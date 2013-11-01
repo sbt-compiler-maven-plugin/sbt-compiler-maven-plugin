@@ -4,6 +4,9 @@ import org.apache.maven.plugin.logging.Log;
 import xsbti.F0;
 import xsbti.Logger;
 
+/**
+ * Maven Logger wrapper implementing SBT Logger interface.
+ */
 public class SBTLogger
     implements Logger
 {

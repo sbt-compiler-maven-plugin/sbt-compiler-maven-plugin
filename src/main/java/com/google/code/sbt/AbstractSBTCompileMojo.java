@@ -62,24 +62,49 @@ import com.typesafe.zinc.Setup;
 public abstract class AbstractSBTCompileMojo
     extends AbstractMojo
 {
+    /**
+     * Scala artifacts "groupId".
+     */
     public static final String SCALA_GROUPID = "org.scala-lang";
 
+    /**
+     * Scala library "artifactId".
+     */
     public static final String SCALA_LIBRARY_ARTIFACTID = "scala-library";
 
+    /**
+     * Scala compiler "artifactId".
+     */
     public static final String SCALA_COMPILER_ARTIFACTID = "scala-compiler";
 
-    public static final String SCALA_REFLECT_ARTIFACTID = "scala-reflect";
-
+    /**
+     * SBT artifacts "groupId".
+     */
     public static final String SBT_GROUP_ID = "com.typesafe.sbt";
 
+    /**
+     * SBT incremental compile "artifactId".
+     */
     public static final String COMPILER_INTEGRATION_ARTIFACT_ID = "incremental-compiler";
 
+    /**
+     * SBT compile interface "artifactId".
+     */
     public static final String COMPILER_INTERFACE_ARTIFACT_ID = "compiler-interface";
 
+    /**
+     * SBT compile interface sources "classifier".
+     */
     public static final String COMPILER_INTERFACE_CLASSIFIER = "sources";
 
+    /**
+     * SBT interface "artifactId".
+     */
     public static final String XSBTI_ARTIFACT_ID = "sbt-interface";
 
+    /**
+     * SBT compilation order.
+     */
     private static final String COMPILE_ORDER = "mixed";
 
     /**
@@ -92,18 +117,24 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * The -encoding argument for Scala and Java compilers.
+     * 
+     * @since 1.0.0
      */
     @Parameter( property = "project.build.sourceEncoding" )
     protected String sourceEncoding;
 
     /**
      * Additional parameters for Java compiler.
+     * 
+     * @since 1.0.0
      */
     @Parameter( property = "sbt.javacOptions", defaultValue = "-g" )
     protected String javacOptions;
 
     /**
      * Additional parameters for Scala compiler.
+     * 
+     * @since 1.0.0
      */
     @Parameter( property = "sbt.scalacOptions", defaultValue = "-deprecation -unchecked" )
     protected String scalacOptions;
@@ -115,25 +146,25 @@ public abstract class AbstractSBTCompileMojo
     protected MavenProject project;
 
     /**
-     * Artifact factory, needed to download source jars.
+     * Maven project builder used to resolve artifacts.
      */
     @Component
     protected MavenProjectBuilder mavenProjectBuilder;
 
     /**
-     * Contains the full list of projects in the reactor.
+     * All projects in the reactor.
      */
     @Parameter( defaultValue = "${reactorProjects}", required = true, readonly = true )
     protected List<MavenProject> reactorProjects;
 
     /**
-     * Used to look up artifacts in the remote repository.
+     * Artifact factory used to look up artifacts in the remote repository.
      */
     @Component
     protected ArtifactFactory factory;
 
     /**
-     * Used to resolve artifacts.
+     * Artifact resolver used to resolve artifacts.
      */
     @Component
     protected ArtifactResolver resolver;
@@ -150,6 +181,14 @@ public abstract class AbstractSBTCompileMojo
     @Parameter( property = "project.remoteArtifactRepositories", readonly = true, required = true )
     protected List<?> remoteRepos;
 
+    /**
+     * Perform compilation.
+     * 
+     * @throws MojoExecutionException if an unexpected problem occurs.
+     * Throwing this exception causes a "BUILD ERROR" message to be displayed.
+     * @throws MojoFailureException if an expected problem (such as a compilation failure) occurs.
+     * Throwing this exception causes a "BUILD FAILURE" message to be displayed.
+     */
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
@@ -171,6 +210,13 @@ public abstract class AbstractSBTCompileMojo
         }
     }
 
+    /**
+     * Actual compilation code, to be overridden.
+     * 
+     * @throws MojoExecutionException if an unexpected problem occurs.
+     * @throws MojoFailureException if an expected problem (such as a compilation failure) occurs.
+     * @throws IOException if an IO exception occurs.
+     */
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException, IOException
     {
@@ -289,14 +335,39 @@ public abstract class AbstractSBTCompileMojo
         }
     }
 
+    /**
+     * Returns compilation classpath elements.
+     * 
+     * @return classpath elements
+     */
     protected abstract List<String> getClasspathElements();
 
+    /**
+     * Returns compilation source roots.
+     * 
+     * @return source roots
+     */
     protected abstract List<String> getCompileSourceRoots();
 
+    /**
+     * Returns output directory.
+     * 
+     * @return output directory
+     */
     protected abstract File getOutputDirectory();
 
+    /**
+     * Returns incremental compilation analysis cache file.
+     * 
+     * @return analysis cache file
+     */
     protected abstract File getAnalysisCacheFile();
 
+    /**
+     * Returns incremental compilation analyses map for reactor projects.
+     * 
+     * @return analysis cache map
+     */
     protected abstract Map<File, File> getAnalysisCacheMap();
 
     private Artifact getDependencyArtifact( Collection<?> classPathArtifacts, String groupId, String artifactId,
@@ -375,11 +446,23 @@ public abstract class AbstractSBTCompileMojo
         return new File( p.getBuild().getDirectory(), "analysis" );
     }
 
+    /**
+     * Returns incremental main compilation analysis cache file location for a project.
+     * 
+     * @param p Maven project
+     * @return analysis cache file location
+     */
     protected File defaultAnalysisCacheFile( MavenProject p )
     {
         return new File( defaultAnalysisDirectory( p ), "compile" );
     }
 
+    /**
+     * Returns incremental test compilation analysis cache file location for a project.
+     * 
+     * @param p Maven project
+     * @return analysis cache file location
+     */
     protected File defaultTestAnalysisCacheFile( MavenProject p )
     {
         return new File( defaultAnalysisDirectory( p ), "test-compile" );
