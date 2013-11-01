@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.HashMap;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,6 +46,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import com.typesafe.zinc.Compiler;

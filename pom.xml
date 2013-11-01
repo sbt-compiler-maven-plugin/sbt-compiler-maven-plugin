@@ -85,16 +85,6 @@ under the License.
             <groupId>com.typesafe.zinc</groupId>
             <artifactId>zinc</artifactId>
             <version>0.3.0</version>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-compiler</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
 
         <!-- Maven -->
@@ -128,24 +118,6 @@ under the License.
             <artifactId>maven-plugin-annotations</artifactId>
             <version>${maven-plugin-plugin.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-common-artifact-filters</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-archiver</artifactId>
-            <version>${plexus-archiver.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-io</artifactId>
-            <version>2.0.6</version>
         </dependency>
 
         <dependency>
