@@ -163,7 +163,7 @@ public abstract class AbstractSBTCompileMojo
             long ts = System.currentTimeMillis();
             internalExecute();
             long te = System.currentTimeMillis();
-            getLog().debug( String.format( "Mojo execution time: %d ms", te-ts ) );
+            getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
         }
         catch ( IOException e )
         {

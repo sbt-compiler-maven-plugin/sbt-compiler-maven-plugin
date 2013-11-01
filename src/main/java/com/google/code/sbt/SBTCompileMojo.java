@@ -108,7 +108,7 @@ public class SBTCompileMojo
         HashMap<File, File> map = new HashMap<File, File>();
         for ( MavenProject reactorProject : reactorProjects )
         {
-            if ( reactorProject != project)
+            if ( reactorProject != project )
             {
                 File analysisCacheFile = defaultAnalysisCacheFile( reactorProject );
                 if ( analysisCacheFile.isFile() )

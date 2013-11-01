@@ -111,7 +111,7 @@ public class SBTTestCompileMojo
         HashMap<File, File> map = new HashMap<File, File>();
         for ( MavenProject reactorProject : reactorProjects )
         {
-            if ( reactorProject != project)
+            if ( reactorProject != project )
             {
                 File analysisCacheFile = defaultAnalysisCacheFile( reactorProject );
                 if ( analysisCacheFile.isFile() )
@@ -130,7 +130,7 @@ public class SBTTestCompileMojo
                     List<Artifact> reactorProjectattachedArtifacts = reactorProject.getAttachedArtifacts();
                     for ( Artifact artifact: reactorProjectattachedArtifacts )
                     {
-                        if ( "tests".equals( artifact.getClassifier() ))
+                        if ( "tests".equals( artifact.getClassifier() ) )
                         {
                             //getLog().info( String.format( "map.add %s:%s", artifact.getFile().getAbsolutePath(), testAnalysisCacheFile.getAbsolutePath() ) );
                             map.put( artifact.getFile().getAbsoluteFile(), testAnalysisCacheFile.getAbsoluteFile() );
