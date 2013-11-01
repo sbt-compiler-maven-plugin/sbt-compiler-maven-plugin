@@ -49,6 +49,11 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import com.typesafe.zinc.Compiler;
+import com.typesafe.zinc.IncOptions;
+import com.typesafe.zinc.Inputs;
+import com.typesafe.zinc.Setup;
+
 /**
  * Abstract base class for SBT compilation mojos.
  * 
@@ -74,6 +79,8 @@ public abstract class AbstractSBTCompileMojo
     public static final String COMPILER_INTERFACE_CLASSIFIER = "sources";
 
     public static final String XSBTI_ARTIFACT_ID = "sbt-interface";
+
+    private static final String COMPILE_ORDER = "mixed"; // Tutaj???
 
     /**
      * SBT version
@@ -192,8 +199,6 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
-            SBTCompiler compiler = new SBTCompiler();
-
             Artifact scalaLibraryArtifact =
                 getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
             if ( scalaLibraryArtifact == null )
@@ -240,25 +245,32 @@ public abstract class AbstractSBTCompileMojo
                 classpathFiles.add( new File( path ) );
             }
 
-            compiler.setLog( getLog() );
-            compiler.setOutputDirectory( getOutputDirectory() );
-            compiler.setScalaLibraryFile( scalaLibraryArtifact.getFile() );
-            compiler.setScalaCompilerFile( scalaCompilerArtifact.getFile() );
-            compiler.setScalaExtraFiles( scalaExtraJars );
-            compiler.setXsbtiArtifactFile( xsbtiArtifact.getFile() );
-            compiler.setCompilerInterfaceSrcFile( compilerInterfaceSrc.getFile() );
-            compiler.setScalacOptions( getScalacOprions() );
-            compiler.setJavacOptions( getJavacOprions() );
-            compiler.setAnalysisCacheFile( getAnalysisCacheFile() );
-            compiler.setAnalysisCacheMap( getAnalysisCacheMap() );
-            compiler.setClassPathFiles( classpathFiles );
+            SBTLogger sbtLogger = new SBTLogger( getLog() );
+            Setup setup =
+                Setup.create( scalaCompilerArtifact.getFile(), scalaLibraryArtifact.getFile(), scalaExtraJars, xsbtiArtifact.getFile(), compilerInterfaceSrc.getFile(),
+                              null, false/* forkJava */ );
+            if ( getLog().isDebugEnabled() )
+            {
+                Setup.debug( setup, sbtLogger );
+            }
+            Compiler compiler = Compiler.create( setup, sbtLogger );
 
-            /*SBTCompilationResult compileResult = */compiler.compile( sourceFiles );
+            scala.Option<File> none = scala.Option.empty();
+            IncOptions incOptions = new IncOptions( 3, 0.5d, false, false, 5, none, false, none );
+            Inputs inputs =
+                Inputs.create( classpathFiles, sourceFiles, getOutputDirectory(), getScalacOptions(), getJavacOptions(), getAnalysisCacheFile(),
+                               getAnalysisCacheMap(), COMPILE_ORDER, incOptions, getLog().isDebugEnabled()/* mirrorAnalysisCache */ );
+            if ( getLog().isDebugEnabled() )
+            {
+                Inputs.debug( inputs, sbtLogger );
+            }
+
+            compiler.compile( inputs, sbtLogger );
         }
-        /*??? catch ( SBTCompilationException e )
+        catch ( xsbti.CompileFailed e )
         {
             throw new MojoFailureException( "Scala compilation failed", e );
-        }*/
+        }
         catch ( ArtifactNotFoundException e )
         {
             throw new MojoFailureException( "Scala compilation failed", e );
@@ -333,7 +345,7 @@ public abstract class AbstractSBTCompileMojo
         return sourceFiles;
     }
 
-    private List<String> getScalacOprions()
+    private List<String> getScalacOptions()
     {
         List<String> result = new ArrayList<String>( Arrays.asList( scalacOptions.split( " " ) ) );
         if ( !result.contains( "-encoding" ) )
@@ -347,7 +359,7 @@ public abstract class AbstractSBTCompileMojo
         return result;
     }
 
-    private List<String> getJavacOprions()
+    private List<String> getJavacOptions()
     {
         List<String> result = new ArrayList<String>( Arrays.asList( javacOptions.split( " " ) ) );
         if ( !result.contains( "-encoding" ) )
@@ -357,21 +369,6 @@ public abstract class AbstractSBTCompileMojo
         }
         return result;
     }
-
-    /*private Map<File, File> getAnalysisCacheMap()
-    {
-        HashMap<File, File> map = new HashMap<File, File>();
-        for ( MavenProject project : reactorProjects )
-        {
-            File analysisCacheFile = defaultAnalysisCacheFile( project );
-            File classesDirectory = new File( project.getBuild().getOutputDirectory() );
-            map.put( classesDirectory.getAbsoluteFile(), analysisCacheFile.getAbsoluteFile() );
-            File testAnalysisCacheFile = defaultTestAnalysisCacheFile( project );
-            File testClassesDirectory = new File( project.getBuild().getTestOutputDirectory() );
-            map.put( testClassesDirectory.getAbsoluteFile(), testAnalysisCacheFile.getAbsoluteFile() );
-        }
-        return map;
-    }*/
 
     private File defaultAnalysisDirectory( MavenProject p )
     {
