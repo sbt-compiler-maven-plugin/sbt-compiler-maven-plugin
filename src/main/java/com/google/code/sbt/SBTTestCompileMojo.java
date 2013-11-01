@@ -119,7 +119,6 @@ public class SBTTestCompileMojo
                     File reactorProjectArtifactFile = reactorProject.getArtifact().getFile();
                     if ( reactorProjectArtifactFile != null )
                     {
-                        //getLog().info( String.format( "map.add %s:%s", reactorProjectArtifactFile.getAbsolutePath(), analysisCacheFile.getAbsolutePath() ) );
                         map.put( reactorProjectArtifactFile.getAbsoluteFile(), analysisCacheFile.getAbsoluteFile() );
                     }
                 }
@@ -132,7 +131,6 @@ public class SBTTestCompileMojo
                     {
                         if ( "tests".equals( artifact.getClassifier() ) )
                         {
-                            //getLog().info( String.format( "map.add %s:%s", artifact.getFile().getAbsolutePath(), testAnalysisCacheFile.getAbsolutePath() ) );
                             map.put( artifact.getFile().getAbsoluteFile(), testAnalysisCacheFile.getAbsoluteFile() );
                             break;
                         }

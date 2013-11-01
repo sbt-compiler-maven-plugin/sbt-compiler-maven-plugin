@@ -116,7 +116,6 @@ public class SBTCompileMojo
                     File reactorProjectArtifactFile = reactorProject.getArtifact().getFile();
                     if ( reactorProjectArtifactFile != null )
                     {
-                        //getLog().info( String.format( "map.add %s:%s", reactorProjectArtifactFile.getAbsolutePath(), analysisCacheFile.getAbsolutePath() ) );
                         map.put( reactorProjectArtifactFile.getAbsoluteFile(), analysisCacheFile.getAbsoluteFile() );
                     }
                 }

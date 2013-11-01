@@ -108,6 +108,11 @@ public abstract class AbstractSBTCompileMojo
     private static final String COMPILE_ORDER = "mixed";
 
     /**
+     * Run compilation in forked JVM.
+     */
+    private static final boolean FORK_JAVA = false;
+
+    /**
      * SBT version
      * 
      * @since 1.0.0
@@ -260,7 +265,8 @@ public abstract class AbstractSBTCompileMojo
             {
                 throw new MojoExecutionException(
                                                   String.format( "Required %s:%s:%s:jar dependency not found",
-                                                                 SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID, scalaVersion ) );
+                                                                 SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID,
+                                                                 scalaVersion ) );
             }
 
             List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact );
@@ -293,8 +299,8 @@ public abstract class AbstractSBTCompileMojo
 
             SBTLogger sbtLogger = new SBTLogger( getLog() );
             Setup setup =
-                Setup.create( scalaCompilerArtifact.getFile(), scalaLibraryArtifact.getFile(), scalaExtraJars, xsbtiArtifact.getFile(), compilerInterfaceSrc.getFile(),
-                              null, false/* forkJava */ );
+                Setup.create( scalaCompilerArtifact.getFile(), scalaLibraryArtifact.getFile(), scalaExtraJars,
+                              xsbtiArtifact.getFile(), compilerInterfaceSrc.getFile(), null, FORK_JAVA );
             if ( getLog().isDebugEnabled() )
             {
                 Setup.debug( setup, sbtLogger );
@@ -304,8 +310,9 @@ public abstract class AbstractSBTCompileMojo
             scala.Option<File> none = scala.Option.empty();
             IncOptions incOptions = new IncOptions( 3, 0.5d, false, false, 5, none, false, none );
             Inputs inputs =
-                Inputs.create( classpathFiles, sourceFiles, getOutputDirectory(), getScalacOptions(), getJavacOptions(), getAnalysisCacheFile(),
-                               getAnalysisCacheMap(), COMPILE_ORDER, incOptions, getLog().isDebugEnabled()/* mirrorAnalysisCache */ );
+                Inputs.create( classpathFiles, sourceFiles, getOutputDirectory(), getScalacOptions(),
+                               getJavacOptions(), getAnalysisCacheFile(), getAnalysisCacheMap(), COMPILE_ORDER,
+                               incOptions, getLog().isDebugEnabled() /* mirrorAnalysisCache */ );
             if ( getLog().isDebugEnabled() )
             {
                 Inputs.debug( inputs, sbtLogger );
