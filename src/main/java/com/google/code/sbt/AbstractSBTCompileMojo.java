@@ -80,7 +80,7 @@ public abstract class AbstractSBTCompileMojo
 
     public static final String XSBTI_ARTIFACT_ID = "sbt-interface";
 
-    private static final String COMPILE_ORDER = "mixed"; // Tutaj???
+    private static final String COMPILE_ORDER = "mixed";
 
     /**
      * SBT version
@@ -167,7 +167,7 @@ public abstract class AbstractSBTCompileMojo
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException( "?", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
     }
 
