@@ -49,6 +49,8 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import scala.Option;
+
 import com.typesafe.zinc.Compiler;
 import com.typesafe.zinc.IncOptions;
 import com.typesafe.zinc.Inputs;
@@ -307,12 +309,10 @@ public abstract class AbstractSBTCompileMojo
             }
             Compiler compiler = Compiler.create( setup, sbtLogger );
 
-            scala.Option<File> none = scala.Option.empty();
-            IncOptions incOptions = new IncOptions( 3, 0.5d, false, false, 5, none, false, none );
             Inputs inputs =
                 Inputs.create( classpathFiles, sourceFiles, getOutputDirectory(), getScalacOptions(),
                                getJavacOptions(), getAnalysisCacheFile(), getAnalysisCacheMap(), COMPILE_ORDER,
-                               incOptions, getLog().isDebugEnabled() /* mirrorAnalysisCache */ );
+                               getIncOptions(), getLog().isDebugEnabled() /* mirrorAnalysisCache */ );
             if ( getLog().isDebugEnabled() )
             {
                 Inputs.debug( inputs, sbtLogger );
@@ -473,6 +473,74 @@ public abstract class AbstractSBTCompileMojo
     protected File defaultTestAnalysisCacheFile( MavenProject p )
     {
         return new File( defaultAnalysisDirectory( p ), "test-compile" );
+    }
+
+    private IncOptions getIncOptions()
+    {
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // After which step include whole transitive closure of invalidated source files.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Steps before transitive closure
+        int transitiveStep = 3;
+
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // What's the fraction of invalidated source files when we switch to recompiling
+        // all files and giving up incremental compilation altogether. That's useful in
+        // cases when probability that we end up recompiling most of source files but
+        // in multiple steps is high. Multi-step incremental recompilation is slower
+        // than recompiling everything in one step.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Limit before recompiling all sources
+        double recompileAllFraction = 0.5d;
+
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // Print very detailed information about relations, such as dependencies between source files.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Enable debug logging of analysis relations
+        boolean relationsDebug = false;
+
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // Enable tools for debugging API changes. At the moment this option is unused but in the
+        // future it will enable for example:
+        //   - disabling API hashing and API minimization (potentially very memory consuming)
+        //   - diffing textual API representation which helps understanding what kind of changes
+        //     to APIs are visible to the incremental compiler
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Enable analysis API debugging
+        boolean apiDebug = false;
+
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // Controls context size (in lines) displayed when diffs are produced for textual API
+        // representation.
+        //
+        // This option is used only when `apiDebug == true`.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Diff context size (in lines) for API debug
+        int apiDiffContextSize = 5;
+
+        // comment from SBT (sbt.inc.IncOptions.scala):
+        // The directory where we dump textual representation of APIs. This method might be called
+        // only if apiDebug returns true. This is unused option at the moment as the needed functionality
+        // is not implemented yet.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Destination for analysis API dump
+        Option<File> apiDumpDirectory = Option.empty();
+
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Restore previous class files on failure
+        boolean transactional = false;
+
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Backup location (if transactional)
+        Option<File> backup = Option.empty();
+
+        return new IncOptions( transitiveStep, recompileAllFraction, relationsDebug, apiDebug, apiDiffContextSize, apiDumpDirectory, transactional, backup );
     }
 
     // Private utility methods
