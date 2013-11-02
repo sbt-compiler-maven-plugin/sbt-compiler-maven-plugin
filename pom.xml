@@ -28,7 +28,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
     <artifactId>sbt-compiler-maven-plugin</artifactId>
-    <version>1.0.0-beta1-SNAPSHOT</version>
+    <version>1.0.0-beta1</version>
     <packaging>maven-plugin</packaging>
 
     <name>SBT Compiler Maven Plugin</name>
@@ -37,9 +37,9 @@ under the License.
     <url>https://sbt-compiler-maven-plugin.googlecode.com/svn/mavensite/${project.version}/</url>
 
     <scm>
-        <connection>scm:svn:http://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</connection>
-        <developerConnection>scm:svn:https://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</developerConnection>
-        <url>http://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</url>
+        <connection>scm:svn:http://sbt-compiler-maven-plugin.googlecode.com/svn/tags/sbt-compiler-maven-plugin-1.0.0-beta1</connection>
+        <developerConnection>scm:svn:https://sbt-compiler-maven-plugin.googlecode.com/svn/tags/sbt-compiler-maven-plugin-1.0.0-beta1</developerConnection>
+        <url>http://sbt-compiler-maven-plugin.googlecode.com/svn/tags/sbt-compiler-maven-plugin-1.0.0-beta1</url>
     </scm>
 
     <issueManagement>
