@@ -426,13 +426,10 @@ public abstract class AbstractSBTCompileMojo
     private List<String> getScalacOptions()
     {
         List<String> result = new ArrayList<String>( Arrays.asList( scalacOptions.split( " " ) ) );
-        if ( !result.contains( "-encoding" ) )
+        if ( !result.contains( "-encoding" ) && sourceEncoding != null && sourceEncoding.length() > 0 )
         {
-            if ( sourceEncoding != null && sourceEncoding.length() > 0 )
-            {
-                result.add( "-encoding" );
-                result.add( sourceEncoding );
-            }
+            result.add( "-encoding" );
+            result.add( sourceEncoding );
         }
         return result;
     }
@@ -440,7 +437,7 @@ public abstract class AbstractSBTCompileMojo
     private List<String> getJavacOptions()
     {
         List<String> result = new ArrayList<String>( Arrays.asList( javacOptions.split( " " ) ) );
-        if ( !result.contains( "-encoding" ) )
+        if ( !result.contains( "-encoding" ) && sourceEncoding != null && sourceEncoding.length() > 0 )
         {
             result.add( "-encoding" );
             result.add( sourceEncoding );
