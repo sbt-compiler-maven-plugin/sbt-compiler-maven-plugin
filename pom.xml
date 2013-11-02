@@ -28,7 +28,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
     <artifactId>sbt-compiler-maven-plugin</artifactId>
-    <version>1.0.0-alpha1-SNAPSHOT</version>
+    <version>1.0.0-beta1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>SBT Compiler Maven Plugin</name>
