@@ -32,7 +32,7 @@ under the License.
     <packaging>maven-plugin</packaging>
 
     <name>SBT Compiler Maven Plugin</name>
-    <description>SBT COmpiler Maven Plugin</description>
+    <description>SBT Compiler Maven Plugin</description>
     <inceptionYear>2013</inceptionYear>
     <url>https://sbt-compiler-maven-plugin.googlecode.com/svn/mavensite/${project.version}/</url>
 
