@@ -67,42 +67,37 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Scala artifacts "groupId".
      */
-    public static final String SCALA_GROUPID = "org.scala-lang";
+    private static final String SCALA_GROUPID = "org.scala-lang";
 
     /**
      * Scala library "artifactId".
      */
-    public static final String SCALA_LIBRARY_ARTIFACTID = "scala-library";
+    private static final String SCALA_LIBRARY_ARTIFACTID = "scala-library";
 
     /**
      * Scala compiler "artifactId".
      */
-    public static final String SCALA_COMPILER_ARTIFACTID = "scala-compiler";
+    private static final String SCALA_COMPILER_ARTIFACTID = "scala-compiler";
 
     /**
      * SBT artifacts "groupId".
      */
-    public static final String SBT_GROUP_ID = "com.typesafe.sbt";
-
-    /**
-     * SBT incremental compile "artifactId".
-     */
-    public static final String COMPILER_INTEGRATION_ARTIFACT_ID = "incremental-compiler";
+    private static final String SBT_GROUP_ID = "com.typesafe.sbt";
 
     /**
      * SBT compile interface "artifactId".
      */
-    public static final String COMPILER_INTERFACE_ARTIFACT_ID = "compiler-interface";
+    private static final String COMPILER_INTERFACE_ARTIFACT_ID = "compiler-interface";
 
     /**
      * SBT compile interface sources "classifier".
      */
-    public static final String COMPILER_INTERFACE_CLASSIFIER = "sources";
+    private static final String COMPILER_INTERFACE_CLASSIFIER = "sources";
 
     /**
      * SBT interface "artifactId".
      */
-    public static final String XSBTI_ARTIFACT_ID = "sbt-interface";
+    private static final String XSBTI_ARTIFACT_ID = "sbt-interface";
 
     /**
      * SBT compilation order.
@@ -266,7 +261,7 @@ public abstract class AbstractSBTCompileMojo
             if ( scalaCompilerArtifact == null )
             {
                 throw new MojoExecutionException(
-                                                  String.format( "Required %s:%s:%s:jar dependency not found",
+                                                  String.format( "Required %s:%s:%s:jar artifact not found",
                                                                  SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID,
                                                                  scalaVersion ) );
             }
