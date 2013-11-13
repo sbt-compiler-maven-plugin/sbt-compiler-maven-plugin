@@ -65,6 +65,13 @@ public abstract class AbstractSBTCompileMojo
     extends AbstractMojo
 {
     /**
+     * Default Scala library and compiler version used when no scalaVersion
+     * configuration property specified and org.scala-lang:scala-library
+     * dependency not found in the project.
+     */
+    public static final String DEFAULT_SCALA_VERSION = "2.10.2";
+
+    /**
      * Scala artifacts "groupId".
      */
     private static final String SCALA_GROUPID = "org.scala-lang";
@@ -108,6 +115,18 @@ public abstract class AbstractSBTCompileMojo
      * Run compilation in forked JVM.
      */
     private static final boolean FORK_JAVA = false;
+
+    /**
+     * Scala Compiler version.
+     * 
+     * If not specified:
+     * a) version of project's org.scala-lang:scala-library dependency is used
+     * b) if org.scala-lang:scala-library dependency does not exist in the project DEFAULT_SCALA_VERSION is used
+     * 
+     * @since 1.0.0
+     */
+    @Parameter( property = "scala.version" )
+    private String scalaVersion;
 
     /**
      * SBT version
@@ -247,23 +266,26 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
+            String resolvedScalaVersion = getScalaVersion();
+
             Artifact scalaLibraryArtifact =
-                getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
+                getResolvedArtifact( SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, resolvedScalaVersion );
             if ( scalaLibraryArtifact == null )
             {
-                throw new MojoExecutionException( String.format( "Required %s:%s:jar dependency not found",
-                                                                 SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID ) );
+                throw new MojoExecutionException(
+                                                  String.format( "Required %s:%s:%s:jar artifact not found",
+                                                                 SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID,
+                                                                 resolvedScalaVersion ) );
             }
 
-            String scalaVersion = scalaLibraryArtifact.getVersion();
             Artifact scalaCompilerArtifact =
-                getResolvedArtifact( SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID, scalaVersion );
+                getResolvedArtifact( SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID, resolvedScalaVersion );
             if ( scalaCompilerArtifact == null )
             {
                 throw new MojoExecutionException(
                                                   String.format( "Required %s:%s:%s:jar artifact not found",
                                                                  SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID,
-                                                                 scalaVersion ) );
+                                                                 resolvedScalaVersion ) );
             }
 
             List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact );
@@ -416,6 +438,22 @@ public abstract class AbstractSBTCompileMojo
         // to guarantee reproductible command line we order file by path (os dependend).
         // Collections.sort( sourceFiles );
         return sourceFiles;
+    }
+
+    private String getScalaVersion()
+    {
+        String result = scalaVersion;
+        if ( result == null || result.length() == 0 )
+        {
+            result = DEFAULT_SCALA_VERSION;
+            Artifact scalaLibraryArtifact =
+                            getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
+            if ( scalaLibraryArtifact != null )
+            {
+                result = scalaLibraryArtifact.getVersion();
+            }
+        }
+        return result;
     }
 
     private List<String> getScalacOptions()
