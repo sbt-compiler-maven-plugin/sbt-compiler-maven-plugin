@@ -46,7 +46,7 @@ public class SBTAddScalaSourcesMojo
     protected MavenProject project;
 
     /**
-     * Adds Scala sources to projest's source and test source roots.
+     * Adds Scala sources.
      */
     public void execute()
     {

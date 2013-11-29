@@ -203,7 +203,7 @@ public abstract class AbstractSBTCompileMojo
     protected List<?> remoteRepos;
 
     /**
-     * Perform compilation.
+     * Performs compilation.
      * 
      * @throws MojoExecutionException if an unexpected problem occurs.
      * Throwing this exception causes a "BUILD ERROR" message to be displayed.
