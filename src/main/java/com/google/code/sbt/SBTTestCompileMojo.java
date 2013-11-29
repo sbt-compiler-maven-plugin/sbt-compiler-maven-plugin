@@ -43,11 +43,13 @@ public class SBTTestCompileMojo
     extends AbstractSBTCompileMojo
 {
     /**
-     * Set this to 'true' to bypass compilation of test sources. Its use is NOT RECOMMENDED, but quite convenient on
-     * occasion.
+     * Set this to 'true' to bypass compilation of test sources.
+     * Its use is NOT RECOMMENDED, but quite convenient on occasion.
+     * 
+     * @since 1.0.0
      */
     @Parameter( property = "maven.test.skip" )
-    private boolean testCompileSkip;
+    private boolean skipTest;
 
     /**
      * The source directories containing the test-source to be compiled.
@@ -71,14 +73,12 @@ public class SBTTestCompileMojo
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException, IOException
     {
-        if ( testCompileSkip )
+        if ( skipTest )
         {
             getLog().info( "Not compiling test sources" );
+            return;
         }
-        else
-        {
-            super.internalExecute();
-        }
+        super.internalExecute();
     }
 
     @Override

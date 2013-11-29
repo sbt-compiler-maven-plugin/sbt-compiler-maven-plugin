@@ -43,6 +43,13 @@ public class SBTCompileMojo
     extends AbstractSBTCompileMojo
 {
     /**
+     * Set this to 'true' to bypass compilation of main sources.
+     * Its use is NOT RECOMMENDED, but quite convenient on occasion.
+     */
+    @Parameter ( property = "maven.main.skip" )
+    private boolean skipMain;
+
+    /**
      * The source directories containing the sources to be compiled.
      */
     @Parameter( defaultValue = "${project.compileSourceRoots}", readonly = true, required = true )
@@ -70,6 +77,12 @@ public class SBTCompileMojo
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException, IOException
     {
+        if ( skipMain )
+        {
+            getLog().info( "Not compiling main sources" );
+            return;
+        }
+
         super.internalExecute();
 
         if ( outputDirectory.isDirectory() )
