@@ -20,8 +20,10 @@ package com.google.code.sbt;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,6 +44,22 @@ import org.apache.maven.project.MavenProject;
 public class SBTCompileMojo
     extends AbstractSBTCompileMojo
 {
+    /**
+     * A list of inclusion filters for the compiler.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter
+    private Set<String> includes = new HashSet<String>();
+
+    /**
+     * A list of exclusion filters for the compiler.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter
+    private Set<String> excludes = new HashSet<String>();
+
     /**
      * Set this to 'true' to bypass compilation of main sources.
      * Its use is NOT RECOMMENDED, but quite convenient on occasion.
@@ -95,6 +113,18 @@ public class SBTCompileMojo
     protected List<String> getCompileSourceRoots()
     {
         return compileSourceRoots;
+    }
+
+    @Override
+    protected Set<String> getSourceIncludes()
+    {
+        return includes;
+    }
+    
+    @Override
+    protected Set<String> getSourceExcludes()
+    {
+        return excludes;
     }
 
     @Override

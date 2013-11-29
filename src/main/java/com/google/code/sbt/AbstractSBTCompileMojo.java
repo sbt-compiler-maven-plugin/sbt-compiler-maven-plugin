@@ -374,6 +374,20 @@ public abstract class AbstractSBTCompileMojo
     protected abstract List<String> getCompileSourceRoots();
 
     /**
+     * A list of inclusion filters for the compiler.
+     * 
+     * @return inclusion filters
+     */
+    protected abstract Set<String> getSourceIncludes();
+    
+    /**
+     * A list of exclusion filters for the compiler.
+     * 
+     * @return exclusion filters
+     */
+    protected abstract Set<String> getSourceExcludes();
+    
+    /**
      * Returns output directory.
      * 
      * @return output directory
@@ -415,8 +429,20 @@ public abstract class AbstractSBTCompileMojo
     {
         List<File> sourceFiles = new ArrayList<File>();
 
+        Set<String> sourceIncludes = getSourceIncludes();
+        if ( sourceIncludes.isEmpty() )
+        {
+            sourceIncludes.add( "**/*.java" );
+            sourceIncludes.add( "**/*.scala" );
+        }
+        Set<String> sourceExcludes = getSourceExcludes();
+
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes( new String[] { "**/*.java", "**/*.scala" } );
+        scanner.setIncludes( sourceIncludes.toArray( new String[sourceIncludes.size()] ) );
+        if ( !sourceExcludes.isEmpty() )
+        {
+            scanner.setExcludes( sourceExcludes.toArray( new String[sourceExcludes.size()] ) );
+        }
         scanner.addDefaultExcludes();
 
         for ( File dir : sourceRootDirs )
