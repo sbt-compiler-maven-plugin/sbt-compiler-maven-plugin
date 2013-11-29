@@ -506,7 +506,7 @@ public abstract class AbstractSBTCompileMojo
 
     private File defaultAnalysisDirectory( MavenProject p )
     {
-        return new File( p.getBuild().getDirectory(), "analysis" );
+        return new File( p.getBuild().getDirectory(), "cache" );
     }
 
     /**
