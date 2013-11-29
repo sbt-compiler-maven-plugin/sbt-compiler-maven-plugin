@@ -20,15 +20,13 @@ package com.google.code.sbt;
 import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Add default Scala source roots, if they exist.
+ * Add default Scala source roots, if they exist and are not already added.
  * 
  * - adds src/main/scala to Maven project as compile source root
  * - adds src/test/scala to Maven project as test compile source root
@@ -47,9 +45,16 @@ public class SBTAddScalaSourcesMojo
     @Component
     protected MavenProject project;
 
+    /**
+     * Adds Scala sources to projest's source and test source roots.
+     */
     public void execute()
-        throws MojoExecutionException, MojoFailureException
     {
+        if ( "pom".equals( project.getPackaging() ) )
+        {
+            return;
+        }
+
         File baseDir = project.getBasedir();
 
         File mainScalaPath = new File( baseDir, "src/main/scala" );
