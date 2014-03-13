@@ -17,26 +17,29 @@
 
 package com.google.code.sbt.compiler.sbt012;
 
-import org.apache.maven.plugin.logging.Log;
+import com.google.code.sbt.compiler.CompilerLogger;
+
 import xsbti.F0;
 import xsbti.Logger;
 
 /**
- * Maven Logger wrapper implementing SBT Logger interface.
+ * CompilerLogger wrapper implementing SBT Logger interface.
+ * 
+ * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
 public class SBT012Logger
     implements Logger
 {
 
-    Log mavenLogger;
+    CompilerLogger compilerLogger;
 
     /**
-     * Creates SBT Logger wrapper around Maven Log implementation.
-     * @param l Maven logger delegate
+     * Creates SBT Logger wrapper around CompilerLogger implementation.
+     * @param l CompilerLogger delegate
      */
-    public SBT012Logger( Log l )
+    public SBT012Logger( CompilerLogger l )
     {
-        this.mavenLogger = l;
+        this.compilerLogger = l;
     }
 
     /**
@@ -47,9 +50,9 @@ public class SBT012Logger
      */
     public void error( F0<String> msg )
     {
-        if ( mavenLogger.isErrorEnabled() )
+        if ( compilerLogger.isErrorEnabled() )
         {
-            mavenLogger.error( msg.apply() );
+            compilerLogger.error( msg.apply() );
         }
     }
 
@@ -61,9 +64,9 @@ public class SBT012Logger
      */
     public void warn( F0<String> msg )
     {
-        if ( mavenLogger.isWarnEnabled() )
+        if ( compilerLogger.isWarnEnabled() )
         {
-            mavenLogger.warn( msg.apply() );
+            compilerLogger.warn( msg.apply() );
         }
     }
 
@@ -75,9 +78,9 @@ public class SBT012Logger
      */
     public void info( F0<String> msg )
     {
-        if ( mavenLogger.isInfoEnabled() )
+        if ( compilerLogger.isInfoEnabled() )
         {
-            mavenLogger.info( msg.apply() );
+            compilerLogger.info( msg.apply() );
         }
     }
 
@@ -89,9 +92,9 @@ public class SBT012Logger
      */
     public void debug( F0<String> msg )
     {
-        if ( mavenLogger.isDebugEnabled() )
+        if ( compilerLogger.isDebugEnabled() )
         {
-            mavenLogger.debug( msg.apply() );
+            compilerLogger.debug( msg.apply() );
         }
     }
 
@@ -103,9 +106,9 @@ public class SBT012Logger
      */
     public void trace( F0<Throwable> exception )
     {
-        if ( mavenLogger.isDebugEnabled() )
+        if ( compilerLogger.isDebugEnabled() )
         {
-            mavenLogger.debug( "", exception.apply() );
+            compilerLogger.debug( exception.apply() );
         }
     }
 

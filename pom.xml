@@ -70,8 +70,6 @@ under the License.
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.version>2.2.1</maven.version>
     </properties>
 
     <modules>

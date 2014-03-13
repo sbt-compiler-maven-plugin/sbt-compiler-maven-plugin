@@ -23,6 +23,8 @@ import com.google.code.sbt.compiler.AbstractCompiler;
 import com.google.code.sbt.compiler.CompilerConfiguration;
 import com.google.code.sbt.compiler.CompilerException;
 
+import org.codehaus.plexus.component.annotations.Component;
+
 import scala.Option;
 
 import com.typesafe.zinc.Compiler;
@@ -33,10 +35,9 @@ import com.typesafe.zinc.Setup;
 /**
  * SBT 0.13.x compiler (uses Zinc 0.3.0)
  * 
- * @plexus.component role="com.google.code.sbt.compiler.Compiler" role-hint="sbt013"
- * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
+@Component( role = com.google.code.sbt.compiler.Compiler.class, hint = "sbt013", description = "SBT 0.13.x compiler (uses Zinc 0.3.0)")
 public class SBT013Compiler
     extends AbstractCompiler
 {

@@ -32,12 +32,4 @@ under the License.
     <name>SBT Compiler API</name>
     <description>SBT Compiler API</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>${maven.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

@@ -325,7 +325,7 @@ public abstract class AbstractSBTCompileMojo
             configuration.setXsbtiFile( xsbtiArtifact.getFile() );
             configuration.setCompilerInterfaceSrcFile( compilerInterfaceSrc.getFile() );
             configuration.setClasspathFiles( classpathFiles );
-            configuration.setLogger( getLog() );
+            configuration.setLogger( new MavenCompilerLogger( getLog() ) );
             configuration.setOutputDirectory( getOutputDirectory() );
             configuration.setSourceEncoding( sourceEncoding );
             configuration.setJavacOptions( javacOptions );

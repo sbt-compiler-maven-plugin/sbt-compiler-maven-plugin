@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.plugin.logging.Log;
+//import org.apache.maven.plugin.logging.Log;
 
 /**
  * ...
@@ -66,7 +66,7 @@ public class CompilerConfiguration
 
     private List<File> classpathFiles;
 
-    private Log log;
+    private CompilerLogger log;
 
     private File outputDirectory;
 
@@ -185,12 +185,12 @@ public class CompilerConfiguration
     }
 
 
-    public Log getLogger()
+    public CompilerLogger getLogger()
     {
         return log;
     }
 
-    public void setLogger( Log log )
+    public void setLogger( CompilerLogger log )
     {
         this.log = log;
     }
