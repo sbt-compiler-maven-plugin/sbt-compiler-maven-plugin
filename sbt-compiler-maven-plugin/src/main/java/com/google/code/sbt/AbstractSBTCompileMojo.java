@@ -20,7 +20,6 @@ package com.google.code.sbt;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,12 +48,9 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
-import scala.Option;
-
-import com.typesafe.zinc.Compiler;
-import com.typesafe.zinc.IncOptions;
-import com.typesafe.zinc.Inputs;
-import com.typesafe.zinc.Setup;
+import com.google.code.sbt.compiler.Compiler;
+import com.google.code.sbt.compiler.CompilerConfiguration;
+import com.google.code.sbt.compiler.CompilerException;
 
 /**
  * Abstract base class for SBT compilation mojos.
@@ -64,13 +60,6 @@ import com.typesafe.zinc.Setup;
 public abstract class AbstractSBTCompileMojo
     extends AbstractMojo
 {
-    /**
-     * Default Scala library and compiler version used when no scalaVersion
-     * configuration property specified and org.scala-lang:scala-library
-     * dependency not found in the project.
-     */
-    public static final String DEFAULT_SCALA_VERSION = "2.10.2";
-
     /**
      * Scala artifacts "groupId".
      */
@@ -107,16 +96,6 @@ public abstract class AbstractSBTCompileMojo
     private static final String XSBTI_ARTIFACT_ID = "sbt-interface";
 
     /**
-     * SBT compilation order.
-     */
-    private static final String COMPILE_ORDER = "mixed";
-
-    /**
-     * Run compilation in forked JVM.
-     */
-    private static final boolean FORK_JAVA = false;
-
-    /**
      * Scala Compiler version.
      * 
      * If not specified:
@@ -133,13 +112,11 @@ public abstract class AbstractSBTCompileMojo
      * 
      * @since 1.0.0
      */
-    @Parameter( property = "sbt.version", defaultValue = "0.13.0" )
+    @Parameter( property = "sbt.version" )
     private String sbtVersion;
 
     /**
      * The -encoding argument for Scala and Java compilers.
-     * 
-     * @since 1.0.0
      */
     @Parameter( property = "project.build.sourceEncoding" )
     protected String sourceEncoding;
@@ -201,6 +178,12 @@ public abstract class AbstractSBTCompileMojo
      */
     @Parameter( property = "project.remoteArtifactRepositories", readonly = true, required = true )
     protected List<?> remoteRepos;
+
+    /**
+     * Map of compiler implementations. For now only zero or one allowed.
+     */
+    @Component( role = Compiler.class )
+    private Map<String, Compiler> compilers;
 
     /**
      * Performs compilation.
@@ -266,7 +249,23 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
-            String resolvedScalaVersion = getScalaVersion();
+            if ( compilers.isEmpty() )
+            {
+                throw new CompilerException( "No compiler defined" );
+            }
+
+            if ( compilers.size() > 1 )
+            {
+                throw new CompilerException( "Too many compiles defined" );
+            }
+
+            Map.Entry<String, Compiler> compilerEntry = compilers.entrySet().iterator().next();
+            String compilerId = compilerEntry.getKey();
+            Compiler sbtCompiler = compilerEntry.getValue();
+
+            getLog().debug( "Using compiler '" + compilerId + "'." );
+
+            String resolvedScalaVersion = getScalaVersion( sbtCompiler );
 
             Artifact scalaLibraryArtifact =
                 getResolvedArtifact( SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, resolvedScalaVersion );
@@ -277,7 +276,7 @@ public abstract class AbstractSBTCompileMojo
                                                                  SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID,
                                                                  resolvedScalaVersion ) );
             }
-
+            
             Artifact scalaCompilerArtifact =
                 getResolvedArtifact( SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID, resolvedScalaVersion );
             if ( scalaCompilerArtifact == null )
@@ -291,21 +290,23 @@ public abstract class AbstractSBTCompileMojo
             List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact );
             scalaExtraJars.remove( scalaLibraryArtifact.getFile() );
 
-            Artifact xsbtiArtifact = getResolvedArtifact( SBT_GROUP_ID, XSBTI_ARTIFACT_ID, sbtVersion );
+            String resolvedSbtVersion = getSbtVersion( sbtCompiler );
+
+            Artifact xsbtiArtifact = getResolvedArtifact( SBT_GROUP_ID, XSBTI_ARTIFACT_ID, resolvedSbtVersion );
             if ( xsbtiArtifact == null )
             {
                 throw new MojoExecutionException( String.format( "Required %s:%s:%s:jar dependency not found",
-                                                                 SBT_GROUP_ID, XSBTI_ARTIFACT_ID, sbtVersion ) );
+                                                                 SBT_GROUP_ID, XSBTI_ARTIFACT_ID, resolvedSbtVersion ) );
             }
 
             Artifact compilerInterfaceSrc =
-                getResolvedArtifact( SBT_GROUP_ID, COMPILER_INTERFACE_ARTIFACT_ID, sbtVersion,
+                getResolvedArtifact( SBT_GROUP_ID, COMPILER_INTERFACE_ARTIFACT_ID, resolvedSbtVersion,
                                      COMPILER_INTERFACE_CLASSIFIER );
             if ( compilerInterfaceSrc == null )
             {
                 throw new MojoExecutionException( String.format( "Required %s:%s:%s:%s:jar dependency not found",
                                                                  SBT_GROUP_ID, COMPILER_INTERFACE_ARTIFACT_ID,
-                                                                 sbtVersion, COMPILER_INTERFACE_CLASSIFIER ) );
+                                                                 resolvedSbtVersion, COMPILER_INTERFACE_CLASSIFIER ) );
             }
 
             List<String> classpathElements = getClasspathElements();
@@ -316,28 +317,25 @@ public abstract class AbstractSBTCompileMojo
                 classpathFiles.add( new File( path ) );
             }
 
-            SBTLogger sbtLogger = new SBTLogger( getLog() );
-            Setup setup =
-                Setup.create( scalaCompilerArtifact.getFile(), scalaLibraryArtifact.getFile(), scalaExtraJars,
-                              xsbtiArtifact.getFile(), compilerInterfaceSrc.getFile(), null, FORK_JAVA );
-            if ( getLog().isDebugEnabled() )
-            {
-                Setup.debug( setup, sbtLogger );
-            }
-            Compiler compiler = Compiler.create( setup, sbtLogger );
+            CompilerConfiguration configuration = new CompilerConfiguration();
+            configuration.setSourceFiles( sourceFiles );
+            configuration.setScalaLibraryFile( scalaLibraryArtifact.getFile() );
+            configuration.setScalaCompilerFile( scalaCompilerArtifact.getFile() );
+            configuration.setScalaExtraJarFiles( scalaExtraJars );
+            configuration.setXsbtiFile( xsbtiArtifact.getFile() );
+            configuration.setCompilerInterfaceSrcFile( compilerInterfaceSrc.getFile() );
+            configuration.setClasspathFiles( classpathFiles );
+            configuration.setLogger( getLog() );
+            configuration.setOutputDirectory( getOutputDirectory() );
+            configuration.setSourceEncoding( sourceEncoding );
+            configuration.setJavacOptions( javacOptions );
+            configuration.setScalacOptions( scalacOptions );
+            configuration.setAnalysisCacheFile( getAnalysisCacheFile() );
+            configuration.setAnalysisCacheMap( getAnalysisCacheMap() );
 
-            Inputs inputs =
-                Inputs.create( classpathFiles, sourceFiles, getOutputDirectory(), getScalacOptions(),
-                               getJavacOptions(), getAnalysisCacheFile(), getAnalysisCacheMap(), COMPILE_ORDER,
-                               getIncOptions(), getLog().isDebugEnabled() /* mirrorAnalysisCache */ );
-            if ( getLog().isDebugEnabled() )
-            {
-                Inputs.debug( inputs, sbtLogger );
-            }
-
-            compiler.compile( inputs, sbtLogger );
+            sbtCompiler.performCompile( configuration );
         }
-        catch ( xsbti.CompileFailed e )
+        catch ( CompilerException e )
         {
             throw new MojoFailureException( "Scala compilation failed", e );
         }
@@ -466,14 +464,14 @@ public abstract class AbstractSBTCompileMojo
         return sourceFiles;
     }
 
-    private String getScalaVersion()
+    private String getScalaVersion( Compiler sbtCompiler )
     {
         String result = scalaVersion;
         if ( result == null || result.length() == 0 )
         {
-            result = DEFAULT_SCALA_VERSION;
+            result = sbtCompiler.getDefaultScalaVersion();
             Artifact scalaLibraryArtifact =
-                            getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
+                getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
             if ( scalaLibraryArtifact != null )
             {
                 result = scalaLibraryArtifact.getVersion();
@@ -482,24 +480,12 @@ public abstract class AbstractSBTCompileMojo
         return result;
     }
 
-    private List<String> getScalacOptions()
+    private String getSbtVersion( Compiler sbtCompiler )
     {
-        List<String> result = new ArrayList<String>( Arrays.asList( scalacOptions.split( " " ) ) );
-        if ( !result.contains( "-encoding" ) && sourceEncoding != null && sourceEncoding.length() > 0 )
+        String result = sbtVersion;
+        if ( result == null || result.length() == 0 )
         {
-            result.add( "-encoding" );
-            result.add( sourceEncoding );
-        }
-        return result;
-    }
-
-    private List<String> getJavacOptions()
-    {
-        List<String> result = new ArrayList<String>( Arrays.asList( javacOptions.split( " " ) ) );
-        if ( !result.contains( "-encoding" ) && sourceEncoding != null && sourceEncoding.length() > 0 )
-        {
-            result.add( "-encoding" );
-            result.add( sourceEncoding );
+            result = sbtCompiler.getDefaultSbtVersion();
         }
         return result;
     }
@@ -529,74 +515,6 @@ public abstract class AbstractSBTCompileMojo
     protected File defaultTestAnalysisCacheFile( MavenProject p )
     {
         return new File( defaultAnalysisDirectory( p ), "test-compile" );
-    }
-
-    private IncOptions getIncOptions()
-    {
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // After which step include whole transitive closure of invalidated source files.
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Steps before transitive closure
-        int transitiveStep = 3;
-
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // What's the fraction of invalidated source files when we switch to recompiling
-        // all files and giving up incremental compilation altogether. That's useful in
-        // cases when probability that we end up recompiling most of source files but
-        // in multiple steps is high. Multi-step incremental recompilation is slower
-        // than recompiling everything in one step.
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Limit before recompiling all sources
-        double recompileAllFraction = 0.5d;
-
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // Print very detailed information about relations, such as dependencies between source files.
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Enable debug logging of analysis relations
-        boolean relationsDebug = false;
-
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // Enable tools for debugging API changes. At the moment this option is unused but in the
-        // future it will enable for example:
-        //   - disabling API hashing and API minimization (potentially very memory consuming)
-        //   - diffing textual API representation which helps understanding what kind of changes
-        //     to APIs are visible to the incremental compiler
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Enable analysis API debugging
-        boolean apiDebug = false;
-
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // Controls context size (in lines) displayed when diffs are produced for textual API
-        // representation.
-        //
-        // This option is used only when `apiDebug == true`.
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Diff context size (in lines) for API debug
-        int apiDiffContextSize = 5;
-
-        // comment from SBT (sbt.inc.IncOptions.scala):
-        // The directory where we dump textual representation of APIs. This method might be called
-        // only if apiDebug returns true. This is unused option at the moment as the needed functionality
-        // is not implemented yet.
-        //
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Destination for analysis API dump
-        Option<File> apiDumpDirectory = Option.empty();
-
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Restore previous class files on failure
-        boolean transactional = false;
-
-        // comment from Zinc (com.typesafe.zinc.Settings.scala):
-        // Backup location (if transactional)
-        Option<File> backup = Option.empty();
-
-        return new IncOptions( transitiveStep, recompileAllFraction, relationsDebug, apiDebug, apiDiffContextSize, apiDumpDirectory, transactional, backup );
     }
 
     // Private utility methods
