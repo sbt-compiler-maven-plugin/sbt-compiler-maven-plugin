@@ -185,6 +185,15 @@ public abstract class AbstractSBTCompileMojo
     @Component( role = Compiler.class )
     private Map<String, Compiler> compilers;
 
+    @Parameter( property = "plugin.groupId", readonly = true, required = true )
+    private String pluginGroupId;
+
+    @Parameter( property = "plugin.artifactId", readonly = true, required = true )
+    private String pluginArtifactId;
+
+    @Parameter( property = "plugin.version", readonly = true, required = true )
+    private String pluginVersion;
+
     /**
      * Performs compilation.
      * 
@@ -249,21 +258,7 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
-            if ( compilers.isEmpty() )
-            {
-                throw new CompilerException( "No compiler defined" );
-            }
-
-            if ( compilers.size() > 1 )
-            {
-                throw new CompilerException( "Too many compiles defined" );
-            }
-
-            Map.Entry<String, Compiler> compilerEntry = compilers.entrySet().iterator().next();
-            String compilerId = compilerEntry.getKey();
-            Compiler sbtCompiler = compilerEntry.getValue();
-
-            getLog().debug( "Using compiler '" + compilerId + "'." );
+            Compiler sbtCompiler = getSbtCompiler();
 
             String resolvedScalaVersion = getScalaVersion( sbtCompiler );
 
@@ -585,6 +580,111 @@ public abstract class AbstractSBTCompileMojo
             resolver.resolve( artifact, remoteRepos, localRepo );
         }
         return artifacts;
+    }
+
+    private Compiler getSbtCompiler()
+        throws MojoExecutionException
+    {
+        if ( compilers.isEmpty() )
+        {
+            StringBuilder sb = new StringBuilder( 1250 );
+            sb.append( "No compiler defined.\n\n" );
+            appendCompilerConfigurationHelpMessage( sb );
+            throw new MojoExecutionException( sb.toString() );
+        }
+
+        if ( compilers.size() > 1 )
+        {
+            StringBuilder sb = new StringBuilder( 1250 );
+            sb.append( "Too many compiles defined.\n\n" );
+            appendCompilerConfigurationHelpMessage( sb );
+            sb.append( "ONLY ONE!\n\n" );
+            throw new MojoExecutionException( sb.toString() );
+        }
+
+        Map.Entry<String, Compiler> compilerEntry = compilers.entrySet().iterator().next();
+        String compilerId = compilerEntry.getKey();
+        Compiler sbtCompiler = compilerEntry.getValue();
+
+        getLog().debug( String.format( "Using compiler \"%s\".", compilerId ) );
+
+        return sbtCompiler;
+    }
+
+    // Proper compiler configuration info helper methods
+
+    private void appendCompilerConfigurationHelpMessage( StringBuilder sb )
+    {
+        String suggestedSbtCompiler = getSuggestedSbtCompiler();
+
+        sb.append( "Add plugin dependency:\n\n" );
+        if ( suggestedSbtCompiler != null )
+        {
+            appendCompilerConfigurationHelpMessageForCompiler( sb, suggestedSbtCompiler );
+            sb.append( "\nor dependency containing your custom SBT " ).append( sbtVersion );
+            sb.append( " compiler implementation.\n" );
+        }
+        else
+        {
+            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-sbt013" );
+            sb.append( "\nfor SBT 0.13.x compatible compiler, or:\n\n" );
+            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-sbt012" );
+            sb.append( "\nfor SBT 0.12.x compatible compiler, or dependency containing your custom SBT" );
+            if ( sbtVersion != null )
+            {
+                sb.append( " " ).append( sbtVersion );
+            }
+            sb.append( " compiler implementation.\n" );
+        }
+        sb.append( "\n" );
+    }
+    
+    private String getSuggestedSbtCompiler()
+    {
+        String result = null;
+        if ( sbtVersion != null && !sbtVersion.isEmpty() )
+        {
+            if ( sbtVersion.startsWith( "0.13." ) )
+            {
+                result = "sbt-compiler-sbt013";
+            }
+            else if ( sbtVersion.startsWith( "0.12." ) )
+            {
+                result = "sbt-compiler-sbt012";
+            }
+        }
+        if ( result == null && "play2".equals( project.getPackaging() ) )
+        {
+            String playVersion = project.getProperties().getProperty( "play2.version" );
+            if ( playVersion != null && !playVersion.isEmpty() )
+            {
+                if ( playVersion.startsWith( "2.2." ) )
+                {
+                    result = "sbt-compiler-sbt013";
+                }
+                else if ( playVersion.startsWith( "2.1." ) )
+                {
+                    result = "sbt-compiler-sbt012";
+                }
+            }
+        }
+        return result;
+    }
+
+    private void appendCompilerConfigurationHelpMessageForCompiler( StringBuilder sb, String compilerId )
+    {
+        sb.append( "|    <plugin>\n" );
+        sb.append( "|        <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
+        sb.append( "|        <artifactId>" ).append ( pluginArtifactId ).append( "</artifactId>\n" );
+        sb.append( "|        <version>" ).append ( pluginVersion ).append( "</version>\n" );
+        sb.append( "|        <dependencies>\n" );
+        sb.append( "|            <dependency>\n" );
+        sb.append( "|                <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
+        sb.append( "|                <artifactId>" ).append( compilerId ).append( "</artifactId>\n" );
+        sb.append( "|                <version>" ).append ( pluginVersion ).append( "</version>\n" );
+        sb.append( "|            </dependency>\n" );
+        sb.append( "|        </dependencies>\n" );
+        sb.append( "|    </plugin>\n" );
     }
 
     private static class NonOptionalArtifactFilter
