@@ -185,7 +185,7 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1</version>
                     <configuration>
                         <targetJdk>1.5</targetJdk>
                     </configuration>
@@ -502,7 +502,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1</version>
                         <configuration>
                             <targetJdk>1.5</targetJdk>
                             <includeTests>true</includeTests>
