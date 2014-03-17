@@ -577,13 +577,7 @@ public abstract class AbstractSBTCompileMojo
     {
         AndArtifactFilter filter = new AndArtifactFilter();
         filter.add( new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-        filter.add( new ArtifactFilter()
-        {
-            public boolean include( Artifact artifact )
-            {
-                return !artifact.isOptional();
-            }
-        } );
+        filter.add( new NonOptionalArtifactFilter() );
         // TODO follow the dependenciesManagement and override rules
         Set<Artifact> artifacts = theProject.createArtifacts( factory, Artifact.SCOPE_RUNTIME, filter );
         for ( Artifact artifact : artifacts )
@@ -591,6 +585,15 @@ public abstract class AbstractSBTCompileMojo
             resolver.resolve( artifact, remoteRepos, localRepo );
         }
         return artifacts;
+    }
+
+    private static class NonOptionalArtifactFilter
+        implements ArtifactFilter
+    {
+        public boolean include( Artifact artifact )
+        {
+            return !artifact.isOptional();
+        }
     }
 
 }
