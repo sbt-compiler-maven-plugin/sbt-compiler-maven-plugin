@@ -88,9 +88,23 @@ under the License.
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <configuration>
+                        <excludeFilterFile>${basedir}/findbugs-exclude.xml</excludeFilterFile>
+                    </configuration>
+                </plugin>
+
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
+                        <sourcepath>${project.basedir}/src/main/java</sourcepath>
+                        <!-- does not work properly
+                        <sourceFileExcludes>
+                            <sourceFileExclude>com/google/code/sbt/HelpMojo.java</sourceFileExclude>
+                        </sourceFileExcludes>
+                        -->
                         <links>
                             <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
                             <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
@@ -135,6 +149,16 @@ under the License.
                         </execution>
                     </executions>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -151,5 +175,62 @@ under the License.
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>fullsite</id>
+
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <configuration>
+                            <excludeFilterFile>${basedir}/findbugs-exclude.xml</excludeFilterFile>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <sourcepath>${project.basedir}/src/main/java</sourcepath>
+                            <!-- does not work properly
+                            <sourceFileExcludes>
+                                <sourceFileExclude>com/google/code/sbt/HelpMojo.java</sourceFileExclude>
+                            </sourceFileExcludes>
+                            -->
+                            <links>
+                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
+                            </links>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
 
 </project>
