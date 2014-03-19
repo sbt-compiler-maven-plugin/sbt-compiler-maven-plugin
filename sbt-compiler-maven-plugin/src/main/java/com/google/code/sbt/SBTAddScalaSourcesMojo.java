@@ -72,7 +72,7 @@ public class SBTAddScalaSourcesMojo
         if ( testScalaPath.isDirectory() )
         {
             String testScalaPathStr = testScalaPath.getAbsolutePath();
-            if ( !project.getCompileSourceRoots().contains( testScalaPathStr ) )
+            if ( !project.getTestCompileSourceRoots().contains( testScalaPathStr ) )
             {
                 project.addTestCompileSourceRoot( testScalaPathStr );
                 getLog().debug( "Added test source directory: " + testScalaPathStr );
