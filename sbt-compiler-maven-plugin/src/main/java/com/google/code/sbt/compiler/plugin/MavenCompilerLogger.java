@@ -46,7 +46,7 @@ public class MavenCompilerLogger
         return mavenLogger.isDebugEnabled();
     }
 
-    public void debug( CharSequence content )
+    public void debug( String content )
     {
         mavenLogger.debug( content );
     }
@@ -61,7 +61,7 @@ public class MavenCompilerLogger
         return mavenLogger.isInfoEnabled();
     }
 
-    public void info( CharSequence content )
+    public void info( String content )
     {
         mavenLogger.info( content );
     }
@@ -71,7 +71,7 @@ public class MavenCompilerLogger
         return mavenLogger.isWarnEnabled();
     }
 
-    public void warn( CharSequence content )
+    public void warn( String content )
     {
         mavenLogger.warn( content );
     }
@@ -81,7 +81,7 @@ public class MavenCompilerLogger
         return mavenLogger.isErrorEnabled();
     }
 
-    public void error( CharSequence content )
+    public void error( String content )
     {
         mavenLogger.error( content );
     }

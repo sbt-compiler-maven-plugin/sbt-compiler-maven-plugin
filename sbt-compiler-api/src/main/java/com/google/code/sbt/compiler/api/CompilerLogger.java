@@ -36,7 +36,7 @@ public interface CompilerLogger
      *
      * @param content debug message
      */
-    void debug( CharSequence content );
+    void debug( String content );
 
     /**
      * Sends a throwable in the <b>debug</b> log level.
@@ -59,7 +59,7 @@ public interface CompilerLogger
      *
      * @param content info message
      */
-    void info( CharSequence content );
+    void info( String content );
 
     /**
      * Returns true if <b>warn</b> log level is enabled.
@@ -73,7 +73,7 @@ public interface CompilerLogger
      *
      * @param content warning message
      */
-    void warn( CharSequence content );
+    void warn( String content );
 
     /**
      * Returns true if <b>error</b> log level is enabled.
@@ -87,6 +87,6 @@ public interface CompilerLogger
      *
      * @param content error message
      */
-    void error( CharSequence content );
+    void error( String content );
 
 }
