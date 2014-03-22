@@ -102,7 +102,7 @@ under the License.
                         <sourcepath>${project.basedir}/src/main/java</sourcepath>
                         <!-- does not work properly
                         <sourceFileExcludes>
-                            <sourceFileExclude>com/google/code/sbt/HelpMojo.java</sourceFileExclude>
+                            <sourceFileExclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</sourceFileExclude>
                         </sourceFileExcludes>
                         -->
                         <links>
@@ -155,7 +155,7 @@ under the License.
                     <artifactId>maven-pmd-plugin</artifactId>
                     <configuration>
                         <excludes>
-                            <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                            <exclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -187,7 +187,7 @@ under the License.
                         <artifactId>maven-jxr-plugin</artifactId>
                         <configuration>
                             <excludes>
-                                <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                                <exclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -207,7 +207,7 @@ under the License.
                             <sourcepath>${project.basedir}/src/main/java</sourcepath>
                             <!-- does not work properly
                             <sourceFileExcludes>
-                                <sourceFileExclude>com/google/code/sbt/HelpMojo.java</sourceFileExclude>
+                                <sourceFileExclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</sourceFileExclude>
                             </sourceFileExcludes>
                             -->
                             <links>
@@ -224,7 +224,7 @@ under the License.
                         <artifactId>maven-pmd-plugin</artifactId>
                         <configuration>
                             <excludes>
-                                <exclude>com/google/code/sbt/HelpMojo.java</exclude>
+                                <exclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
