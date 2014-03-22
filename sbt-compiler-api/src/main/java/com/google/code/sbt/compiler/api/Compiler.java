@@ -24,16 +24,39 @@ package com.google.code.sbt.compiler.api;
  */
 public interface Compiler
 {
+    /**
+     * Returns default Scala version for the compiler.
+     * 
+     * This default value is used when none of the below options is true:
+     * <ul>
+     * <li>plugin's <code>scalaVersion</code> configuration parameter is defined,</li>
+     * <li>project's <code>scala.version</code> property is defined,</li>
+     * <li>project contains <code>org.scala-lang:scala-library</code> dependency.</li>
+     * </ul>
+     *
+     * @return default Scala version for the compiler
+     */
     String getDefaultScalaVersion();
 
+    /**
+     * Returns default SBT version for the compiler.
+     * 
+     * This default value is used when none of the below options is true:
+     * <ul>
+     * <li>plugin's <code>sbtVersion</code> configuration parameter is defined,</li>
+     * <li>project's <code>sbt.version</code> property is defined,</li>
+     * </ul>
+     *
+     * @return default SBT version for the compiler
+     */
     String getDefaultSbtVersion();
 
     /**
      * Performs the compilation of the project.
      * 
-     * @param configuration   the configuration description of the compilation
-     *   to perform
-     * @throws CompilerException if compilation exception occurs.
+     * @param configuration SBT compilation configuration
+     * 
+     * @throws CompilerException if compilation fails
      */
     void performCompile( CompilerConfiguration configuration )
         throws CompilerException;

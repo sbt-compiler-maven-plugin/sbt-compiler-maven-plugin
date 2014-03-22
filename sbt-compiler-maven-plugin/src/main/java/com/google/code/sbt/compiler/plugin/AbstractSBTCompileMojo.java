@@ -96,27 +96,31 @@ public abstract class AbstractSBTCompileMojo
     private static final String XSBTI_ARTIFACT_ID = "sbt-interface";
 
     /**
-     * Scala Compiler version.
-     * 
-     * If not specified:
-     * a) version of project's org.scala-lang:scala-library dependency is used
-     * b) if org.scala-lang:scala-library dependency does not exist in the project DEFAULT_SCALA_VERSION is used
+     * Forced Scala version.<br>
+     * <br>
+     * If specified, this version of Scala compiler is used for compilation.<br>
+     * If not specified, version of project's <b>{@code org.scala-lang:scala-library}</b> dependency is used.<br>
+     * If there is no <b>{@code org.scala-lang:scala-library}</b> dependency in the project (in Java only projects),
+     * selected compiler's {@link Compiler#getDefaultScalaVersion()} is used. 
      * 
      * @since 1.0.0
      */
     @Parameter( property = "scala.version" )
-    private String scalaVersion;
+    protected String scalaVersion;
 
     /**
-     * SBT version
+     * Forced SBT version.<br>
+     * <br>
+     * If specified, this version of SBT compiler is used for compilation.<br>
+     * If not specified, selected compiler's {@link Compiler#getDefaultSbtVersion()} is used. 
      * 
      * @since 1.0.0
      */
     @Parameter( property = "sbt.version" )
-    private String sbtVersion;
+    protected String sbtVersion;
 
     /**
-     * The -encoding argument for Scala and Java compilers.
+     * Scala and Java source files encoding.
      */
     @Parameter( property = "project.build.sourceEncoding" )
     protected String sourceEncoding;
@@ -138,7 +142,7 @@ public abstract class AbstractSBTCompileMojo
     protected String scalacOptions;
 
     /**
-     * <i>Maven Internal</i>: Project to interact with.
+     * Maven project to interact with.
      */
     @Component
     protected MavenProject project;
@@ -150,7 +154,7 @@ public abstract class AbstractSBTCompileMojo
     protected MavenProjectBuilder mavenProjectBuilder;
 
     /**
-     * All projects in the reactor.
+     * All Maven projects in the reactor.
      */
     @Parameter( defaultValue = "${reactorProjects}", required = true, readonly = true )
     protected List<MavenProject> reactorProjects;
@@ -174,7 +178,7 @@ public abstract class AbstractSBTCompileMojo
     protected ArtifactRepository localRepo;
 
     /**
-     * List of Remote Repositories used by the resolver
+     * Remote repositories used by the resolver
      */
     @Parameter( property = "project.remoteArtifactRepositories", readonly = true, required = true )
     protected List<?> remoteRepos;
@@ -197,10 +201,8 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Performs compilation.
      * 
-     * @throws MojoExecutionException if an unexpected problem occurs.
-     * Throwing this exception causes a "BUILD ERROR" message to be displayed.
-     * @throws MojoFailureException if an expected problem (such as a compilation failure) occurs.
-     * Throwing this exception causes a "BUILD FAILURE" message to be displayed.
+     * @throws MojoExecutionException if unexpected problem occurs
+     * @throws MojoFailureException if expected problem (such as compilation failure) occurs
      */
     public void execute()
         throws MojoExecutionException, MojoFailureException
@@ -224,11 +226,11 @@ public abstract class AbstractSBTCompileMojo
     }
 
     /**
-     * Actual compilation code, to be overridden.
+     * Performs compilation.
      * 
-     * @throws MojoExecutionException if an unexpected problem occurs.
-     * @throws MojoFailureException if an expected problem (such as a compilation failure) occurs.
-     * @throws IOException if an IO exception occurs.
+     * @throws MojoExecutionException if unexpected problem occurs
+     * @throws MojoFailureException if expected problem (such as compilation failure) occurs
+     * @throws IOException if IO exception occurs
      */
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException, IOException
@@ -367,16 +369,16 @@ public abstract class AbstractSBTCompileMojo
     protected abstract List<String> getCompileSourceRoots();
 
     /**
-     * A list of inclusion filters for the compiler.
+     * Returns source inclusion filters for the compiler.
      * 
-     * @return inclusion filters
+     * @return source inclusion filters
      */
     protected abstract Set<String> getSourceIncludes();
     
     /**
-     * A list of exclusion filters for the compiler.
+     * Returns source exclusion filters for the compiler.
      * 
-     * @return exclusion filters
+     * @return source exclusion filters
      */
     protected abstract Set<String> getSourceExcludes();
     
@@ -388,16 +390,16 @@ public abstract class AbstractSBTCompileMojo
     protected abstract File getOutputDirectory();
 
     /**
-     * Returns incremental compilation analysis cache file.
+     * Returns SBT incremental compilation analysis cache file location for this project.
      * 
      * @return analysis cache file
      */
     protected abstract File getAnalysisCacheFile();
 
     /**
-     * Returns incremental compilation analyses map for reactor projects.
+     * Returns SBT incremental compilation analysis cache file locations map for all reactor projects.
      * 
-     * @return analysis cache map
+     * @return analysis cache files map
      */
     protected abstract Map<File, File> getAnalysisCacheMap();
 
@@ -491,7 +493,7 @@ public abstract class AbstractSBTCompileMojo
     }
 
     /**
-     * Returns incremental main compilation analysis cache file location for a project.
+     * Returns SBT incremental main compilation analysis cache file location for a project.
      * 
      * @param p Maven project
      * @return analysis cache file location
@@ -502,7 +504,7 @@ public abstract class AbstractSBTCompileMojo
     }
 
     /**
-     * Returns incremental test compilation analysis cache file location for a project.
+     * Returns SBT incremental test compilation analysis cache file location for a project.
      * 
      * @param p Maven project
      * @return analysis cache file location

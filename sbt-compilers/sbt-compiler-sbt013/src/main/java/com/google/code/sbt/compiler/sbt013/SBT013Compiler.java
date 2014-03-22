@@ -33,7 +33,7 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.13.x compiler (uses Zinc 0.3.0)
+ * SBT 0.13.x compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.0)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -47,29 +47,20 @@ public class SBT013Compiler
     private static final String COMPILE_ORDER = "mixed";
 
     /**
-     * Run compilation in forked JVM.
+     * Run javac compilation in forked JVM.
      */
     private static final boolean FORK_JAVA = false;
 
-    /**
-     * {@inheritDoc}
-     */
     public String getDefaultScalaVersion()
     {
         return "2.10.3";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getDefaultSbtVersion()
     {
         return "0.13.0";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {

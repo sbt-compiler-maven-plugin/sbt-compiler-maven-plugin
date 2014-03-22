@@ -28,7 +28,7 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.12.x compiler (uses Zinc 0.2.5)
+ * SBT 0.12.x compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.2.5)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -41,25 +41,16 @@ public class SBT012Compiler
      */
     private static final String COMPILE_ORDER = "mixed";
 
-    /**
-     * {@inheritDoc}
-     */
     public String getDefaultScalaVersion()
     {
         return "2.10.0";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getDefaultSbtVersion()
     {
         return "0.12.2";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {

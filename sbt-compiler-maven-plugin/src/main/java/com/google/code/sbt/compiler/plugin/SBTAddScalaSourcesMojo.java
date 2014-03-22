@@ -26,10 +26,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Add default Scala source roots, if they exist and are not already added.
- * 
- * - adds src/main/scala to Maven project as compile source root
- * - adds src/test/scala to Maven project as test compile source root
+ * Add default Scala source roots, if they exist and are not already added.<br/><br/>
+ * Adds:
+ * <ul>
+ * <li>{@code src/main/scala} as compile source root</li>
+ * <li>{@code src/test/scala} as test compile source root</li>
+ * </ul>
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  * @since 1.0.0
@@ -40,13 +42,18 @@ public class SBTAddScalaSourcesMojo
 {
 
     /**
-     * <i>Maven Internal</i>: Project to interact with.
+     * Maven project to interact with.
      */
     @Component
     protected MavenProject project;
 
     /**
-     * Adds Scala sources.
+     * Adds default Scala sources locations to Maven project.
+     * 
+     * <ul>
+     * <li>{@code src/main/scala} is added to project's compile source roots</li>
+     * <li>{@code src/test/scala} is added to project's test compile source roots</li>
+     * </ul>
      */
     public void execute()
     {

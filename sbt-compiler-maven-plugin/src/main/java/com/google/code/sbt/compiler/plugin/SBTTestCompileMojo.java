@@ -45,32 +45,31 @@ public class SBTTestCompileMojo
     extends AbstractSBTCompileMojo
 {
     /**
-     * A list of inclusion filters for the compiler.
+     * Test source inclusion filters for the compiler.
      * 
      * @since 1.0.0
      */
     @Parameter
-    private Set<String> testIncludes = new HashSet<String>();
+    protected Set<String> testIncludes = new HashSet<String>();
 
     /**
-     * A list of exclusion filters for the compiler.
+     * Test source exclusion filters for the compiler.
      * 
      * @since 1.0.0
      */
     @Parameter
-    private Set<String> testExcludes = new HashSet<String>();
+    protected Set<String> testExcludes = new HashSet<String>();
 
     /**
-     * Set this to 'true' to bypass compilation of test sources.
-     * Its use is NOT RECOMMENDED, but quite convenient on occasion.
+     * Set this to <b>{@code true}</b> to bypass compilation of test sources.
      * 
      * @since 1.0.0
      */
     @Parameter( property = "maven.test.skip" )
-    private boolean skipTest;
+    protected boolean skipTest;
 
     /**
-     * The source directories containing the test-source to be compiled.
+     * The source directories containing Scala and Java test sources to be compiled.
      */
     @Parameter( defaultValue = "${project.testCompileSourceRoots}", readonly = true, required = true )
     private List<String> compileSourceRoots;

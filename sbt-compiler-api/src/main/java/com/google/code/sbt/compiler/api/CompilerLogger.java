@@ -18,68 +18,74 @@
 package com.google.code.sbt.compiler.api;
 
 /**
- * This interface supplies the API for providing feedback to the user from the <code>Mojo</code>, using standard
- * <code>Maven</code> channels.
- * <br/>
+ * Logger providing compilation feedback.
  *
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
 public interface CompilerLogger
 {
     /**
-     * @return true if the <b>debug</b> error level is enabled
+     * Returns true if <b>debug</b> log level is enabled.
+     * 
+     * @return true if <b>debug</b> log level is enabled
      */
     boolean isDebugEnabled();
 
     /**
-     * Send a message to the user in the <b>debug</b> error level.
+     * Sends a message in <b>debug</b> log level.
      *
-     * @param content
+     * @param content debug message
      */
     void debug( CharSequence content );
 
     /**
-     * Send an exception to the user in the <b>debug</b> error level.
+     * Sends a throwable in the <b>debug</b> log level.
      * <br/>
-     * The stack trace for this exception will be output when this error level is enabled.
+     * The stack trace for this throwable will be output.
      *
-     * @param error
+     * @param throwable debug throwable
      */
-    void debug( Throwable error );
+    void debug( Throwable throwable );
 
     /**
-     * @return true if the <b>info</b> error level is enabled
+     * Returns true if <b>info</b> log level is enabled.
+     * 
+     * @return true if <b>info</b> log level is enabled
      */
     boolean isInfoEnabled();
 
     /**
-     * Send a message to the user in the <b>info</b> error level.
+     * Sends a message in <b>info</b> log level.
      *
-     * @param content
+     * @param content info message
      */
     void info( CharSequence content );
 
     /**
-     * @return true if the <b>warn</b> error level is enabled
+     * Returns true if <b>warn</b> log level is enabled.
+     * 
+     * @return true if <b>warn</b> log level is enabled
      */
     boolean isWarnEnabled();
 
     /**
-     * Send a message to the user in the <b>warn</b> error level.
+     * Sends a message in <b>warn</b> log level.
      *
-     * @param content
+     * @param content warning message
      */
     void warn( CharSequence content );
 
     /**
-     * @return true if the <b>error</b> error level is enabled
+     * Returns true if <b>error</b> log level is enabled.
+     * 
+     * @return true if <b>error</b> log level is enabled
      */
     boolean isErrorEnabled();
 
     /**
-     * Send a message to the user in the <b>error</b> error level.
+     * Sends a message in the <b>error</b> log level.
      *
-     * @param content
+     * @param content error message
      */
     void error( CharSequence content );
 

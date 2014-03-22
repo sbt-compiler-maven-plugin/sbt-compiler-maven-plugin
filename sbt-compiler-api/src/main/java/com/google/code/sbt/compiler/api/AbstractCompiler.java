@@ -22,13 +22,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * ...
+ * An abstract base class for SBT compilers.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
 public abstract class AbstractCompiler
     implements Compiler
 {
+    /**
+     * Returns merged <code>scalaOptions</code> and <code>sourceEncoding</code> configuration parameters.
+     * 
+     * @param configuration compiler configuration object
+     * @return merged parameters
+     */
     protected List<String> resolveScalacOptions( CompilerConfiguration configuration )
     {
         String scalacOptions = configuration.getScalacOptions();
@@ -42,6 +48,12 @@ public abstract class AbstractCompiler
         return result;
     }
 
+    /**
+     * Returns merged <code>javacOptions</code> and <code>sourceEncoding</code> configuration parameters.
+     * 
+     * @param configuration compiler configuration object
+     * @return merged parameters
+     */
     protected List<String> resolveJavacOptions( CompilerConfiguration configuration )
     {
         String javacOptions = configuration.getJavacOptions();

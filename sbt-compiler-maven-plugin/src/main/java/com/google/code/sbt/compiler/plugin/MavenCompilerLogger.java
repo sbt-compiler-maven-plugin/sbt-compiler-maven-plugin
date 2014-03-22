@@ -22,90 +22,68 @@ import org.apache.maven.plugin.logging.Log;
 import com.google.code.sbt.compiler.api.CompilerLogger;
 
 /**
- * Maven org.apache.maven.plugin.logging.Log wrapper implementing CompilerLogger interface.
+ * Maven {@link org.apache.maven.plugin.logging.Log} wrapper implementing {@link CompilerLogger} interface.
  *
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
 public class MavenCompilerLogger
     implements CompilerLogger
 {
-    private Log delegate;
-
-    public MavenCompilerLogger(Log delegate)
-    {
-        this.delegate = delegate;
-    }
+    private Log mavenLogger;
 
     /**
-     * {@inheritDoc}
+     * Creates {@link CompilerLogger} wrapper around Maven {@link Log} delegate.
+     * 
+     * @param mavenLogger Maven {@link Log} delegate
      */
+    public MavenCompilerLogger( Log mavenLogger )
+    {
+        this.mavenLogger = mavenLogger;
+    }
+
     public boolean isDebugEnabled()
     {
-        return delegate.isDebugEnabled();
+        return mavenLogger.isDebugEnabled();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void debug( CharSequence content )
     {
-        delegate.debug( content );
+        mavenLogger.debug( content );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void debug( Throwable throwable )
     {
-        delegate.debug( throwable );
+        mavenLogger.debug( throwable );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isInfoEnabled()
     {
-        return delegate.isInfoEnabled();
+        return mavenLogger.isInfoEnabled();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void info( CharSequence content )
     {
-        delegate.info( content );
+        mavenLogger.info( content );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isWarnEnabled()
     {
-        return delegate.isWarnEnabled();
+        return mavenLogger.isWarnEnabled();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void warn( CharSequence content )
     {
-        delegate.warn( content );
+        mavenLogger.warn( content );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isErrorEnabled()
     {
-        return delegate.isErrorEnabled();
+        return mavenLogger.isErrorEnabled();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void error( CharSequence content )
     {
-        delegate.error( content );
+        mavenLogger.error( content );
     }
 
 }

@@ -17,18 +17,32 @@
 
 package com.google.code.sbt.compiler.api;
 
-//import java.io.File;
-
+/**
+ * Exception thrown if compilation fails.
+ * 
+ * @see Compiler#performCompile(CompilerConfiguration)
+ */
 public class CompilerException
     extends Exception
 {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs a new exception with the specified detail message.
+     *
+     * @param message exception detail message
+     */
     public CompilerException( String message )
     {
         super( message );
     }
 
+    /**
+     * Constructs a new exception with the specified detail message and cause.
+     *
+     * @param message exception detail message
+     * @param cause exception cause (nested throwable)
+     */
     public CompilerException( String message, Throwable cause )
     {
         super( message, cause );

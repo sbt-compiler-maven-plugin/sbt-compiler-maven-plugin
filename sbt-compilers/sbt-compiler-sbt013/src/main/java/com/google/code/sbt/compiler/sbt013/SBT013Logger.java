@@ -23,7 +23,7 @@ import xsbti.F0;
 import xsbti.Logger;
 
 /**
- * CompilerLogger wrapper implementing SBT Logger interface.
+ * {@link CompilerLogger} wrapper implementing SBT Logger interface.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -34,12 +34,13 @@ public class SBT013Logger
     CompilerLogger compilerLogger;
 
     /**
-     * Creates SBT Logger wrapper around CompilerLogger implementation.
-     * @param l CompilerLogger delegate
+     * Creates SBT Logger wrapper around given {@link CompilerLogger} implementation.
+     * 
+     * @param compilerLogger {@link CompilerLogger} delegate
      */
-    public SBT013Logger( CompilerLogger l )
+    public SBT013Logger( CompilerLogger compilerLogger )
     {
-        this.compilerLogger = l;
+        this.compilerLogger = compilerLogger;
     }
 
     /**
@@ -57,8 +58,8 @@ public class SBT013Logger
     }
 
     /**
-     * Send a message to the user in the <b>wanr</b> error level
-     * if the <b>wanr</b> error level is enabled.
+     * Send a message to the user in the <b>warn</b> error level
+     * if the <b>warn</b> error level is enabled.
      *
      * @param msg message
      */

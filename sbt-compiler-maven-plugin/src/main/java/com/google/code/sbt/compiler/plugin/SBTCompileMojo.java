@@ -45,30 +45,29 @@ public class SBTCompileMojo
     extends AbstractSBTCompileMojo
 {
     /**
-     * A list of inclusion filters for the compiler.
+     * Source inclusion filters for the compiler.
      * 
      * @since 1.0.0
      */
     @Parameter
-    private Set<String> includes = new HashSet<String>();
+    protected Set<String> includes = new HashSet<String>();
 
     /**
-     * A list of exclusion filters for the compiler.
+     * Source exclusion filters for the compiler.
      * 
      * @since 1.0.0
      */
     @Parameter
-    private Set<String> excludes = new HashSet<String>();
+    protected Set<String> excludes = new HashSet<String>();
 
     /**
-     * Set this to 'true' to bypass compilation of main sources.
-     * Its use is NOT RECOMMENDED, but quite convenient on occasion.
+     * Set this to <b>{@code true}</b> to bypass compilation of main sources.
      */
     @Parameter ( property = "maven.main.skip" )
-    private boolean skipMain;
+    protected boolean skipMain;
 
     /**
-     * The source directories containing the sources to be compiled.
+     * The source directories containing Scala and Java main sources to be compiled.
      */
     @Parameter( defaultValue = "${project.compileSourceRoots}", readonly = true, required = true )
     private List<String> compileSourceRoots;
