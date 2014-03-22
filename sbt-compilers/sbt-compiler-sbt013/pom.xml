@@ -38,6 +38,14 @@ under the License.
             <artifactId>zinc</artifactId>
             <version>0.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.oracle.java</groupId>
+            <artifactId>tools</artifactId>
+            <version>undefined</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>
