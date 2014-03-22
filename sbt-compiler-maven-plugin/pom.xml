@@ -32,6 +32,10 @@ under the License.
     <name>SBT Compiler Maven Plugin</name>
     <description>SBT Compiler Maven Plugin</description>
 
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
+
     <properties>
         <maven.version>2.2.1</maven.version>
         <maven-plugin-plugin.version>3.2</maven-plugin-plugin.version>
@@ -99,12 +103,8 @@ under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
-                        <sourcepath>${project.basedir}/src/main/java</sourcepath>
-                        <!-- does not work properly
-                        <sourceFileExcludes>
-                            <sourceFileExclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</sourceFileExclude>
-                        </sourceFileExcludes>
-                        -->
+                        <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../sbt-compiler-api/src/main/java</sourcepath>
+                        <subpackages>com.google.code.sbt.compiler.plugin</subpackages>
                         <links>
                             <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
                             <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
@@ -178,10 +178,58 @@ under the License.
 
     <profiles>
         <profile>
+            <id>publicsite</id> <!-- site version to be uploaded -->
+
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../sbt-compiler-api/src/main/java</sourcepath>
+                            <subpackages>com.google.code.sbt.compiler.plugin</subpackages>
+                            <links>
+                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
+                            </links>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <profile>
             <id>fullsite</id>
 
             <reporting>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../sbt-compiler-api/src/main/java</sourcepath>
+                            <subpackages>com.google.code.sbt.compiler.plugin</subpackages>
+                            <links>
+                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
+                                <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
+                            </links>
+                        </configuration>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jxr-plugin</artifactId>
@@ -197,25 +245,6 @@ under the License.
                         <artifactId>findbugs-maven-plugin</artifactId>
                         <configuration>
                             <excludeFilterFile>${basedir}/findbugs-exclude.xml</excludeFilterFile>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <sourcepath>${project.basedir}/src/main/java</sourcepath>
-                            <!-- does not work properly
-                            <sourceFileExcludes>
-                                <sourceFileExclude>com/google/code/sbt/compiler/plugin/HelpMojo.java</sourceFileExclude>
-                            </sourceFileExcludes>
-                            -->
-                            <links>
-                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
-                                <link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</link>
-                                <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
-                                <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
-                            </links>
                         </configuration>
                     </plugin>
 
