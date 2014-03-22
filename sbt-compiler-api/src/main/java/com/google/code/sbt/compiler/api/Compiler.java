@@ -15,23 +15,27 @@
  * under the License.
  */
 
-package com.google.code.sbt.compiler;
+package com.google.code.sbt.compiler.api;
 
-//import java.io.File;
-
-public class CompilerException
-    extends Exception
+/**
+ * SBT compiler interface.
+ * 
+ * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
+ */
+public interface Compiler
 {
-    private static final long serialVersionUID = 1L;
+    String getDefaultScalaVersion();
 
-    public CompilerException( String message )
-    {
-        super( message );
-    }
+    String getDefaultSbtVersion();
 
-    public CompilerException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
+    /**
+     * Performs the compilation of the project.
+     * 
+     * @param configuration   the configuration description of the compilation
+     *   to perform
+     * @throws CompilerException if compilation exception occurs.
+     */
+    void performCompile( CompilerConfiguration configuration )
+        throws CompilerException;
 
 }

@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package com.google.code.sbt.compiler;
+package com.google.code.sbt.compiler.api;
 
 /**
  * This interface supplies the API for providing feedback to the user from the <code>Mojo</code>, using standard

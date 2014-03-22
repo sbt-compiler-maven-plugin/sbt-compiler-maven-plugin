@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package com.google.code.sbt;
+package com.google.code.sbt.compiler.plugin;
 
 import java.io.File;
 

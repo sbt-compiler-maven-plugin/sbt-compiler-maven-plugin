@@ -15,11 +15,11 @@
  * under the License.
  */
 
-package com.google.code.sbt;
+package com.google.code.sbt.compiler.plugin;
 
 import org.apache.maven.plugin.logging.Log;
 
-import com.google.code.sbt.compiler.CompilerLogger;
+import com.google.code.sbt.compiler.api.CompilerLogger;
 
 /**
  * Maven org.apache.maven.plugin.logging.Log wrapper implementing CompilerLogger interface.

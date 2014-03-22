@@ -17,7 +17,7 @@
 
 package com.google.code.sbt.compiler.sbt013;
 
-import com.google.code.sbt.compiler.CompilerLogger;
+import com.google.code.sbt.compiler.api.CompilerLogger;
 
 import xsbti.F0;
 import xsbti.Logger;

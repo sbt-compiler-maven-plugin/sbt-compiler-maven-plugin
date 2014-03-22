@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package com.google.code.sbt;
+package com.google.code.sbt.compiler.plugin;
 
 import java.io.IOException;
 import java.io.File;
@@ -48,9 +48,9 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
-import com.google.code.sbt.compiler.Compiler;
-import com.google.code.sbt.compiler.CompilerConfiguration;
-import com.google.code.sbt.compiler.CompilerException;
+import com.google.code.sbt.compiler.api.Compiler;
+import com.google.code.sbt.compiler.api.CompilerConfiguration;
+import com.google.code.sbt.compiler.api.CompilerException;
 
 /**
  * Abstract base class for SBT compilation mojos.

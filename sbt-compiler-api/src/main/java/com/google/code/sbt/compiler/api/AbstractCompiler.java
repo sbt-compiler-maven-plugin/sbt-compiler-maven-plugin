@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package com.google.code.sbt.compiler;
+package com.google.code.sbt.compiler.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;

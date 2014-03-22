@@ -17,9 +17,9 @@
 
 package com.google.code.sbt.compiler.sbt012;
 
-import com.google.code.sbt.compiler.AbstractCompiler;
-import com.google.code.sbt.compiler.CompilerConfiguration;
-import com.google.code.sbt.compiler.CompilerException;
+import com.google.code.sbt.compiler.api.AbstractCompiler;
+import com.google.code.sbt.compiler.api.CompilerConfiguration;
+import com.google.code.sbt.compiler.api.CompilerException;
 
 import org.codehaus.plexus.component.annotations.Component;
 
@@ -32,7 +32,7 @@ import com.typesafe.zinc.Setup;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.Compiler.class, hint = "sbt012", description = "SBT 0.12.x compiler (uses Zinc 0.2.5)")
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt012", description = "SBT 0.12.x compiler (uses Zinc 0.2.5)")
 public class SBT012Compiler
     extends AbstractCompiler
 {
