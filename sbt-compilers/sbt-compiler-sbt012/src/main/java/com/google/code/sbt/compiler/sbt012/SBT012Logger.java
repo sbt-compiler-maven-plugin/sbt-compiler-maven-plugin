@@ -49,6 +49,7 @@ public class SBT012Logger
      *
      * @param msg message
      */
+    @Override
     public void error( F0<String> msg )
     {
         if ( compilerLogger.isErrorEnabled() )
@@ -63,6 +64,7 @@ public class SBT012Logger
      *
      * @param msg message
      */
+    @Override
     public void warn( F0<String> msg )
     {
         if ( compilerLogger.isWarnEnabled() )
@@ -77,6 +79,7 @@ public class SBT012Logger
      *
      * @param msg message
      */
+    @Override
     public void info( F0<String> msg )
     {
         if ( compilerLogger.isInfoEnabled() )
@@ -91,6 +94,7 @@ public class SBT012Logger
      *
      * @param msg message
      */
+    @Override
     public void debug( F0<String> msg )
     {
         if ( compilerLogger.isDebugEnabled() )
@@ -105,6 +109,7 @@ public class SBT012Logger
      *
      * @param exception exception thrown
      */
+    @Override
     public void trace( F0<Throwable> exception )
     {
         if ( compilerLogger.isDebugEnabled() )

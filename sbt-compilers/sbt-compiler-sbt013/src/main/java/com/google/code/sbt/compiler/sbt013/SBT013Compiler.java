@@ -37,7 +37,7 @@ import com.typesafe.zinc.Setup;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt013", description = "SBT 0.13.x compiler (uses Zinc 0.3.0)")
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt013", description = "SBT 0.13.x compiler (uses Zinc 0.3.0)" )
 public class SBT013Compiler
     extends AbstractCompiler
 {
@@ -51,16 +51,19 @@ public class SBT013Compiler
      */
     private static final boolean FORK_JAVA = false;
 
+    @Override
     public String getDefaultScalaVersion()
     {
         return "2.10.3";
     }
 
+    @Override
     public String getDefaultSbtVersion()
     {
         return "0.13.0";
     }
 
+    @Override
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {

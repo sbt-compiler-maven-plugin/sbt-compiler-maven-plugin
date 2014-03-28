@@ -32,7 +32,7 @@ import com.typesafe.zinc.Setup;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt012", description = "SBT 0.12.x compiler (uses Zinc 0.2.5)")
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt012", description = "SBT 0.12.x compiler (uses Zinc 0.2.5)" )
 public class SBT012Compiler
     extends AbstractCompiler
 {
@@ -41,16 +41,19 @@ public class SBT012Compiler
      */
     private static final String COMPILE_ORDER = "mixed";
 
+    @Override
     public String getDefaultScalaVersion()
     {
         return "2.10.0";
     }
 
+    @Override
     public String getDefaultSbtVersion()
     {
         return "0.12.2";
     }
 
+    @Override
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {
