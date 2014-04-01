@@ -19,13 +19,18 @@ package com.google.code.sbt.compiler.plugin;
 
 import java.io.IOException;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -260,26 +265,32 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
-            Compiler sbtCompiler = getSbtCompiler();
-
+            Compiler sbtCompiler = null;
+            if ( !compilers.isEmpty() )
+            {
+                sbtCompiler = getDeclaredSbtCompiler();
+            }
+            else
+            {
+                sbtCompiler = getWellKnownSbtCompiler();
+            }
+            
             String resolvedScalaVersion = getScalaVersion( sbtCompiler );
 
             Artifact scalaLibraryArtifact =
                 getResolvedArtifact( SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, resolvedScalaVersion );
             if ( scalaLibraryArtifact == null )
             {
-                throw new MojoExecutionException(
-                                                  String.format( "Required %s:%s:%s:jar artifact not found",
+                throw new MojoExecutionException( String.format( "Required %s:%s:%s:jar artifact not found",
                                                                  SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID,
                                                                  resolvedScalaVersion ) );
             }
-            
+
             Artifact scalaCompilerArtifact =
                 getResolvedArtifact( SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID, resolvedScalaVersion );
             if ( scalaCompilerArtifact == null )
             {
-                throw new MojoExecutionException(
-                                                  String.format( "Required %s:%s:%s:jar artifact not found",
+                throw new MojoExecutionException( String.format( "Required %s:%s:%s:jar artifact not found",
                                                                  SCALA_GROUPID, SCALA_COMPILER_ARTIFACTID,
                                                                  resolvedScalaVersion ) );
             }
@@ -349,6 +360,18 @@ public abstract class AbstractSBTCompileMojo
             throw new MojoFailureException( "Scala compilation failed", e );
         }
         catch ( ProjectBuildingException e )
+        {
+            throw new MojoFailureException( "Scala compilation failed", e );
+        }
+        catch ( InstantiationException e )
+        {
+            throw new MojoFailureException( "Scala compilation failed", e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new MojoFailureException( "Scala compilation failed", e );
+        }
+        catch ( ClassNotFoundException e )
         {
             throw new MojoFailureException( "Scala compilation failed", e );
         }
@@ -466,12 +489,15 @@ public abstract class AbstractSBTCompileMojo
         String result = scalaVersion;
         if ( result == null || result.length() == 0 )
         {
-            result = sbtCompiler.getDefaultScalaVersion();
             Artifact scalaLibraryArtifact =
                 getDependencyArtifact( project.getArtifacts(), SCALA_GROUPID, SCALA_LIBRARY_ARTIFACTID, "jar" );
             if ( scalaLibraryArtifact != null )
             {
                 result = scalaLibraryArtifact.getVersion();
+            }
+            else
+            {
+                result = sbtCompiler.getDefaultScalaVersion();
             }
         }
         return result;
@@ -584,17 +610,24 @@ public abstract class AbstractSBTCompileMojo
         return artifacts;
     }
 
-    private Compiler getSbtCompiler()
+    // Proper compiler configuration info helper methods
+
+    // Cached classloaders
+    private static final ConcurrentHashMap<String, ClassLoader> cachedClassLoaders = new ConcurrentHashMap<String, ClassLoader>( 2 );
+
+    private static ClassLoader getCachedClassLoader( String compilerId )
+    {
+        return cachedClassLoaders.get( compilerId );
+    }
+
+    private static void setCachedClassLoader( String compilerId, ClassLoader classLoader )
+    {
+        cachedClassLoaders.put( compilerId, classLoader );
+    }
+
+    private Compiler getDeclaredSbtCompiler()
         throws MojoExecutionException
     {
-        if ( compilers.isEmpty() )
-        {
-            StringBuilder sb = new StringBuilder( 1250 );
-            sb.append( "No compiler defined.\n\n" );
-            appendCompilerConfigurationHelpMessage( sb );
-            throw new MojoExecutionException( sb.toString() );
-        }
-
         if ( compilers.size() > 1 )
         {
             StringBuilder sb = new StringBuilder( 1250 );
@@ -613,16 +646,69 @@ public abstract class AbstractSBTCompileMojo
         return sbtCompiler;
     }
 
-    // Proper compiler configuration info helper methods
+    private Compiler getWellKnownSbtCompiler()
+        throws ArtifactNotFoundException, ArtifactResolutionException, ClassNotFoundException, IllegalAccessException,
+        InstantiationException, InvalidDependencyVersionException, MalformedURLException, ProjectBuildingException
+    {
+        String compilerId = getSuggestedSbtCompilerId();
+        if ( compilerId == null )
+        {
+            compilerId = "sbt013";
+        }
+        ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
+        if ( compilerClassLoader == null )
+        {
+            getLog().debug( "Not used cached classloader for " + compilerId );
+            Artifact compilerArtifact =
+                getResolvedArtifact( "com.google.code.sbt-compiler-maven-plugin", "sbt-compiler-" + compilerId,
+                                     pluginVersion );
+
+            Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
+            List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
+            classPathFiles.add( compilerArtifact.getFile() );
+            for ( Artifact dependencyArtifact : compilerDependencies )
+            {
+                classPathFiles.add( dependencyArtifact.getFile() );
+            }
+            String javaHome = System.getProperty( "java.home" );
+            classPathFiles.add( new File( javaHome, "../lib/tools.jar" ) );
+
+            List<URL> classPathUrls = new ArrayList<URL>( classPathFiles.size() );
+            for ( File classPathFile : classPathFiles )
+            {
+                classPathUrls.add( new URL( classPathFile.toURI().toASCIIString() ) );
+            }
+
+            compilerClassLoader =
+                new URLClassLoader( classPathUrls.toArray( new URL[classPathUrls.size()] ),
+                                    Thread.currentThread().getContextClassLoader() );
+            getLog().debug( "Setting cached classloader for " + compilerId );
+            setCachedClassLoader( compilerId, compilerClassLoader );
+        }
+        // TMP
+        else
+        {
+            getLog().debug( "Used cached classloader for " + compilerId );
+        }
+
+        String compilerClassName =
+            String.format( "com.google.code.sbt.compiler.%s.%sCompiler", compilerId,
+                           compilerId.toUpperCase( Locale.ROOT ) );
+        Compiler sbtCompiler = (Compiler) compilerClassLoader.loadClass( compilerClassName ).newInstance();
+
+        getLog().debug( String.format( "Using compiler \"%s\".", compilerId ) );
+
+        return sbtCompiler;
+    }
 
     private void appendCompilerConfigurationHelpMessage( StringBuilder sb )
     {
-        String suggestedSbtCompiler = getSuggestedSbtCompiler();
+        String suggestedSbtCompilerId = getSuggestedSbtCompilerId();
 
         sb.append( "Add plugin dependency:\n\n" );
-        if ( suggestedSbtCompiler != null )
+        if ( suggestedSbtCompilerId != null )
         {
-            appendCompilerConfigurationHelpMessageForCompiler( sb, suggestedSbtCompiler );
+            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-" + suggestedSbtCompilerId );
             sb.append( "\nor dependency containing your custom SBT " ).append( sbtVersion );
             sb.append( " compiler implementation.\n" );
         }
@@ -641,18 +727,18 @@ public abstract class AbstractSBTCompileMojo
         sb.append( "\n" );
     }
     
-    private String getSuggestedSbtCompiler()
+    private String getSuggestedSbtCompilerId()
     {
         String result = null;
         if ( sbtVersion != null && !sbtVersion.isEmpty() )
         {
             if ( sbtVersion.startsWith( "0.13." ) )
             {
-                result = "sbt-compiler-sbt013";
+                result = "sbt013";
             }
             else if ( sbtVersion.startsWith( "0.12." ) )
             {
-                result = "sbt-compiler-sbt012";
+                result = "sbt012";
             }
         }
         if ( result == null && "play2".equals( project.getPackaging() ) )
@@ -662,18 +748,18 @@ public abstract class AbstractSBTCompileMojo
             {
                 if ( playVersion.startsWith( "2.2." ) )
                 {
-                    result = "sbt-compiler-sbt013";
+                    result = "sbt013";
                 }
                 else if ( playVersion.startsWith( "2.1." ) )
                 {
-                    result = "sbt-compiler-sbt012";
+                    result = "sbt012";
                 }
             }
         }
         return result;
     }
 
-    private void appendCompilerConfigurationHelpMessageForCompiler( StringBuilder sb, String compilerId )
+    private void appendCompilerConfigurationHelpMessageForCompiler( StringBuilder sb, String compilerArtifactId )
     {
         sb.append( "|    <plugin>\n" );
         sb.append( "|        <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
@@ -682,7 +768,7 @@ public abstract class AbstractSBTCompileMojo
         sb.append( "|        <dependencies>\n" );
         sb.append( "|            <dependency>\n" );
         sb.append( "|                <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
-        sb.append( "|                <artifactId>" ).append( compilerId ).append( "</artifactId>\n" );
+        sb.append( "|                <artifactId>" ).append( compilerArtifactId ).append( "</artifactId>\n" );
         sb.append( "|                <version>" ).append ( pluginVersion ).append( "</version>\n" );
         sb.append( "|            </dependency>\n" );
         sb.append( "|        </dependencies>\n" );
