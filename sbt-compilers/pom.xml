@@ -42,6 +42,7 @@ under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>sbt-compiler-api</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
