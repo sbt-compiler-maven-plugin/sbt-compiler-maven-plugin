@@ -38,14 +38,6 @@ under the License.
             <artifactId>zinc</artifactId>
             <version>0.2.5</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.sun.jdk</groupId>
-            <artifactId>tools</artifactId>
-            <version>undefined</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <build>
