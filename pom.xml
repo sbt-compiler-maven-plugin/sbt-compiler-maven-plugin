@@ -168,9 +168,9 @@ under the License.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.9.1</version>
                     <configuration>
-                        <source>1.5</source>
+                        <source>1.6</source>
                         <links>
-                            <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                            <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                         </links>
                         <notimestamp>true</notimestamp>
                     </configuration>
@@ -187,7 +187,7 @@ under the License.
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>3.1</version>
                     <configuration>
-                        <targetJdk>1.5</targetJdk>
+                        <targetJdk>1.6</targetJdk>
                     </configuration>
                 </plugin>
 
@@ -386,15 +386,15 @@ under the License.
                         </configuration>
                     </execution>
                     <execution>
-                        <id>enforce-java5</id>
+                        <id>enforce-java6</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.5</version>
-                                    <message>Java 1.5 or later required.</message>
+                                    <version>1.6</version>
+                                    <message>Java 1.6 or later required.</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -425,9 +425,9 @@ under the License.
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>2.9.1</version>
                         <configuration>
-                            <source>1.5</source>
+                            <source>1.6</source>
                             <links>
-                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                                <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                             </links>
                             <notimestamp>true</notimestamp>
                             <!-- graphviz -->
@@ -524,9 +524,9 @@ under the License.
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>2.9.1</version>
                         <configuration>
-                            <source>1.5</source>
+                            <source>1.6</source>
                             <links>
-                                <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+                                <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                             </links>
                             <notimestamp>true</notimestamp>
                         </configuration>
@@ -557,7 +557,7 @@ under the License.
                         <artifactId>maven-pmd-plugin</artifactId>
                         <version>3.1</version>
                         <configuration>
-                            <targetJdk>1.5</targetJdk>
+                            <targetJdk>1.6</targetJdk>
                             <includeTests>true</includeTests>
                         </configuration>
                     </plugin>
