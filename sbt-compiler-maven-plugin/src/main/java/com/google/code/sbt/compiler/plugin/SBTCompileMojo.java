@@ -92,7 +92,7 @@ public class SBTCompileMojo
 
     @Override
     protected void internalExecute()
-        throws MojoExecutionException, MojoFailureException, IOException
+        throws MojoExecutionException, MojoFailureException
     {
         if ( skipMain )
         {

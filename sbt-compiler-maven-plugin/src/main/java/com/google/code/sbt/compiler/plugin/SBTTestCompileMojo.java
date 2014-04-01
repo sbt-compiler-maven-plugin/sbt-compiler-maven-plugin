@@ -88,7 +88,7 @@ public class SBTTestCompileMojo
 
     @Override
     protected void internalExecute()
-        throws MojoExecutionException, MojoFailureException, IOException
+        throws MojoExecutionException, MojoFailureException
     {
         if ( skipTest )
         {

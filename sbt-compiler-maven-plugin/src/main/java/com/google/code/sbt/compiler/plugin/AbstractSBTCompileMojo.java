@@ -209,6 +209,7 @@ public abstract class AbstractSBTCompileMojo
      * @throws MojoExecutionException if unexpected problem occurs
      * @throws MojoFailureException if expected problem (such as compilation failure) occurs
      */
+    @Override
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
@@ -217,17 +218,10 @@ public abstract class AbstractSBTCompileMojo
             return;
         }
 
-        try
-        {
-            long ts = System.currentTimeMillis();
-            internalExecute();
-            long te = System.currentTimeMillis();
-            getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
+        long ts = System.currentTimeMillis();
+        internalExecute();
+        long te = System.currentTimeMillis();
+        getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
     }
 
     /**
@@ -235,10 +229,9 @@ public abstract class AbstractSBTCompileMojo
      * 
      * @throws MojoExecutionException if unexpected problem occurs
      * @throws MojoFailureException if expected problem (such as compilation failure) occurs
-     * @throws IOException if IO exception occurs
      */
     protected void internalExecute()
-        throws MojoExecutionException, MojoFailureException, IOException
+        throws MojoExecutionException, MojoFailureException
     {
         List<String> compileSourceRoots = getCompileSourceRoots();
 
@@ -347,33 +340,37 @@ public abstract class AbstractSBTCompileMojo
         {
             throw new MojoFailureException( "Scala compilation failed", e );
         }
+        catch ( IOException e )
+        {
+            throw new MojoExecutionException( "Scala compilation failed", e );
+        }
         catch ( ArtifactNotFoundException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( ArtifactResolutionException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( InvalidDependencyVersionException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( ProjectBuildingException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( InstantiationException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( IllegalAccessException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( ClassNotFoundException e )
         {
-            throw new MojoFailureException( "Scala compilation failed", e );
+            throw new MojoExecutionException( "Scala compilation failed", e );
         }
     }
 
