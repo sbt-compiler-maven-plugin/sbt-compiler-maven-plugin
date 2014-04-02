@@ -17,7 +17,6 @@
 
 package com.google.code.sbt.compiler.plugin;
 
-import java.io.IOException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -213,15 +212,13 @@ public abstract class AbstractSBTCompileMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
-        if ( "pom".equals( project.getPackaging() ) )
+        if ( !"pom".equals( project.getPackaging() ) )
         {
-            return;
+            long ts = System.currentTimeMillis();
+            internalExecute();
+            long te = System.currentTimeMillis();
+            getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
         }
-
-        long ts = System.currentTimeMillis();
-        internalExecute();
-        long te = System.currentTimeMillis();
-        getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
     }
 
     /**
@@ -258,15 +255,7 @@ public abstract class AbstractSBTCompileMojo
 
         try
         {
-            Compiler sbtCompiler = null;
-            if ( !compilers.isEmpty() )
-            {
-                sbtCompiler = getDeclaredSbtCompiler();
-            }
-            else
-            {
-                sbtCompiler = getWellKnownSbtCompiler();
-            }
+            Compiler sbtCompiler = getSbtCompiler();
             
             String resolvedScalaVersion = getScalaVersion( sbtCompiler );
 
@@ -340,10 +329,6 @@ public abstract class AbstractSBTCompileMojo
         {
             throw new MojoFailureException( "Scala compilation failed", e );
         }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
         catch ( ArtifactNotFoundException e )
         {
             throw new MojoExecutionException( "Scala compilation failed", e );
@@ -357,18 +342,6 @@ public abstract class AbstractSBTCompileMojo
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( ProjectBuildingException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
-        catch ( InstantiationException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
-        catch ( IllegalAccessException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
-        catch ( ClassNotFoundException e )
         {
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
@@ -622,6 +595,21 @@ public abstract class AbstractSBTCompileMojo
         cachedClassLoaders.put( compilerId, classLoader );
     }
 
+    private Compiler getSbtCompiler()
+        throws MojoExecutionException
+    {
+        Compiler sbtCompiler = null;
+        if ( !compilers.isEmpty() )
+        {
+            sbtCompiler = getDeclaredSbtCompiler();
+        }
+        else
+        {
+            sbtCompiler = getWellKnownSbtCompiler();
+        }
+        return sbtCompiler;
+    }
+
     private Compiler getDeclaredSbtCompiler()
         throws MojoExecutionException
     {
@@ -638,64 +626,106 @@ public abstract class AbstractSBTCompileMojo
         String compilerId = compilerEntry.getKey();
         Compiler sbtCompiler = compilerEntry.getValue();
 
-        getLog().debug( String.format( "Using compiler \"%s\".", compilerId ) );
+        getLog().debug( String.format( "Using declared compiler \"%s\".", compilerId ) );
 
         return sbtCompiler;
     }
 
     private Compiler getWellKnownSbtCompiler()
-        throws ArtifactNotFoundException, ArtifactResolutionException, ClassNotFoundException, IllegalAccessException,
-        InstantiationException, InvalidDependencyVersionException, MalformedURLException, ProjectBuildingException
+        throws MojoExecutionException
     {
-        String compilerId = getSuggestedSbtCompilerId();
-        if ( compilerId == null )
+        try
         {
-            compilerId = "sbt013";
-        }
-        ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
-        if ( compilerClassLoader == null )
-        {
-            getLog().debug( "Not used cached classloader for " + compilerId );
-            Artifact compilerArtifact =
-                getResolvedArtifact( "com.google.code.sbt-compiler-maven-plugin", "sbt-compiler-" + compilerId,
-                                     pluginVersion );
-
-            Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
-            List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
-            classPathFiles.add( compilerArtifact.getFile() );
-            for ( Artifact dependencyArtifact : compilerDependencies )
+            String compilerId = getSuggestedSbtCompilerId();
+            if ( compilerId == null )
             {
-                classPathFiles.add( dependencyArtifact.getFile() );
+                compilerId = "sbt013";
             }
-            String javaHome = System.getProperty( "java.home" );
-            classPathFiles.add( new File( javaHome, "../lib/tools.jar" ) );
-
-            List<URL> classPathUrls = new ArrayList<URL>( classPathFiles.size() );
-            for ( File classPathFile : classPathFiles )
+            ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
+            if ( compilerClassLoader != null && compilerClassLoader.getParent() != Thread.currentThread().getContextClassLoader() )
             {
-                classPathUrls.add( new URL( classPathFile.toURI().toASCIIString() ) );
+                getLog().debug( "Invalidated cached classloader for " + compilerId + ". Old parent classloader "
+                                    + compilerClassLoader.getParent().hashCode() + ", new parent classloader "
+                                    + Thread.currentThread().getContextClassLoader().hashCode() );
+                compilerClassLoader = null;
+            }
+            if ( compilerClassLoader == null )
+            {
+                getLog().debug( "Not used cached classloader for " + compilerId );
+                Artifact compilerArtifact =
+                    getResolvedArtifact( "com.google.code.sbt-compiler-maven-plugin", "sbt-compiler-" + compilerId,
+                                         pluginVersion );
+
+                Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
+                List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
+                classPathFiles.add( compilerArtifact.getFile() );
+                for ( Artifact dependencyArtifact : compilerDependencies )
+                {
+                    classPathFiles.add( dependencyArtifact.getFile() );
+                }
+                String javaHome = System.getProperty( "java.home" );
+                classPathFiles.add( new File( javaHome, "../lib/tools.jar" ) );
+
+                List<URL> classPathUrls = new ArrayList<URL>( classPathFiles.size() );
+                for ( File classPathFile : classPathFiles )
+                {
+                    classPathUrls.add( new URL( classPathFile.toURI().toASCIIString() ) );
+                }
+
+                compilerClassLoader =
+                    new URLClassLoader( classPathUrls.toArray( new URL[classPathUrls.size()] ),
+                                        Thread.currentThread().getContextClassLoader() );
+                getLog().debug( "Setting cached classloader for " + compilerId + " with parent classloader "
+                                    + compilerClassLoader.getParent().hashCode() );
+                setCachedClassLoader( compilerId, compilerClassLoader );
+            }
+            // TMP
+            else
+            {
+                getLog().debug( "Used cached classloader for " + compilerId );
             }
 
-            compilerClassLoader =
-                new URLClassLoader( classPathUrls.toArray( new URL[classPathUrls.size()] ),
-                                    Thread.currentThread().getContextClassLoader() );
-            getLog().debug( "Setting cached classloader for " + compilerId );
-            setCachedClassLoader( compilerId, compilerClassLoader );
+            String compilerClassName =
+                String.format( "com.google.code.sbt.compiler.%s.%sCompiler", compilerId,
+                               compilerId.toUpperCase( Locale.ROOT ) );
+            Compiler sbtCompiler = (Compiler) compilerClassLoader.loadClass( compilerClassName ).newInstance();
+
+            getLog().debug( String.format( "Using autodetected compiler \"%s\".", compilerId ) );
+
+            return sbtCompiler;
         }
-        // TMP
-        else
+        catch ( ArtifactNotFoundException e )
         {
-            getLog().debug( "Used cached classloader for " + compilerId );
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
-
-        String compilerClassName =
-            String.format( "com.google.code.sbt.compiler.%s.%sCompiler", compilerId,
-                           compilerId.toUpperCase( Locale.ROOT ) );
-        Compiler sbtCompiler = (Compiler) compilerClassLoader.loadClass( compilerClassName ).newInstance();
-
-        getLog().debug( String.format( "Using compiler \"%s\".", compilerId ) );
-
-        return sbtCompiler;
+        catch ( ArtifactResolutionException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( InstantiationException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( InvalidDependencyVersionException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+        catch ( ProjectBuildingException e )
+        {
+            throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
     }
 
     private void appendCompilerConfigurationHelpMessage( StringBuilder sb )
