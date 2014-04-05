@@ -139,18 +139,18 @@ public class SBTTestCompileMojo
         HashMap<File, File> map = new HashMap<File, File>();
         for ( MavenProject reactorProject : reactorProjects )
         {
+            File analysisCacheFile = defaultAnalysisCacheFile( reactorProject );
+            if ( analysisCacheFile.isFile() )
+            {
+                File reactorProjectArtifactFile = reactorProject.getArtifact().getFile();
+                if ( reactorProjectArtifactFile != null )
+                {
+                    map.put( reactorProjectArtifactFile.getAbsoluteFile(), analysisCacheFile.getAbsoluteFile() );
+                }
+            }
+            
             if ( reactorProject != project )
             {
-                File analysisCacheFile = defaultAnalysisCacheFile( reactorProject );
-                if ( analysisCacheFile.isFile() )
-                {
-                    File reactorProjectArtifactFile = reactorProject.getArtifact().getFile();
-                    if ( reactorProjectArtifactFile != null )
-                    {
-                        map.put( reactorProjectArtifactFile.getAbsoluteFile(), analysisCacheFile.getAbsoluteFile() );
-                    }
-                }
-                
                 File testAnalysisCacheFile = defaultTestAnalysisCacheFile( reactorProject );
                 if ( testAnalysisCacheFile.isFile() )
                 {
