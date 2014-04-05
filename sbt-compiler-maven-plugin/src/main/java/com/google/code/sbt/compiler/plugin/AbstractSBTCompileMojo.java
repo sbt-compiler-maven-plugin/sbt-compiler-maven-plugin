@@ -642,16 +642,27 @@ public abstract class AbstractSBTCompileMojo
                 compilerId = "sbt013";
             }
             ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
-            if ( compilerClassLoader != null && compilerClassLoader.getParent() != Thread.currentThread().getContextClassLoader() )
+            if ( compilerClassLoader == null )
             {
-                getLog().debug( "Invalidated cached classloader for " + compilerId + ". Old parent classloader "
-                                    + compilerClassLoader.getParent().hashCode() + ", new parent classloader "
-                                    + Thread.currentThread().getContextClassLoader().hashCode() );
-                compilerClassLoader = null;
+                getLog().debug( String.format( "Cached classloader for compiler \"%s\" not available.", compilerId ) );
+            }
+            else
+            {
+                if ( compilerClassLoader.getParent() == Thread.currentThread().getContextClassLoader() )
+                {
+                    getLog().debug( String.format( "Using cached classloader for compiler \"%s\".", compilerId ) );
+                }
+                else
+                {
+                    getLog().debug( String.format( "Invalidated cached classloader for compiler \"%s\". Parent classloader changed from %d to %d.",
+                                                   compilerId,
+                                                   Integer.valueOf( compilerClassLoader.getParent().hashCode() ),
+                                                   Integer.valueOf( Thread.currentThread().getContextClassLoader().hashCode() ) ) );
+                    compilerClassLoader = null;
+                }
             }
             if ( compilerClassLoader == null )
             {
-                getLog().debug( "Not used cached classloader for " + compilerId );
                 Artifact compilerArtifact =
                     getResolvedArtifact( "com.google.code.sbt-compiler-maven-plugin", "sbt-compiler-" + compilerId,
                                          pluginVersion );
@@ -675,14 +686,9 @@ public abstract class AbstractSBTCompileMojo
                 compilerClassLoader =
                     new URLClassLoader( classPathUrls.toArray( new URL[classPathUrls.size()] ),
                                         Thread.currentThread().getContextClassLoader() );
-                getLog().debug( "Setting cached classloader for " + compilerId + " with parent classloader "
-                                    + compilerClassLoader.getParent().hashCode() );
+                getLog().debug( String.format( "Setting cached classloader for compiler \"%s\" with parent classloader %d",
+                                               compilerId, Integer.valueOf( compilerClassLoader.getParent().hashCode() ) ) );
                 setCachedClassLoader( compilerId, compilerClassLoader );
-            }
-            // TMP
-            else
-            {
-                getLog().debug( "Used cached classloader for " + compilerId );
             }
 
             String compilerClassName =
@@ -768,7 +774,7 @@ public abstract class AbstractSBTCompileMojo
                 result = "sbt012";
             }
         }
-        if ( result == null && "play2".equals( project.getPackaging() ) )
+        if ( result == null )
         {
             String playVersion = project.getProperties().getProperty( "play2.version" );
             if ( playVersion != null && !playVersion.isEmpty() )
