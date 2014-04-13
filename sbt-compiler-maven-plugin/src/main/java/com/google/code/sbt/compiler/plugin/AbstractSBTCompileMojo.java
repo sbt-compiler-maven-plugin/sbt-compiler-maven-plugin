@@ -639,7 +639,7 @@ public abstract class AbstractSBTCompileMojo
             String compilerId = getSuggestedSbtCompilerId();
             if ( compilerId == null )
             {
-                compilerId = "sbt013";
+                compilerId = "sbt0131";
             }
             ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
             if ( compilerClassLoader == null )
@@ -767,7 +767,14 @@ public abstract class AbstractSBTCompileMojo
         {
             if ( sbtVersion.startsWith( "0.13." ) )
             {
-                result = "sbt013";
+                if ( sbtVersion.equals( "0.13.0" ) )
+                {
+                    result = "sbt013";
+                }
+                else
+                {
+                    result = "sbt0131";
+                }
             }
             else if ( sbtVersion.startsWith( "0.12." ) )
             {
