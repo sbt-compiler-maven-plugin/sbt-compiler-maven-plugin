@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package com.google.code.sbt.compiler.sbt013;
+package com.google.code.sbt.compiler.sbt0131;
 
 import java.io.File;
 
@@ -33,12 +33,12 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.13 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.0)
+ * SBT 0.13.1 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.1)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt013", description = "SBT 0.13 compiler (uses Zinc 0.3.0)" )
-public class SBT013Compiler
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt0131", description = "SBT 0.13.1 compiler (uses Zinc 0.3.1)" )
+public class SBT0131Compiler
     extends AbstractCompiler
 {
     /**
@@ -60,18 +60,18 @@ public class SBT013Compiler
     @Override
     public String getDefaultSbtVersion()
     {
-        return "0.13.0";
+        return "0.13.1";
     }
 
     @Override
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {
-        SBT013Logger sbtLogger = new SBT013Logger( configuration.getLogger() );
+        SBT0131Logger sbtLogger = new SBT0131Logger( configuration.getLogger() );
         Setup setup =
             Setup.create( configuration.getScalaCompilerFile(), configuration.getScalaLibraryFile(),
                           configuration.getScalaExtraJarFiles(), configuration.getXsbtiFile(),
-                          configuration.getCompilerInterfaceSrcFile(), null, SBT013Compiler.FORK_JAVA );
+                          configuration.getCompilerInterfaceSrcFile(), null, SBT0131Compiler.FORK_JAVA );
         if ( configuration.getLogger().isDebugEnabled() )
         {
             Setup.debug( setup, sbtLogger );
@@ -82,8 +82,8 @@ public class SBT013Compiler
             Inputs.create( configuration.getClasspathFiles(), configuration.getSourceFiles(),
                            configuration.getOutputDirectory(), resolveScalacOptions( configuration ),
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
-                           configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER, getIncOptions(),
-                           configuration.getLogger().isDebugEnabled() /* mirrorAnalysisCache */ );
+                           configuration.getAnalysisCacheMap(), SBT0131Compiler.COMPILE_ORDER, getIncOptions(),
+                           false /* mirrorAnalysisCache */ );
         if ( configuration.getLogger().isDebugEnabled() )
         {
             Inputs.debug( inputs, sbtLogger );

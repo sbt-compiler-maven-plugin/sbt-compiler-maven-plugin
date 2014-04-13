@@ -35,6 +35,7 @@ under the License.
     <modules>
         <module>sbt-compiler-sbt012</module>
         <module>sbt-compiler-sbt013</module>
+        <module>sbt-compiler-sbt0131</module>
     </modules>
 
     <dependencies>

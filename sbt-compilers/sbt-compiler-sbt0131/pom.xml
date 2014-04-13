@@ -26,17 +26,17 @@ under the License.
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sbt-compiler-sbt013</artifactId>
+    <artifactId>sbt-compiler-sbt0131</artifactId>
     <packaging>jar</packaging>
 
-    <name>SBT Compiler for SBT 0.13</name>
-    <description>SBT Compiler for SBT 0.13</description>
+    <name>SBT Compiler for SBT 0.13.1</name>
+    <description>SBT Compiler for SBT 0.13.1</description>
 
     <dependencies>
         <dependency>
             <groupId>com.typesafe.zinc</groupId>
             <artifactId>zinc</artifactId>
-            <version>0.3.0</version>
+            <version>0.3.1</version>
         </dependency>
     </dependencies>
 
@@ -48,7 +48,7 @@ under the License.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../../sbt-compiler-api/src/main/java</sourcepath>
-                        <subpackages>com.google.code.sbt.compiler.sbt013</subpackages>
+                        <subpackages>com.google.code.sbt.compiler.sbt0131</subpackages>
                     </configuration>
                 </plugin>
             </plugins>
@@ -66,7 +66,7 @@ under the License.
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../../sbt-compiler-api/src/main/java</sourcepath>
-                            <subpackages>com.google.code.sbt.compiler.sbt013</subpackages>
+                            <subpackages>com.google.code.sbt.compiler.sbt0131</subpackages>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -83,7 +83,7 @@ under the License.
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../../sbt-compiler-api/src/main/java</sourcepath>
-                            <subpackages>com.google.code.sbt.compiler.sbt013</subpackages>
+                            <subpackages>com.google.code.sbt.compiler.sbt0131</subpackages>
                         </configuration>
                     </plugin>
                 </plugins>
