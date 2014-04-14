@@ -23,6 +23,8 @@ import com.google.code.sbt.compiler.api.CompilerException;
 
 import org.codehaus.plexus.component.annotations.Component;
 
+import xsbti.Logger;
+
 import com.typesafe.zinc.Compiler;
 import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
@@ -57,7 +59,7 @@ public class SBT012Compiler
     public void performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {
-        SBT012Logger sbtLogger = new SBT012Logger( configuration.getLogger() );
+        Logger sbtLogger = new SBT012Logger( configuration.getLogger() );
         Setup setup =
             Setup.create( configuration.getScalaCompilerFile(), configuration.getScalaLibraryFile(),
                           configuration.getScalaExtraJarFiles(), configuration.getXsbtiFile(),
