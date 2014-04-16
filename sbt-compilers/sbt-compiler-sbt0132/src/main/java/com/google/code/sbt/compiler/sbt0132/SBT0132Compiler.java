@@ -62,7 +62,7 @@ public class SBT0132Compiler
     @Override
     public String getDefaultSbtVersion()
     {
-        return "0.13.2-M3";
+        return "0.13.2";
     }
 
     @Override
