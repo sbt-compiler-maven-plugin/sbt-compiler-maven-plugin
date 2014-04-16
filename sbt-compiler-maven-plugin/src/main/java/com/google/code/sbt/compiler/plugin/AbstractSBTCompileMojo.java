@@ -639,7 +639,7 @@ public abstract class AbstractSBTCompileMojo
             String compilerId = getSuggestedSbtCompilerId();
             if ( compilerId == null )
             {
-                compilerId = "sbt0132";
+                compilerId = "sbt0135";
             }
             ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
             if ( compilerClassLoader == null )
@@ -775,9 +775,13 @@ public abstract class AbstractSBTCompileMojo
                 {
                     result = "sbt0131";
                 }
-                else
+                else if ( sbtVersion.equals( "0.13.2" ) || sbtVersion.startsWith( "0.13.2-" ) )
                 {
                     result = "sbt0132";
+                }
+                else
+                {
+                    result = "sbt0135";
                 }
             }
             else if ( sbtVersion.startsWith( "0.12." ) )
@@ -790,13 +794,17 @@ public abstract class AbstractSBTCompileMojo
             String playVersion = project.getProperties().getProperty( "play2.version" );
             if ( playVersion != null && !playVersion.isEmpty() )
             {
-                if ( playVersion.startsWith( "2.2." ) )
+                if ( playVersion.startsWith( "2.1." ) || playVersion.startsWith( "2.1-" ) )
+                {
+                    result = "sbt012";
+                }
+                else if ( playVersion.startsWith( "2.2." ) || playVersion.startsWith( "2.2-" ) )
                 {
                     result = "sbt013";
                 }
-                else if ( playVersion.startsWith( "2.1." ) )
+                else if ( playVersion.startsWith( "2.3." ) || playVersion.startsWith( "2.3-" ) )
                 {
-                    result = "sbt012";
+                    result = "sbt0135";
                 }
             }
         }
