@@ -56,9 +56,11 @@ public interface Compiler
      * 
      * @param configuration SBT compilation configuration
      * 
+     * @return incremental compilation analysis object
+     * 
      * @throws CompilerException if compilation fails
      */
-    void performCompile( CompilerConfiguration configuration )
+    Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException;
 
 }

@@ -20,6 +20,7 @@ package com.google.code.sbt.compiler.sbt013;
 import java.io.File;
 
 import com.google.code.sbt.compiler.api.AbstractCompiler;
+import com.google.code.sbt.compiler.api.Analysis;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
 
@@ -27,6 +28,7 @@ import org.codehaus.plexus.component.annotations.Component;
 
 import scala.Option;
 
+import xsbti.CompileFailed;
 import xsbti.Logger;
 
 import com.typesafe.zinc.Compiler;
@@ -66,7 +68,7 @@ public class SBT013Compiler
     }
 
     @Override
-    public void performCompile( CompilerConfiguration configuration )
+    public Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {
         Logger sbtLogger = new SBT013Logger( configuration.getLogger() );
@@ -93,9 +95,9 @@ public class SBT013Compiler
 
         try
         {
-            compiler.compile( inputs, sbtLogger );
+            return new SBT013Analysis( compiler.compile( inputs, sbtLogger ) );
         }
-        catch ( xsbti.CompileFailed e )
+        catch ( CompileFailed e )
         {
             throw new CompilerException( "Scala compilation failed", e );
         }
