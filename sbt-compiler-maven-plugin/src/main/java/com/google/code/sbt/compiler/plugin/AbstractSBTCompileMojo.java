@@ -45,6 +45,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -55,6 +56,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import com.google.code.sbt.compiler.api.Compiler;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
+import com.google.code.sbt.compiler.api.CompilerHelper;
 
 /**
  * Abstract base class for SBT compilation mojos.
@@ -115,8 +117,23 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Forced SBT version.<br>
      * <br>
-     * If specified, this version of SBT compiler is used for compilation.<br>
-     * If not specified, selected compiler's {@link Compiler#getDefaultSbtVersion()} is used. 
+     * There are three cases possible:
+     * <ul>
+     * <li>
+     * If {@link #sbtVersion} is specified, compatible {@link Compiler} implementation
+     * is selected and configured to use {@link #sbtVersion} SBT version for compilation.
+     * </li>
+     * <li>
+     * If {@link #sbtVersion} is not specified, and {@link #playVersion} is specified
+     * {@link #playVersion} parameter value is used to indirectly select compatible {@link Compiler} implementation
+     * and it's {@link Compiler#getDefaultSbtVersion()} SBT version used for compilation.
+     * </li>
+     * <li>
+     * If both {@link #sbtVersion} and {@link #playVersion} are not specified
+     * the most recent {@link Compiler} implementation is selected
+     * and it's {@link Compiler#getDefaultSbtVersion()} SBT version used for compilation.
+     * </li>
+     * </ul>
      * 
      * @since 1.0.0
      */
@@ -124,7 +141,21 @@ public abstract class AbstractSBTCompileMojo
     protected String sbtVersion;
 
     /**
+     * Forced Play&#33 Framework version.
+     * <br>
+     * <br>
+     * Used to select SBT version in Play&#33 Framework projects based on framework version used.
+     * See {@link #sbtVersion} for more details.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter( property = "play2.version" )
+    protected String playVersion;
+
+    /**
      * Scala and Java source files encoding.
+     * 
+     * @since 1.0.0
      */
     @Parameter( property = "project.build.sourceEncoding" )
     protected String sourceEncoding;
@@ -148,7 +179,7 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Maven project to interact with.
      */
-    @Component
+    @Parameter( defaultValue="${project}", readonly = true )
     protected MavenProject project;
 
     /**
@@ -185,22 +216,19 @@ public abstract class AbstractSBTCompileMojo
      * Remote repositories used by the resolver
      */
     @Parameter( property = "project.remoteArtifactRepositories", readonly = true, required = true )
-    protected List<?> remoteRepos;
+    protected List<ArtifactRepository> remoteRepos;
+
+    /**
+     * Plugin descriptor used to retrieve this plugin's properties.
+     */
+    @Parameter( defaultValue="${plugin}", readonly = true, required = true )
+    private PluginDescriptor plugin;
 
     /**
      * Map of compiler implementations. For now only zero or one allowed.
      */
     @Component( role = Compiler.class )
     private Map<String, Compiler> compilers;
-
-    @Parameter( property = "plugin.groupId", readonly = true, required = true )
-    private String pluginGroupId;
-
-    @Parameter( property = "plugin.artifactId", readonly = true, required = true )
-    private String pluginArtifactId;
-
-    @Parameter( property = "plugin.version", readonly = true, required = true )
-    private String pluginVersion;
 
     /**
      * Performs compilation.
@@ -580,8 +608,6 @@ public abstract class AbstractSBTCompileMojo
         return artifacts;
     }
 
-    // Proper compiler configuration info helper methods
-
     // Cached classloaders
     private static final ConcurrentHashMap<String, ClassLoader> cachedClassLoaders = new ConcurrentHashMap<String, ClassLoader>( 2 );
 
@@ -615,11 +641,7 @@ public abstract class AbstractSBTCompileMojo
     {
         if ( compilers.size() > 1 )
         {
-            StringBuilder sb = new StringBuilder( 1250 );
-            sb.append( "Too many compiles defined.\n\n" );
-            appendCompilerConfigurationHelpMessage( sb );
-            sb.append( "ONLY ONE!\n\n" );
-            throw new MojoExecutionException( sb.toString() );
+            throw new MojoExecutionException( "Too many compiles defined. A maximum of one allowed." );
         }
 
         Map.Entry<String, Compiler> compilerEntry = compilers.entrySet().iterator().next();
@@ -636,11 +658,7 @@ public abstract class AbstractSBTCompileMojo
     {
         try
         {
-            String compilerId = getSuggestedSbtCompilerId();
-            if ( compilerId == null )
-            {
-                compilerId = "sbt0135";
-            }
+            String compilerId = CompilerHelper.getDefaultCompilerId( sbtVersion, playVersion );
             ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
             if ( compilerClassLoader == null )
             {
@@ -664,8 +682,7 @@ public abstract class AbstractSBTCompileMojo
             if ( compilerClassLoader == null )
             {
                 Artifact compilerArtifact =
-                    getResolvedArtifact( "com.google.code.sbt-compiler-maven-plugin", "sbt-compiler-" + compilerId,
-                                         pluginVersion );
+                    getResolvedArtifact( plugin.getGroupId(), "sbt-compiler-" + compilerId, plugin.getVersion() );
 
                 Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
                 List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
@@ -732,99 +749,6 @@ public abstract class AbstractSBTCompileMojo
         {
             throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
-    }
-
-    private void appendCompilerConfigurationHelpMessage( StringBuilder sb )
-    {
-        String suggestedSbtCompilerId = getSuggestedSbtCompilerId();
-
-        sb.append( "Add plugin dependency:\n\n" );
-        if ( suggestedSbtCompilerId != null )
-        {
-            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-" + suggestedSbtCompilerId );
-            sb.append( "\nor dependency containing your custom SBT " ).append( sbtVersion );
-            sb.append( " compiler implementation.\n" );
-        }
-        else
-        {
-            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-sbt013" );
-            sb.append( "\nfor SBT 0.13.x compatible compiler, or:\n\n" );
-            appendCompilerConfigurationHelpMessageForCompiler( sb, "sbt-compiler-sbt012" );
-            sb.append( "\nfor SBT 0.12.x compatible compiler, or dependency containing your custom SBT" );
-            if ( sbtVersion != null )
-            {
-                sb.append( " " ).append( sbtVersion );
-            }
-            sb.append( " compiler implementation.\n" );
-        }
-        sb.append( "\n" );
-    }
-    
-    private String getSuggestedSbtCompilerId()
-    {
-        String result = null;
-        if ( sbtVersion != null && !sbtVersion.isEmpty() )
-        {
-            if ( sbtVersion.startsWith( "0.13." ) )
-            {
-                if ( sbtVersion.equals( "0.13.0" ) || sbtVersion.startsWith( "0.13.0-" ) )
-                {
-                    result = "sbt013";
-                }
-                else if ( sbtVersion.equals( "0.13.1" ) || sbtVersion.startsWith( "0.13.1-" ) )
-                {
-                    result = "sbt0131";
-                }
-                else if ( sbtVersion.equals( "0.13.2" ) || sbtVersion.startsWith( "0.13.2-" ) )
-                {
-                    result = "sbt0132";
-                }
-                else
-                {
-                    result = "sbt0135";
-                }
-            }
-            else if ( sbtVersion.startsWith( "0.12." ) )
-            {
-                result = "sbt012";
-            }
-        }
-        if ( result == null )
-        {
-            String playVersion = project.getProperties().getProperty( "play2.version" );
-            if ( playVersion != null && !playVersion.isEmpty() )
-            {
-                if ( playVersion.startsWith( "2.1." ) || playVersion.startsWith( "2.1-" ) )
-                {
-                    result = "sbt012";
-                }
-                else if ( playVersion.startsWith( "2.2." ) || playVersion.startsWith( "2.2-" ) )
-                {
-                    result = "sbt013";
-                }
-                else if ( playVersion.startsWith( "2.3." ) || playVersion.startsWith( "2.3-" ) )
-                {
-                    result = "sbt0135";
-                }
-            }
-        }
-        return result;
-    }
-
-    private void appendCompilerConfigurationHelpMessageForCompiler( StringBuilder sb, String compilerArtifactId )
-    {
-        sb.append( "|    <plugin>\n" );
-        sb.append( "|        <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
-        sb.append( "|        <artifactId>" ).append ( pluginArtifactId ).append( "</artifactId>\n" );
-        sb.append( "|        <version>" ).append ( pluginVersion ).append( "</version>\n" );
-        sb.append( "|        <dependencies>\n" );
-        sb.append( "|            <dependency>\n" );
-        sb.append( "|                <groupId>" ).append ( pluginGroupId ).append( "</groupId>\n" );
-        sb.append( "|                <artifactId>" ).append( compilerArtifactId ).append( "</artifactId>\n" );
-        sb.append( "|                <version>" ).append ( pluginVersion ).append( "</version>\n" );
-        sb.append( "|            </dependency>\n" );
-        sb.append( "|        </dependencies>\n" );
-        sb.append( "|    </plugin>\n" );
     }
 
     private static class NonOptionalArtifactFilter
