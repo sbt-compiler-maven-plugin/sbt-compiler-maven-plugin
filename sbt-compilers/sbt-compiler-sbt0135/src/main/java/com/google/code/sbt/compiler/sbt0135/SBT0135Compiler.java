@@ -37,7 +37,7 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.13.2 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.5)
+ * SBT 0.13.5 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.5)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -64,7 +64,7 @@ public class SBT0135Compiler
     @Override
     public String getDefaultSbtVersion()
     {
-        return "0.13.5-M3";
+        return "0.13.5";
     }
 
     @Override
