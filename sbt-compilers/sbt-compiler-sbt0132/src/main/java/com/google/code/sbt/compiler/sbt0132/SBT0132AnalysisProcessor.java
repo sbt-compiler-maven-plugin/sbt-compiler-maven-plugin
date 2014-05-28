@@ -42,9 +42,9 @@ public class SBT0132AnalysisProcessor
     }
 
     @Override
-    public Analysis readFromFile( File analysisFile )
+    public Analysis readFromFile( File analysisCacheFile )
     {
-        return new SBT0132Analysis( Compiler$.MODULE$.analysis( analysisFile ) );
+        return new SBT0132Analysis( Compiler$.MODULE$.analysis( analysisCacheFile ) );
     }
 
 }

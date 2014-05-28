@@ -42,9 +42,9 @@ public class SBT012Analysis
     }
 
     @Override
-    public void writeToFile( File analysisFile )
+    public void writeToFile( File analysisCacheFile )
     {
-        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisFile );
+        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisCacheFile );
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 

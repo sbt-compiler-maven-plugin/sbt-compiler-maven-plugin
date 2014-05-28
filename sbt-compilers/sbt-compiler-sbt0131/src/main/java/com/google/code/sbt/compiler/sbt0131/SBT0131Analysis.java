@@ -48,14 +48,14 @@ public class SBT0131Analysis
     }
 
     @Override
-    public void writeToFile( File analysisFile )
+    public void writeToFile( File analysisCacheFile )
     {
         if ( stamps != null ) // stamps were modified, merge now
         {
             analysis = analysis.copy( stamps, analysis.apis(), analysis.relations(), analysis.infos(), analysis.compilations() );
             stamps = null;
         }
-        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisFile );
+        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisCacheFile );
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 
