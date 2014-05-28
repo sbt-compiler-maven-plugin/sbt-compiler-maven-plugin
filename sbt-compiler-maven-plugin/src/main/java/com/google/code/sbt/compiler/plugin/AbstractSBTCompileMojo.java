@@ -117,6 +117,7 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Forced SBT version.<br>
      * <br>
+     * Used to automatically select one of the "well known" SBT compilers if no compiler added explicitly as plugin's dependency.
      * There are three cases possible:
      * <ul>
      * <li>
