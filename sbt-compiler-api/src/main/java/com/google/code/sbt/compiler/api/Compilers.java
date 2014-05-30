@@ -22,9 +22,9 @@ package com.google.code.sbt.compiler.api;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-public class CompilerHelper
+public class Compilers
 {
-    private CompilerHelper()
+    private Compilers()
     {
     }
 

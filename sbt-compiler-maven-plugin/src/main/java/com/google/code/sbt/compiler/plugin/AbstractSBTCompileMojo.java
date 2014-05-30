@@ -56,7 +56,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import com.google.code.sbt.compiler.api.Compiler;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
-import com.google.code.sbt.compiler.api.CompilerHelper;
+import com.google.code.sbt.compiler.api.Compilers;
 
 /**
  * Abstract base class for SBT compilation mojos.
@@ -659,7 +659,7 @@ public abstract class AbstractSBTCompileMojo
     {
         try
         {
-            String compilerId = CompilerHelper.getDefaultCompilerId( sbtVersion, playVersion );
+            String compilerId = Compilers.getDefaultCompilerId( sbtVersion, playVersion );
             ClassLoader compilerClassLoader = getCachedClassLoader( compilerId );
             if ( compilerClassLoader == null )
             {
