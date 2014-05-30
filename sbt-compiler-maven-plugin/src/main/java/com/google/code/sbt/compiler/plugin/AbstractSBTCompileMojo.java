@@ -180,7 +180,7 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Maven project to interact with.
      */
-    @Parameter( defaultValue="${project}", readonly = true )
+    @Parameter( defaultValue = "${project}", readonly = true )
     protected MavenProject project;
 
     /**
@@ -222,7 +222,7 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Plugin descriptor used to retrieve this plugin's properties.
      */
-    @Parameter( defaultValue="${plugin}", readonly = true, required = true )
+    @Parameter( defaultValue = "${plugin}", readonly = true, required = true )
     private PluginDescriptor plugin;
 
     /**

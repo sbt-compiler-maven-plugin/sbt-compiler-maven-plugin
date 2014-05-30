@@ -42,6 +42,11 @@ public class SBT0132Analysis
     private sbt.inc.Analysis analysis;
     private Stamps stamps;
 
+    /**
+     * Creates {@link Analysis} wrapper around SBT native {@link sbt.inc.Analysis} delegate.
+     * 
+     * @param analysis SBT native {@link sbt.inc.Analysis} delegate
+     */
     public SBT0132Analysis( sbt.inc.Analysis analysis )
     {
         this.analysis = analysis;
@@ -74,15 +79,15 @@ public class SBT0132Analysis
     @Override
     public void updateClassFileTimestamp( File classFile )
     {
-        if ( stamps == null)
+        if ( stamps == null )
         {
             stamps = analysis.stamps();
         }
-        Stamp existingStamp = stamps.product(classFile);
+        Stamp existingStamp = stamps.product( classFile );
         if ( existingStamp != null && existingStamp instanceof LastModified )
         {
             Stamp newStamp = new LastModified( classFile.lastModified() );
-            stamps = stamps.markProduct(classFile, newStamp);
+            stamps = stamps.markProduct( classFile, newStamp );
         }
     }
 

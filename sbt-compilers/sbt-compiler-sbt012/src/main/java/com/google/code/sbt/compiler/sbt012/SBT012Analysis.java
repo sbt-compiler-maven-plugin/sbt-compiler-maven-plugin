@@ -36,7 +36,12 @@ public class SBT012Analysis
 {
     private sbt.inc.Analysis analysis;
 
-    public SBT012Analysis(sbt.inc.Analysis analysis)
+    /**
+     * Creates {@link Analysis} wrapper around SBT native {@link sbt.inc.Analysis} delegate.
+     * 
+     * @param analysis SBT native {@link sbt.inc.Analysis} delegate
+     */
+    public SBT012Analysis( sbt.inc.Analysis analysis )
     {
         this.analysis = analysis;
     }

@@ -28,7 +28,9 @@ import java.util.Set;
 public interface Analysis
 {
     /**
-     * Returns source file's compilation time,
+     * Returns source file's compilation time.
+     *
+     * @param sourceFile source file
      *
      * @return source file's compilation time
      */
@@ -36,6 +38,8 @@ public interface Analysis
 
     /**
      * Returns source file's compilation products (class files).
+     *
+     * @param sourceFile source file
      *
      * @return source file's compilation products (class files).
      */
@@ -69,6 +73,6 @@ public interface Analysis
      *  
      * @return SBT native incremental compilation
      */
-    public Object unwrap();
+    Object unwrap();
 
 }
