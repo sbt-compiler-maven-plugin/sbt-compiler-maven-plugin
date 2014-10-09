@@ -37,11 +37,11 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.13.5 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.5)
+ * SBT 0.13.5 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.5.3)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt0135", description = "SBT 0.13.5 compiler (uses Zinc 0.3.5)" )
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt0135", description = "SBT 0.13.5 compiler (uses Zinc 0.3.5.3)" )
 public class SBT0135Compiler
     extends AbstractCompiler
 {

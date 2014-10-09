@@ -36,7 +36,7 @@ under the License.
         <dependency>
             <groupId>com.typesafe.zinc</groupId>
             <artifactId>zinc</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.5.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.scala-lang</groupId>
