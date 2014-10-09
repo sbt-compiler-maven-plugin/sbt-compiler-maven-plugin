@@ -177,6 +177,14 @@ public abstract class AbstractSBTCompileMojo
     protected String scalacOptions;
 
     /**
+     * Additional parameters for Scala compiler.
+     * <break>
+     * For internal use only.
+     */
+    @Parameter( defaultValue = "", readonly = true )
+    protected String _scalacOptions;
+
+    /**
      * Maven project to interact with.
      */
     @Parameter( defaultValue = "${project}", readonly = true, required = true )
@@ -339,6 +347,11 @@ public abstract class AbstractSBTCompileMojo
             {
                 classpathFiles.add( new File( path ) );
             }
+            String resolvedScalacOptions = scalacOptions;
+            if ( _scalacOptions != null && _scalacOptions.length() > 0 )
+            {
+                resolvedScalacOptions = resolvedScalacOptions + ' ' + _scalacOptions;
+            }
 
             CompilerConfiguration configuration = new CompilerConfiguration();
             configuration.setSourceFiles( sourceFiles );
@@ -352,7 +365,7 @@ public abstract class AbstractSBTCompileMojo
             configuration.setOutputDirectory( getOutputDirectory() );
             configuration.setSourceEncoding( sourceEncoding );
             configuration.setJavacOptions( javacOptions );
-            configuration.setScalacOptions( scalacOptions );
+            configuration.setScalacOptions( resolvedScalacOptions );
             configuration.setAnalysisCacheFile( getAnalysisCacheFile() );
             configuration.setAnalysisCacheMap( getAnalysisCacheMap() );
 
