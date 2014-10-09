@@ -179,7 +179,7 @@ public abstract class AbstractSBTCompileMojo
     /**
      * Maven project to interact with.
      */
-    @Parameter( defaultValue = "${project}", readonly = true )
+    @Parameter( defaultValue = "${project}", readonly = true, required = true )
     protected MavenProject project;
 
     /**
