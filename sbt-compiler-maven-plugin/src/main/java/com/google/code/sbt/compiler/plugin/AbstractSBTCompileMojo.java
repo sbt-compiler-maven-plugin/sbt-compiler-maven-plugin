@@ -312,7 +312,6 @@ public abstract class AbstractSBTCompileMojo
             }
 
             List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact );
-            scalaExtraJars.remove( scalaLibraryArtifact.getFile() );
 
             String resolvedSbtVersion = getSbtVersion( sbtCompiler );
 
@@ -569,7 +568,11 @@ public abstract class AbstractSBTCompileMojo
         List<File> d = new ArrayList<File>();
         for ( Artifact artifact : getAllDependencies( scalaCompilerArtifact ) )
         {
-            d.add( artifact.getFile() );
+            if ( !SCALA_GROUPID.equals( artifact.getGroupId() )
+                || !SCALA_LIBRARY_ARTIFACTID.equals( artifact.getArtifactId() ) )
+            {
+                d.add( artifact.getFile() );
+            }
         }
         return d;
     }
