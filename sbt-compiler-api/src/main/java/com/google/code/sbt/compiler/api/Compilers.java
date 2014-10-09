@@ -17,6 +17,8 @@
 
 package com.google.code.sbt.compiler.api;
 
+import java.io.File;
+
 /**
  * Helper class.
  * 
@@ -24,6 +26,12 @@ package com.google.code.sbt.compiler.api;
  */
 public class Compilers
 {
+    private static final String CLASSES = "classes";
+    
+    private static final String TEST_CLASSES = "test-classes";
+    
+    private static final String CACHE = "cache";
+    
     private Compilers()
     {
     }
@@ -88,6 +96,19 @@ public class Compilers
             result = "sbt0135"; // use latest version
         }
         return result;
+    }
+
+    /**
+     * Returns directory for incremental compilation cache files.
+     * 
+     * @param classesDirectory compilation output directory 
+     * @return directory for incremental compilation cache files
+     */
+    public static File getCacheDirectory( File classesDirectory )
+    {
+        String classesDirectoryName = classesDirectory.getName();
+        String cacheDirectoryName = classesDirectoryName.replace( TEST_CLASSES, CACHE ).replace( CLASSES, CACHE );
+        return new File( classesDirectory.getParentFile(), cacheDirectoryName );
     }
 
 }

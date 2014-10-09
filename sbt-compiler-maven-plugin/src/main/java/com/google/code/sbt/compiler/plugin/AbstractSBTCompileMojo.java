@@ -516,11 +516,6 @@ public abstract class AbstractSBTCompileMojo
         return result;
     }
 
-    private File defaultAnalysisDirectory( MavenProject p )
-    {
-        return new File( p.getBuild().getDirectory(), "cache" );
-    }
-
     /**
      * Returns SBT incremental main compilation analysis cache file location for a project.
      * 
@@ -529,7 +524,8 @@ public abstract class AbstractSBTCompileMojo
      */
     protected File defaultAnalysisCacheFile( MavenProject p )
     {
-        return new File( defaultAnalysisDirectory( p ), "compile" );
+        File classesDirectory = new File( p.getBuild().getOutputDirectory() );
+        return new File( Compilers.getCacheDirectory( classesDirectory ), "compile" );
     }
 
     /**
@@ -540,7 +536,8 @@ public abstract class AbstractSBTCompileMojo
      */
     protected File defaultTestAnalysisCacheFile( MavenProject p )
     {
-        return new File( defaultAnalysisDirectory( p ), "test-compile" );
+        File testClassesDirectory = new File( p.getBuild().getTestOutputDirectory() );
+        return new File( Compilers.getCacheDirectory( testClassesDirectory ), "test-compile" );
     }
 
     // Private utility methods
