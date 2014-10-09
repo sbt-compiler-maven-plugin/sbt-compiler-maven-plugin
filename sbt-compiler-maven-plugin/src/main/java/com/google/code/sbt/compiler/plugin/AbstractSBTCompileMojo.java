@@ -45,7 +45,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -220,10 +219,16 @@ public abstract class AbstractSBTCompileMojo
     protected List<ArtifactRepository> remoteRepos;
 
     /**
-     * Plugin descriptor used to retrieve this plugin's properties.
+     * Plugin's groupId used for well known providers resolution
      */
-    @Parameter( defaultValue = "${plugin}", readonly = true, required = true )
-    private PluginDescriptor plugin;
+    @Parameter( property = "plugin.groupId", readonly = true, required = true )
+    private String pluginGroupId;
+
+    /**
+     * Plugin's version used for well known providers resolution
+     */
+    @Parameter( property = "plugin.version", readonly = true, required = true )
+    private String pluginVersion;
 
     /**
      * Map of compiler implementations. For now only zero or one allowed.
@@ -683,7 +688,7 @@ public abstract class AbstractSBTCompileMojo
             if ( compilerClassLoader == null )
             {
                 Artifact compilerArtifact =
-                    getResolvedArtifact( plugin.getGroupId(), "sbt-compiler-" + compilerId, plugin.getVersion() );
+                    getResolvedArtifact( pluginGroupId, "sbt-compiler-" + compilerId, pluginVersion );
 
                 Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
                 List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
