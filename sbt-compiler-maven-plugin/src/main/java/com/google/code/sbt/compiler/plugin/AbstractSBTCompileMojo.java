@@ -181,7 +181,7 @@ public abstract class AbstractSBTCompileMojo
      * <break>
      * For internal use only.
      */
-    @Parameter( defaultValue = "", readonly = true )
+    @Parameter( property = "sbt._scalacOptions", defaultValue = "", readonly = true )
     protected String _scalacOptions;
 
     /**
