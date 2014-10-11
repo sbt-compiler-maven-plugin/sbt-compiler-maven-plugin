@@ -374,8 +374,8 @@ public abstract class AbstractSBTCompileMojo
                 || ( _scalacPlugins != null && _scalacPlugins.trim().length() > 0 ) )
             {
                 List<Artifact> resolvedScalaCompilerPluginArtifacts = new ArrayList<Artifact>();
-                resolveScalacPluginArtifacts(resolvedScalaCompilerPluginArtifacts, scalacPlugins.trim() );
-                resolveScalacPluginArtifacts(resolvedScalaCompilerPluginArtifacts, _scalacPlugins.trim() );
+                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, scalacPlugins.trim() );
+                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, _scalacPlugins.trim() );
                 for ( Artifact artifact: resolvedScalaCompilerPluginArtifacts )
                 {
                     String arg = "-Xplugin:" + artifact.getFile().getAbsolutePath();
@@ -804,12 +804,13 @@ public abstract class AbstractSBTCompileMojo
         }
     }
 
-    private void resolveScalacPluginArtifacts( List<Artifact> scalacPluginArtifacts, String scalacPlugins )
+    // Plugins in format "groupId1:artifactId1:version1 groupId2:artifactId2:version2"
+    private void resolveScalacPluginArtifacts( List<Artifact> scalacPluginArtifacts, String plugins )
         throws ArtifactNotFoundException, ArtifactResolutionException
     {
-        if ( scalacPlugins != null && scalacPlugins.trim().length() > 0 )
+        if ( plugins != null && plugins.trim().length() > 0 )
         {
-            String[] scalacPluginsGAVs = scalacPlugins.trim().split( " " );
+            String[] scalacPluginsGAVs = plugins.trim().split( " " );
             for ( String scalacPluginGAV : scalacPluginsGAVs )
             {
                 String[] gav = scalacPluginGAV.split( ":" );
