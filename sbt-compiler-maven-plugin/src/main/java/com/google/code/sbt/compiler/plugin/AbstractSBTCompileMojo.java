@@ -185,6 +185,22 @@ public abstract class AbstractSBTCompileMojo
     protected String _scalacOptions;
 
     /**
+     * Scala compiler plugins.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter( property = "sbt.scalacPlugins", defaultValue = "" )
+    protected String scalacPlugins;
+
+    /**
+     * Scala compiler plugins.
+     * <break>
+     * For internal use only.
+     */
+    @Parameter( property = "sbt._scalacPlugins", defaultValue = "", readonly = true )
+    protected String _scalacPlugins;
+
+    /**
      * Maven project to interact with.
      */
     @Parameter( defaultValue = "${project}", readonly = true, required = true )
@@ -347,10 +363,28 @@ public abstract class AbstractSBTCompileMojo
             {
                 classpathFiles.add( new File( path ) );
             }
-            String resolvedScalacOptions = scalacOptions;
+
+            String resolvedScalacOptions = scalacOptions.trim();
             if ( _scalacOptions != null && _scalacOptions.length() > 0 )
             {
                 resolvedScalacOptions = resolvedScalacOptions + ' ' + _scalacOptions;
+            }
+
+            if ( ( scalacPlugins != null && scalacPlugins.trim().length() > 0 )
+                || ( _scalacPlugins != null && _scalacPlugins.trim().length() > 0 ) )
+            {
+                List<Artifact> resolvedScalaCompilerPluginArtifacts = new ArrayList<Artifact>();
+                resolveScalacPluginArtifacts(resolvedScalaCompilerPluginArtifacts, scalacPlugins.trim() );
+                resolveScalacPluginArtifacts(resolvedScalaCompilerPluginArtifacts, _scalacPlugins.trim() );
+                for ( Artifact artifact: resolvedScalaCompilerPluginArtifacts )
+                {
+                    String arg = "-Xplugin:" + artifact.getFile().getAbsolutePath();
+                    if ( arg.indexOf( ' ' ) >= 0 )
+                    {
+                        arg = '\"' + arg + '\"';
+                    }
+                    resolvedScalacOptions = resolvedScalacOptions + ' ' + arg;
+                }
             }
 
             CompilerConfiguration configuration = new CompilerConfiguration();
@@ -767,6 +801,27 @@ public abstract class AbstractSBTCompileMojo
         catch ( ProjectBuildingException e )
         {
             throw new MojoExecutionException( "Compiler autodetection failed", e );
+        }
+    }
+
+    private void resolveScalacPluginArtifacts( List<Artifact> scalacPluginArtifacts, String scalacPlugins )
+        throws ArtifactNotFoundException, ArtifactResolutionException
+    {
+        if ( scalacPlugins != null && scalacPlugins.trim().length() > 0 )
+        {
+            String[] scalacPluginsGAVs = scalacPlugins.trim().split( "," );
+            for ( String scalacPluginGAV : scalacPluginsGAVs )
+            {
+                String[] gav = scalacPluginGAV.split( ":" );
+                String groupId = gav[0];
+                String artifactId = gav[1];
+                String version = gav[2];
+                Artifact scalacPluginArtifact = getResolvedArtifact( groupId, artifactId, version );
+                if ( scalacPluginArtifact != null )
+                {
+                    scalacPluginArtifacts.add( scalacPluginArtifact );
+                }
+            }
         }
     }
 
