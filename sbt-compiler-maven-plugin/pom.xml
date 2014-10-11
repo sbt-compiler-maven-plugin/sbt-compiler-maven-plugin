@@ -221,6 +221,14 @@ under the License.
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <configuration>
+                            <excludes>com/google/code/sbt/compiler/plugin/HelpMojo.java</excludes>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../sbt-compiler-api/src/main/java</sourcepath>
