@@ -809,7 +809,7 @@ public abstract class AbstractSBTCompileMojo
     {
         if ( scalacPlugins != null && scalacPlugins.trim().length() > 0 )
         {
-            String[] scalacPluginsGAVs = scalacPlugins.trim().split( "," );
+            String[] scalacPluginsGAVs = scalacPlugins.trim().split( " " );
             for ( String scalacPluginGAV : scalacPluginsGAVs )
             {
                 String[] gav = scalacPluginGAV.split( ":" );
