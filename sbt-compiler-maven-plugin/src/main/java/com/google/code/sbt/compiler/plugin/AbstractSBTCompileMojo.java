@@ -374,8 +374,8 @@ public abstract class AbstractSBTCompileMojo
                 || ( _scalacPlugins != null && _scalacPlugins.trim().length() > 0 ) )
             {
                 List<Artifact> resolvedScalaCompilerPluginArtifacts = new ArrayList<Artifact>();
-                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, scalacPlugins.trim() );
-                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, _scalacPlugins.trim() );
+                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, scalacPlugins );
+                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, _scalacPlugins );
                 for ( Artifact artifact: resolvedScalaCompilerPluginArtifacts )
                 {
                     String arg = "-Xplugin:" + artifact.getFile().getAbsolutePath();
