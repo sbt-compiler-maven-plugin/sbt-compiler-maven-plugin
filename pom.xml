@@ -108,7 +108,7 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.2</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
@@ -166,7 +166,7 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
+                    <version>2.10.1</version>
                     <configuration>
                         <source>1.6</source>
                         <links>
@@ -219,7 +219,7 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>2.7</version>
                 </plugin>
 
                 <plugin>
@@ -267,7 +267,7 @@ under the License.
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>animal-sniffer-maven-plugin</artifactId>
-                    <version>1.11</version>
+                    <version>1.12</version>
                     <configuration>
                         <signature>
                             <groupId>org.codehaus.mojo.signature</groupId>
@@ -302,7 +302,7 @@ under the License.
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>javancss-maven-plugin</artifactId>
-                    <version>2.0</version>
+                    <version>2.1</version>
                 </plugin>
 
                 <plugin>
@@ -437,7 +437,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>2.10.1</version>
                         <configuration>
                             <source>1.6</source>
                             <links>
@@ -536,7 +536,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>2.10.1</version>
                         <configuration>
                             <source>1.6</source>
                             <links>
@@ -629,7 +629,7 @@ under the License.
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>javancss-maven-plugin</artifactId>
-                        <version>2.0</version>
+                        <version>2.1</version>
                     </plugin>
 
                     <plugin>
@@ -656,7 +656,7 @@ under the License.
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>2.9.1</version>
+                            <version>2.10.1</version>
                             <configuration>
                                 <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
                                 <docletArtifact>
@@ -681,7 +681,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>2.10.1</version>
                         <configuration>
                             <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
                             <docletArtifact>
@@ -737,12 +737,12 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.3</version>
+                        <version>2.4</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>2.10.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
