@@ -154,6 +154,13 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Scala and Java source files encoding.
+     * <br>
+     * <br>
+     * If not specified, the encoding value will be the value of the <b>{@code file.encoding}</b> system property.
+     * <br>
+     * <br>
+     * <b>{@code -encoding}</b> option in {@link #scalacOptions} or {@link #javacOptions}
+     * overrides this parameter for Scala or Java compiler respectively.
      * 
      * @since 1.0.0
      */
@@ -162,6 +169,9 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Additional parameters for Java compiler.
+     * <br>
+     * <br>
+     * Space-separated list of parameters. Parameters containing spaces can be enclosed in apostrophes or quotes.
      * 
      * @since 1.0.0
      */
@@ -170,6 +180,9 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Additional parameters for Scala compiler.
+     * <br>
+     * <br>
+     * Space-separated list of parameters. Parameters containing spaces can be enclosed in apostrophes or quotes.
      * 
      * @since 1.0.0
      */
@@ -186,6 +199,9 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Scala compiler plugins.
+     * <br>
+     * <br>
+     * Space-separated list of plugin definitions in <b>{@code groupId:artifactId:version}</b> format.
      * 
      * @since 1.0.0
      */
