@@ -399,6 +399,7 @@ under the License.
                             </rules>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>enforce-java6</id>
                         <goals>
@@ -739,11 +740,13 @@ under the License.
                         <artifactId>maven-source-plugin</artifactId>
                         <version>2.4</version>
                     </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>2.10.1</version>
                     </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
