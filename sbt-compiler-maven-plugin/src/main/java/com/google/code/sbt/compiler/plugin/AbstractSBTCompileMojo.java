@@ -104,8 +104,8 @@ public abstract class AbstractSBTCompileMojo
      * Forced Scala version.<br>
      * <br>
      * If specified, this version of Scala compiler is used for compilation.<br>
-     * If not specified, version of project's <b>{@code org.scala-lang:scala-library}</b> dependency is used.<br>
-     * If there is no <b>{@code org.scala-lang:scala-library}</b> dependency in the project (in Java only projects),
+     * If not specified, version of project's {@code org.scala-lang:scala-library} dependency is used.<br>
+     * If there is no {@code org.scala-lang:scala-library} dependency in the project (in Java only projects),
      * selected compiler's {@link Compiler#getDefaultScalaVersion()} is used. 
      * 
      * @since 1.0.0
@@ -156,10 +156,10 @@ public abstract class AbstractSBTCompileMojo
      * Scala and Java source files encoding.
      * <br>
      * <br>
-     * If not specified, the encoding value will be the value of the <b>{@code file.encoding}</b> system property.
+     * If not specified, the encoding value will be the value of the {@code file.encoding} system property.
      * <br>
      * <br>
-     * <b>{@code -encoding}</b> option in {@link #scalacOptions} or {@link #javacOptions}
+     * {@code -encoding} option in {@link #scalacOptions} or {@link #javacOptions}
      * overrides this parameter for Scala or Java compiler respectively.
      * 
      * @since 1.0.0
@@ -201,7 +201,7 @@ public abstract class AbstractSBTCompileMojo
      * Scala compiler plugins.
      * <br>
      * <br>
-     * Space-separated list of plugin definitions in <b>{@code groupId:artifactId:version}</b> format.
+     * Space-separated list of plugin definitions in {@code groupId:artifactId:version} format.
      * 
      * @since 1.0.0
      */

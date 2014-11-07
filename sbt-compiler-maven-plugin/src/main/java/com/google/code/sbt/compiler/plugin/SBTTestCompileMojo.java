@@ -60,7 +60,7 @@ public class SBTTestCompileMojo
     protected Set<String> testExcludes = new HashSet<String>();
 
     /**
-     * Set this to <b>{@code true}</b> to bypass compilation of test sources.
+     * Set this to {@code true} to bypass compilation of test sources.
      * 
      * @since 1.0.0
      */

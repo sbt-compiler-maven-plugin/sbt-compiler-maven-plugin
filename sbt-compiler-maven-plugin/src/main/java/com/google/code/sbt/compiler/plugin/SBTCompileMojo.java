@@ -60,7 +60,7 @@ public class SBTCompileMojo
     protected Set<String> excludes = new HashSet<String>();
 
     /**
-     * Set this to <b>{@code true}</b> to bypass compilation of main sources.
+     * Set this to {@code true} to bypass compilation of main sources.
      */
     @Parameter ( property = "maven.main.skip" )
     protected boolean skipMain;
