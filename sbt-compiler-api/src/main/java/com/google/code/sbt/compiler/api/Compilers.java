@@ -67,9 +67,13 @@ public class Compilers
                 {
                     result = "sbt0135";
                 }
-                else
+                else if ( sbtVersion.equals( "0.13.6" ) || sbtVersion.startsWith( "0.13.6-" ) )
                 {
                     result = "sbt0136";
+                }
+                else
+                {
+                    result = "sbt0137";
                 }
             }
             else if ( sbtVersion.startsWith( "0.12." ) )
@@ -97,7 +101,7 @@ public class Compilers
         }
         if ( result == null )
         {
-            result = "sbt0136"; // use latest version
+            result = "sbt0137"; // use latest version
         }
         return result;
     }
