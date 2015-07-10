@@ -115,18 +115,7 @@ under the License.
                             <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
                             <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
                         </links>
-                        <tagletArtifacts>
-                            <tagletArtifact>
-                                <groupId>org.apache.maven.plugin-tools</groupId>
-                                <artifactId>maven-plugin-tools-javadoc</artifactId>
-                                <version>${maven-plugin-plugin.version}</version>
-                            </tagletArtifact>
-                            <tagletArtifact>
-                                <groupId>org.codehaus.plexus</groupId>
-                                <artifactId>plexus-javadoc</artifactId>
-                                <version>1.0</version>
-                            </tagletArtifact>
-                        </tagletArtifacts>
+                        <notimestamp>true</notimestamp>
                     </configuration>
                 </plugin>
 
@@ -135,16 +124,11 @@ under the License.
                     <artifactId>maven-plugin-plugin</artifactId>
                     <version>${maven-plugin-plugin.version}</version>
                     <configuration>
-                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                        <extractors>
+                            <extractor>java-annotations</extractor>
+                        </extractors>
                     </configuration>
                     <executions>
-                        <execution>
-                            <id>mojo-descriptor</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>descriptor</goal>
-                            </goals>
-                        </execution>
                         <execution>
                             <id>help-goal</id>
                             <goals>
@@ -198,6 +182,7 @@ under the License.
                                 <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
                                 <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
                             </links>
+                            <notimestamp>true</notimestamp>
                         </configuration>
                     </plugin>
 
@@ -239,6 +224,7 @@ under the License.
                                 <link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs/</link>
                                 <link>http://maven.apache.org/ref/${maven.version}/maven-project/apidocs/</link>
                             </links>
+                            <notimestamp>true</notimestamp>
                         </configuration>
                     </plugin>
 
