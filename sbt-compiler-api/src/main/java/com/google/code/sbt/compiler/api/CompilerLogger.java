@@ -40,7 +40,7 @@ public interface CompilerLogger
 
     /**
      * Sends a throwable in the <b>debug</b> log level.
-     * <br/>
+     * <br>
      * The stack trace for this throwable will be output.
      *
      * @param throwable debug throwable
