@@ -31,7 +31,7 @@ import com.typesafe.zinc.Compiler$;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.AnalysisProcessor.class, hint = "sbt0131", description = "SBT 0.13.1 analysis processor" )
+@Component( role = AnalysisProcessor.class, hint = "sbt0131", description = "SBT 0.13.1 analysis processor" )
 public class SBT0131AnalysisProcessor
     implements AnalysisProcessor
 {

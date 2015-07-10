@@ -31,7 +31,7 @@ import org.codehaus.plexus.component.annotations.Component;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.AnalysisProcessor.class, hint = "sbt0132", description = "SBT 0.13.2 analysis processor" )
+@Component( role = AnalysisProcessor.class, hint = "sbt0132", description = "SBT 0.13.2 analysis processor" )
 public class SBT0132AnalysisProcessor
     implements AnalysisProcessor
 {
