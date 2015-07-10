@@ -26,8 +26,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Add managed source root, if it is not already added.<br/><br/>
- * Helper mojo.<br/>
+ * Add managed source root, if it is not already added.<br><br>
+ * Helper mojo.<br>
  * Adds <code>${project.build.directory}/src_managed</code> is added to project's compile source roots
  * even if it does not exist yet (it may be created later by source generators).
  * 

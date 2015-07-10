@@ -26,8 +26,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Add default Scala source roots, if they exist and are not already added.<br/><br/>
- * Helper mojo.<br/>
+ * Add default Scala source roots, if they exist and are not already added.<br><br>
+ * Helper mojo.<br>
  * Adds:
  * <ul>
  * <li>{@code src/main/scala} as compile source root</li>

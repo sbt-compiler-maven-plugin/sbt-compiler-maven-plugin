@@ -141,10 +141,10 @@ public abstract class AbstractSBTCompileMojo
     protected String sbtVersion;
 
     /**
-     * Forced Play&#33 Framework version.
+     * Forced Play&#33; Framework version.
      * <br>
      * <br>
-     * Used to select SBT version in Play&#33 Framework projects based on framework version used.
+     * Used to select SBT version in Play&#33; Framework projects based on framework version used.
      * See {@link #sbtVersion} for more details.
      * 
      * @since 1.0.0
@@ -191,7 +191,7 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Additional parameters for Scala compiler.
-     * <break>
+     * <br>
      * For internal use only.
      */
     @Parameter( property = "sbt._scalacOptions", defaultValue = "", readonly = true )
@@ -210,7 +210,7 @@ public abstract class AbstractSBTCompileMojo
 
     /**
      * Scala compiler plugins.
-     * <break>
+     * <br>
      * For internal use only.
      */
     @Parameter( property = "sbt._scalacPlugins", defaultValue = "", readonly = true )
