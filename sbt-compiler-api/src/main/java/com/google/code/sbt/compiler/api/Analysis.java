@@ -28,6 +28,13 @@ import java.util.Set;
 public interface Analysis
 {
     /**
+     * Returns all source files.
+     *
+     * @return all source files
+     */
+    public Set<File> getSourceFiles();
+
+    /**
      * Returns source file's compilation time.
      *
      * @param sourceFile source file

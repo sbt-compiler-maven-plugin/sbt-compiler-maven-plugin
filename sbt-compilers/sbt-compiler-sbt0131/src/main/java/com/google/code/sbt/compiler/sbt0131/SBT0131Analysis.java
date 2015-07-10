@@ -65,6 +65,12 @@ public class SBT0131Analysis
     }
 
     @Override
+    public Set<File> getSourceFiles()
+    {
+    	return JavaConversions.setAsJavaSet( analysis.apis().internal().keySet() );
+    }
+
+    @Override
     public long getCompilationTime( File sourceFile )
     {
         return analysis.apis().internalAPI( sourceFile ).compilation().startTime();
