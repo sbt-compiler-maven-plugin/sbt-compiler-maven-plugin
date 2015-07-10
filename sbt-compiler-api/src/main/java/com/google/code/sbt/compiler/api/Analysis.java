@@ -32,7 +32,7 @@ public interface Analysis
      *
      * @return all source files
      */
-    public Set<File> getSourceFiles();
+    Set<File> getSourceFiles();
 
     /**
      * Returns source file's compilation time.
