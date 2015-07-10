@@ -67,7 +67,7 @@ public class SBT0135Analysis
     @Override
     public Set<File> getSourceFiles()
     {
-    	return JavaConversions.setAsJavaSet( analysis.apis().internal().keySet() );
+        return JavaConversions.setAsJavaSet( analysis.apis().internal().keySet() );
     }
 
     @Override
