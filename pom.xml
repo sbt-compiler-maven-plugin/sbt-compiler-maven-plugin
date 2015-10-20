@@ -34,17 +34,18 @@ under the License.
     <name>SBT Compiler</name>
     <description>SBT Compiler</description>
     <inceptionYear>2013</inceptionYear>
-    <url>https://sbt-compiler-maven-plugin.googlecode.com/svn/mavensite/${project.version}/</url>
+    <url>https://sbt-compiler-maven-plugin.github.io/</url>
 
     <scm>
-        <connection>scm:svn:http://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</connection>
-        <developerConnection>scm:svn:https://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</developerConnection>
-        <url>http://sbt-compiler-maven-plugin.googlecode.com/svn/trunk/plugin/</url>
+        <connection>scm:git:git://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</developerConnection>
+        <url>https://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin/tree/${project.scm.tag}</url>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
-        <system>Google Project Hosting</system>
-        <url>http://code.google.com/p/sbt-compiler-maven-plugin/issues/</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin/issues/</url>
     </issueManagement>
 
     <developers>
