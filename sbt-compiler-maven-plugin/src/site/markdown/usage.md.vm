@@ -1,0 +1,294 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+
+$h2 Configuration steps
+
+$h3 Adding plugin
+
+Standard Maven Compiler Plugin must be turned off and this plugin must be added.
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <skipMain>true</skipMain> <!-- skip compile -->
+                    <skip>true</skip> <!-- skip testCompile -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-sbt-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+$h3 Configuring Scala and Java sources locations
+
+Scala and Java sources locations have to be configured. It has to be done using Maven's standard source and test source roots settings (there are no separate settings for Java and for Scala source roots).
+
+Java and Scala sources can be separated or mixed. It's up to you, where you want to place them. Below are some common source layouts.
+
+a) Scala only or Java and Scala mixed (in `src/main/scala` and `src/test/scala`):
+
+```
+<project>
+    <build>
+        <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>
+    </build>
+</project>
+```
+
+b) Java and Scala separated (Java sources in `src/main/java` and `src/test/java` and Scala sources in `src/main/scala` and `src/test/scala`):
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-sbt-compile</id>
+                        <goals>
+                            <goal>addScalaSources</goal> <!-- short equivalent of the more verbose version below -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+`addScalaSources` is a utility goal, a shortcut for (more verbose) configuration:
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/scala</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/test/scala</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+c) Java only (Java sources in `src/main/java` and `src/test/java`)
+
+Nothing to configure.
+
+
+$h3 Setting Scala library (and compiler) version
+
+Scala library version resolution is performed in three steps.
+
+a) can be specified as plugin's configuration parameter:
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <scalaVersion>2.11.7</scalaVersion>
+                </configuration>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+or using property
+
+```
+<project>
+    <properties>
+        <scala.version>2.11.7</scala.version>
+    </properties>
+</project>
+```
+
+b) if no version specified directly, project's dependencies will be searched for `scala-library` and it's versions used
+
+```
+<project>
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.7</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+c) if `scala-library` dependency was not found, default value will be selected depending on resolved SBT version.
+
+$h3 Setting SBT version
+
+SBT version resolution is performed in two steps.
+
+a) can be specified as plugin's configuration parameter:
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <sbtVersion>0.13.7</sbtVersion>
+                </configuration>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+or using property
+
+```
+<project>
+    <properties>
+        <sbt.version>0.13.7</sbt.version>
+    </properties>
+</project>
+```
+
+b) if no version specified directly, default value `0.13.7` will be selected
+
+$h3 Setting additional compiler options
+
+a) Scalac and Javac options
+
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <javacOptions>-g</javacOptions> <!-- "-g" is default value -->
+                    <scalacOptions>-deprecation -unchecked</scalacOptions> <!-- "-deprecation -unchecked" is default value -->
+                </configuration>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+b) source encoding
+
+Source encoding can be specified in two ways:
+
+as a property:
+
+```
+<project>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>
+```
+
+or in javacOptions and scalacOptions plugin's configuration parameters (more verbose, not recommended):
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <javacOptions>-g -encoding UTF-8</javacOptions>
+                    <scalacOptions>-deprecation -unchecked -encoding UTF-8</scalacOptions>
+                </configuration>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
+
+c) source includes/excludes
+
+```
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include> <!-- default value -->
+                        <include>**/*.scala</include> <!-- default value -->
+                    </includes>
+                    <excludes>
+                        <exclude>Foo.java</exclude>
+                        <exclude>Bar.scala</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        <plugins>
+    </build>
+</project>
+```
