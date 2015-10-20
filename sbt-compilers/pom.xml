@@ -40,6 +40,7 @@ under the License.
         <module>sbt-compiler-sbt0135</module>
         <module>sbt-compiler-sbt0136</module>
         <module>sbt-compiler-sbt0137</module>
+        <module>sbt-compiler-sbt0138</module>
     </modules>
 
     <dependencies>
