@@ -10,4 +10,4 @@ install:
 
 script: mvn clean verify --update-snapshots -e
 
-jdk: oraclejdk6
+jdk: oraclejdk7
