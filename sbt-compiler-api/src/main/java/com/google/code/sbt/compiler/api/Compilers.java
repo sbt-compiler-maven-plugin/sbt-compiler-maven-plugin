@@ -103,7 +103,15 @@ public class Compilers
                 }
                 else if ( playVersion.startsWith( "2.3." ) || playVersion.startsWith( "2.3-" ) )
                 {
-                    result = "sbt0135";
+                    result = "sbt0138";
+                }
+                else if ( playVersion.startsWith( "2.4." ) || playVersion.startsWith( "2.4-" ) )
+                {
+                    result = "sbt0138";
+                }
+                else if ( playVersion.startsWith( "2.5." ) || playVersion.startsWith( "2.5-" ) )
+                {
+                    result = "sbt0139";
                 }
             }
         }
