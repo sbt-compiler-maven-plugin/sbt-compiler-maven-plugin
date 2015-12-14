@@ -1,3 +1,21 @@
 .builtBy {
     display: none;
 }
+
+pre.prettyprint {
+    border: 1px solid #e3e3e3;
+}
+
+tt {
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    color: #d14;
+}
+
+.tag {
+    color: #63a35c;
+}
+
+code, pre {
+    font-family: Monaco,Menlo,"Courier New",monospace;
+}

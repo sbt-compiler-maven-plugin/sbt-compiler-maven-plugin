@@ -29,8 +29,8 @@ under the License.
     <artifactId>sbt-compiler-sbt012</artifactId>
     <packaging>jar</packaging>
 
-    <name>SBT Compiler for SBT 0.12</name>
-    <description>SBT Compiler for SBT 0.12</description>
+    <name>SBT Compiler for SBT 0.12.x</name>
+    <description>SBT Compiler for SBT 0.12.x</description>
 
     <dependencies>
         <dependency>

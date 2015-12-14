@@ -1,3 +1,28 @@
+#banner {
+    background-color: #006bbb;
+    border-radius: 6px 6px 0px 0px;
+    color: white;
+}
+
+#bannerLeft {
+    margin-left: 14px;
+    margin-top: 30px;
+}
+
+#bannerRight > img {
+    border-radius: 6px 6px 0px 0px;
+}
+
+.breadcrumb {
+    background-color: #002f51;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.breadcrumb > li {
+    color: #ffffff;
+    text-shadow: none;
+}
+
 .builtBy {
     display: none;
 }

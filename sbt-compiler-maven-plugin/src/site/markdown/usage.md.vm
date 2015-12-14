@@ -52,8 +52,8 @@ a) Scala only or Java and Scala mixed (in `src/main/scala` and `src/test/scala`)
 ```
 <project>
     <build>
-        <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>
+        <sourceDirectory>\${project.basedir}/src/main/scala</sourceDirectory>
+        <testSourceDirectory>\${project.basedir}/src/test/scala</testSourceDirectory>
     </build>
 </project>
 ```
@@ -91,6 +91,7 @@ b) Java and Scala separated (Java sources in `src/main/java` and `src/test/java`
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${buildHelperPluginVersion}</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -99,7 +100,7 @@ b) Java and Scala separated (Java sources in `src/main/java` and `src/test/java`
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/src/main/scala</source>
+                                <source>\${project.basedir}/src/main/scala</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -110,7 +111,7 @@ b) Java and Scala separated (Java sources in `src/main/java` and `src/test/java`
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/src/test/scala</source>
+                                <source>\${project.basedir}/src/test/scala</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -141,7 +142,7 @@ a) can be specified as plugin's configuration parameter:
                 <artifactId>sbt-compiler-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <scalaVersion>2.11.7</scalaVersion>
+                    <scalaVersion>${scala211LatestVersion}</scalaVersion>
                 </configuration>
             </plugin>
         <plugins>
@@ -154,7 +155,7 @@ or using property
 ```
 <project>
     <properties>
-        <scala.version>2.11.7</scala.version>
+        <scala.version>${scala211LatestVersion}</scala.version>
     </properties>
 </project>
 ```
@@ -167,7 +168,7 @@ b) if no version specified directly, project's dependencies will be searched for
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.7</version>
+            <version>${scala211LatestVersion}</version>
         </dependency>
     </dependencies>
 </project>
@@ -190,7 +191,7 @@ a) can be specified as plugin's configuration parameter:
                 <artifactId>sbt-compiler-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <sbtVersion>0.13.7</sbtVersion>
+                    <sbtVersion>${sbtDefaultVersion}</sbtVersion>
                 </configuration>
             </plugin>
         <plugins>
@@ -203,12 +204,12 @@ or using property
 ```
 <project>
     <properties>
-        <sbt.version>0.13.7</sbt.version>
+        <sbt.version>${sbtDefaultVersion}</sbt.version>
     </properties>
 </project>
 ```
 
-b) if no version specified directly, default value `0.13.7` will be selected
+b) if no version specified directly, default value `${sbtDefaultVersion}` will be selected
 
 $h3 Setting additional compiler options
 
