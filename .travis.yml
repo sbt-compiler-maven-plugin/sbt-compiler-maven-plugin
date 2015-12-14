@@ -1,3 +1,13 @@
 language: java
-jdk:
-   - oraclejdk7
+
+cache:
+  directories:
+    - $HOME/.m2
+
+install:
+  - mvn dependency:resolve-plugins -DexcludeArtifactIds=plexus-component-metadata --quiet --update-snapshots -e
+  - mvn dependency:resolve --quiet --update-snapshots -e
+
+script: mvn clean verify --update-snapshots -e
+
+jdk: oraclejdk6
