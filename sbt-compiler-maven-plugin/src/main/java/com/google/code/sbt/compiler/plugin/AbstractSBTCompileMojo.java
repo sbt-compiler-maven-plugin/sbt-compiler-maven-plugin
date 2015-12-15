@@ -23,7 +23,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -33,20 +33,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
@@ -223,12 +223,6 @@ public abstract class AbstractSBTCompileMojo
     protected MavenProject project;
 
     /**
-     * Maven project builder used to resolve artifacts.
-     */
-    @Component
-    protected MavenProjectBuilder mavenProjectBuilder;
-
-    /**
      * All Maven projects in the reactor.
      */
     @Parameter( defaultValue = "${reactorProjects}", required = true, readonly = true )
@@ -257,6 +251,12 @@ public abstract class AbstractSBTCompileMojo
      */
     @Parameter( property = "project.remoteArtifactRepositories", readonly = true, required = true )
     protected List<ArtifactRepository> remoteRepos;
+
+    /**
+     * For retrieval of artifact's metadata.
+     */
+    @Component
+    protected ArtifactMetadataSource metadataSource;
 
     /**
      * Plugin's groupId used for well known providers resolution
@@ -351,7 +351,7 @@ public abstract class AbstractSBTCompileMojo
                                                                  resolvedScalaVersion ) );
             }
 
-            List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact );
+            List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact, scalaLibraryArtifact );
 
             String resolvedSbtVersion = getSbtVersion( sbtCompiler );
 
@@ -621,60 +621,34 @@ public abstract class AbstractSBTCompileMojo
         return artifact;
     }
 
-    private List<File> getCompilerDependencies( Artifact scalaCompilerArtifact )
+    private List<File> getCompilerDependencies( Artifact scalaCompilerArtifact, Artifact scalaLibraryArtifact )
         throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
         ProjectBuildingException
     {
+        ArtifactFilter scalaLibraryFilter =
+            new ExcludesArtifactFilter( Collections.singletonList( scalaLibraryArtifact.getGroupId() + ":"
+                + scalaLibraryArtifact.getArtifactId() ) );
         List<File> d = new ArrayList<File>();
-        for ( Artifact artifact : getAllDependencies( scalaCompilerArtifact ) )
+        for ( Artifact artifact : getAllDependencies( scalaCompilerArtifact, scalaLibraryFilter ) )
         {
-            if ( !SCALA_GROUPID.equals( artifact.getGroupId() )
-                || !SCALA_LIBRARY_ARTIFACTID.equals( artifact.getArtifactId() ) )
+            if ( !scalaCompilerArtifact.getGroupId().equals( artifact.getGroupId() )
+                || !scalaCompilerArtifact.getArtifactId().equals( artifact.getArtifactId() ) )
             {
-                d.add( artifact.getFile() );
+                d.add( artifact.getFile() ); // don't add scalaCompilerArtifact file
             }
         }
         return d;
     }
 
-    private Set<Artifact> getAllDependencies( Artifact artifact )
+    private Set<Artifact> getAllDependencies( Artifact artifact, ArtifactFilter filter )
         throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
         ProjectBuildingException
     {
-        Set<Artifact> result = new HashSet<Artifact>();
-        MavenProject p = mavenProjectBuilder.buildFromRepository( artifact, remoteRepos, localRepo );
-        Set<Artifact> d = resolveDependencyArtifacts( p );
-        result.addAll( d );
-        for ( Artifact dependency : d )
-        {
-            Set<Artifact> transitive = getAllDependencies( dependency );
-            result.addAll( transitive );
-        }
-        return result;
-    }
-
-    /**
-     * This method resolves the dependency artifacts from the project.
-     * 
-     * @param theProject The POM.
-     * @return resolved set of dependency artifacts.
-     * @throws ArtifactResolutionException
-     * @throws ArtifactNotFoundException
-     * @throws InvalidDependencyVersionException
-     */
-    private Set<Artifact> resolveDependencyArtifacts( MavenProject theProject )
-        throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException
-    {
-        AndArtifactFilter filter = new AndArtifactFilter();
-        filter.add( new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-        filter.add( new NonOptionalArtifactFilter() );
-        // TODO follow the dependenciesManagement and override rules
-        Set<Artifact> artifacts = theProject.createArtifacts( factory, Artifact.SCOPE_RUNTIME, filter );
-        for ( Artifact artifact : artifacts )
-        {
-            resolver.resolve( artifact, remoteRepos, localRepo );
-        }
-        return artifacts;
+        Artifact originatingArtifact = factory.createBuildArtifact( "dummy", "dummy", "1.0", "jar" );
+        ArtifactResolutionResult resolutionResult =
+            resolver.resolveTransitively( Collections.singleton( artifact ), originatingArtifact,
+                                          localRepo, remoteRepos, metadataSource, filter );
+        return resolutionResult.getArtifacts();
     }
 
     // Cached classloaders
@@ -753,9 +727,9 @@ public abstract class AbstractSBTCompileMojo
                 Artifact compilerArtifact =
                     getResolvedArtifact( pluginGroupId, "sbt-compiler-" + compilerId, pluginVersion );
 
-                Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact );
-                List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 2 );
-                classPathFiles.add( compilerArtifact.getFile() );
+                Set<Artifact> compilerDependencies = getAllDependencies( compilerArtifact, null );
+                List<File> classPathFiles = new ArrayList<File>( compilerDependencies.size() + 1 );
+//                classPathFiles.add( compilerArtifact.getFile() );
                 for ( Artifact dependencyArtifact : compilerDependencies )
                 {
                     classPathFiles.add( dependencyArtifact.getFile() );
@@ -839,15 +813,6 @@ public abstract class AbstractSBTCompileMojo
                     scalacPluginArtifacts.add( scalacPluginArtifact );
                 }
             }
-        }
-    }
-
-    private static class NonOptionalArtifactFilter
-        implements ArtifactFilter
-    {
-        public boolean include( Artifact artifact )
-        {
-            return !artifact.isOptional();
         }
     }
 
