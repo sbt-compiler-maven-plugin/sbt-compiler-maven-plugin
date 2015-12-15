@@ -28,7 +28,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
     <artifactId>sbt-compiler</artifactId>
-    <version>1.0.0-beta7-SNAPSHOT</version>
+    <version>1.0.0-beta7</version>
     <packaging>pom</packaging>
 
     <name>SBT Compiler</name>
@@ -40,7 +40,7 @@ under the License.
         <connection>scm:git:git://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</developerConnection>
         <url>https://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin/tree/${project.scm.tag}</url>
-        <tag>HEAD</tag>
+        <tag>sbt-compiler-1.0.0-beta7</tag>
     </scm>
 
     <ciManagement>
