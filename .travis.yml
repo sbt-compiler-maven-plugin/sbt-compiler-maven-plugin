@@ -5,6 +5,8 @@ cache:
     - $HOME/.m2
 
 install:
+  - java -XX:+PrintFlagsFinal -version
+  - mvn --version
   - mvn dependency:resolve-plugins -DexcludeArtifactIds=plexus-component-metadata --quiet --update-snapshots -e
   - mvn dependency:resolve --quiet --update-snapshots -e
 
