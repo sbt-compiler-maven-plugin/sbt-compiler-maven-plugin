@@ -7,8 +7,8 @@ cache:
 install:
   - java -XX:+PrintFlagsFinal -version
   - mvn --version
-  - mvn dependency:resolve-plugins -DexcludeArtifactIds=plexus-component-metadata --quiet --update-snapshots -e
-  - mvn dependency:resolve --quiet --update-snapshots -e
+  - mvn dependency:resolve-plugins -DexcludeArtifactIds=plexus-component-metadata --update-snapshots -e
+  - mvn dependency:resolve --update-snapshots -e
 
 script: mvn clean verify --update-snapshots -e
 
