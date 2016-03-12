@@ -37,11 +37,11 @@ import com.typesafe.zinc.Inputs;
 import com.typesafe.zinc.Setup;
 
 /**
- * SBT 0.13 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.0)
+ * SBT 0.13 compatible compiler (uses <a href="https://github.com/typesafehub/zinc">Zinc</a> 0.3.9)
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt013", description = "SBT 0.13 compiler (uses Zinc 0.3.0)" )
+@Component( role = com.google.code.sbt.compiler.api.Compiler.class, hint = "sbt013", description = "SBT 0.13 compiler (uses Zinc 0.3.9)" )
 public class SBT013Compiler
     extends AbstractCompiler
 {
@@ -58,13 +58,13 @@ public class SBT013Compiler
     @Override
     public String getDefaultScalaVersion()
     {
-        return "2.10.3";
+        return "2.10.5";
     }
 
     @Override
     public String getDefaultSbtVersion()
     {
-        return "0.13.0";
+        return "0.13.9";
     }
 
     @Override
@@ -168,8 +168,31 @@ public class SBT013Compiler
         // Backup location (if transactional)
         Option<File> backup = Option.empty();
 
+        // comment from SBT (sbt.inc.IncOptions scala):
+        // Determines whether incremental compiler should recompile all dependencies of a file
+        // that contains a macro definition.
+        //
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Enable recompilation of all dependencies of a macro def
+        boolean recompileOnMacroDef = true;
+
+        // comment from SBT (sbt.inc.IncOptions scala):
+        // Determines whether incremental compiler uses the new algorithm known as name hashing.
+        //
+        // This flag is disabled by default so incremental compiler's behavior is the same as in sbt 0.13.0.
+        //
+        // IMPLEMENTATION NOTE:
+        // Enabling this flag enables a few additional functionalities that are needed by the name hashing algorithm:
+        //
+        //   1. New dependency source tracking is used. See `sbt.inc.Relations` for details.
+        //   2. Used names extraction and tracking is enabled. See `sbt.inc.Relations` for details as well.
+        //   3. Hashing of public names is enabled. See `sbt.inc.AnalysisCallback` for details.
+        // comment from Zinc (com.typesafe.zinc.Settings.scala):
+        // Enable improved (experimental) incremental compilation algorithm
+        boolean nameHashing = false;
+
         return new IncOptions( transitiveStep, recompileAllFraction, relationsDebug, apiDebug, apiDiffContextSize,
-                               apiDumpDirectory, transactional, backup );
+                               apiDumpDirectory, transactional, backup, recompileOnMacroDef, nameHashing );
     }
 
 }

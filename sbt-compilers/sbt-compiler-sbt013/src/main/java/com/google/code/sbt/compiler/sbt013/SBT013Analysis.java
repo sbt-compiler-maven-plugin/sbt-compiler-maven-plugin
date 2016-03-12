@@ -23,6 +23,9 @@ import java.util.Set;
 import scala.collection.JavaConversions;
 
 import sbt.inc.AnalysisStore;
+import sbt.inc.LastModified;
+import sbt.inc.Stamp;
+import sbt.inc.Stamps;
 
 import com.typesafe.zinc.Compiler$;
 
@@ -37,6 +40,7 @@ public class SBT013Analysis
     implements Analysis
 {
     private sbt.inc.Analysis analysis;
+    private Stamps stamps;
 
     /**
      * Creates {@link Analysis} wrapper around SBT native {@link sbt.inc.Analysis} delegate.
@@ -49,8 +53,13 @@ public class SBT013Analysis
     }
 
     @Override
-    public void writeToFile( File analysisCacheFile )
+    public void writeToFile( File analysisCacheFile )//use Zinc method (if there is any)?
     {
+        if ( stamps != null ) // stamps were modified, merge now
+        {
+            analysis = analysis.copy( stamps, analysis.apis(), analysis.relations(), analysis.infos(), analysis.compilations() );
+            stamps = null;
+        }
         AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisCacheFile );
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
@@ -76,7 +85,16 @@ public class SBT013Analysis
     @Override
     public void updateClassFileTimestamp( File classFile )
     {
-        // Class file time stamps not supported
+        if ( stamps == null )
+        {
+            stamps = analysis.stamps();
+        }
+        Stamp existingStamp = stamps.product( classFile );
+        if ( existingStamp != null && existingStamp instanceof LastModified )
+        {
+            Stamp newStamp = new LastModified( classFile.lastModified() );
+            stamps = stamps.markProduct( classFile, newStamp );
+        }
     }
 
     @Override

@@ -49,42 +49,11 @@ public class Compilers
         String result = null;
         if ( sbtVersion != null && !sbtVersion.isEmpty() )
         {
-            if ( sbtVersion.startsWith( "0.13." ) )
+            if ( sbtVersion.equals( "0.13" ) || sbtVersion.startsWith( "0.13." ) )
             {
-                if ( sbtVersion.equals( "0.13.0" ) || sbtVersion.startsWith( "0.13.0-" ) )
-                {
-                    result = "sbt013";
-                }
-                else if ( sbtVersion.equals( "0.13.1" ) || sbtVersion.startsWith( "0.13.1-" ) )
-                {
-                    result = "sbt0131";
-                }
-                else if ( sbtVersion.equals( "0.13.2" ) || sbtVersion.startsWith( "0.13.2-" ) )
-                {
-                    result = "sbt0132";
-                }
-                else if ( sbtVersion.equals( "0.13.5" ) || sbtVersion.startsWith( "0.13.5-" ) )
-                {
-                    result = "sbt0135";
-                }
-                else if ( sbtVersion.equals( "0.13.6" ) || sbtVersion.startsWith( "0.13.6-" ) )
-                {
-                    result = "sbt0136";
-                }
-                else if ( sbtVersion.equals( "0.13.7" ) || sbtVersion.startsWith( "0.13.7-" ) )
-                {
-                    result = "sbt0137";
-                }
-                else if ( sbtVersion.equals( "0.13.8" ) || sbtVersion.startsWith( "0.13.8-" ) )
-                {
-                    result = "sbt0138";
-                }
-                else
-                {
-                    result = "sbt0139";
-                }
+                result = "sbt013";
             }
-            else if ( sbtVersion.startsWith( "0.12." ) )
+            else if ( sbtVersion.equals( "0.12" ) || sbtVersion.startsWith( "0.12." ) )
             {
                 result = "sbt012";
             }
@@ -97,27 +66,11 @@ public class Compilers
                 {
                     result = "sbt012";
                 }
-                else if ( playVersion.startsWith( "2.2." ) || playVersion.startsWith( "2.2-" ) )
-                {
-                    result = "sbt013";
-                }
-                else if ( playVersion.startsWith( "2.3." ) || playVersion.startsWith( "2.3-" ) )
-                {
-                    result = "sbt0138";
-                }
-                else if ( playVersion.startsWith( "2.4." ) || playVersion.startsWith( "2.4-" ) )
-                {
-                    result = "sbt0138";
-                }
-                else if ( playVersion.startsWith( "2.5." ) || playVersion.startsWith( "2.5-" ) )
-                {
-                    result = "sbt0139";
-                }
             }
         }
         if ( result == null )
         {
-            result = "sbt0139"; // use latest version
+            result = "sbt013"; // use latest version
         }
         return result;
     }

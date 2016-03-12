@@ -5,4 +5,4 @@
 
 $h2 About ${project.name}
 
-Compiler compatible with SBT version 0.13.0.
+Compiler compatible with SBT version 0.13.x.

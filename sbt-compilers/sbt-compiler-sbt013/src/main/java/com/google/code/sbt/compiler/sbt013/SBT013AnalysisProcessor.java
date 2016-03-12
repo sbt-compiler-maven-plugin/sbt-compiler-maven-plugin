@@ -38,7 +38,7 @@ public class SBT013AnalysisProcessor
     @Override
     public boolean areClassFileTimestampsSupported()
     {
-        return false;
+        return true;
     }
 
     @Override
