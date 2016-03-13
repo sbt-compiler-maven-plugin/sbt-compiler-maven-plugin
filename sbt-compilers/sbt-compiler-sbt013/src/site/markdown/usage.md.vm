@@ -9,7 +9,7 @@ There are three ways of selecting this compiler.
 
 $h3 Using project property.
 
-Add `sbt.version` project property with value starting with `0.13.`.
+Add `sbt.version` project property with value `0.13` or any value starting with `0.13.`.
 
 This is simplest and recommended way because this property can be used
 to declare versions of Play! Framework dependencies.
@@ -19,7 +19,7 @@ to declare versions of Play! Framework dependencies.
     ...
     <properties>
         ...
-        <sbt.version>0.13.9</sbt.version>
+        <sbt.version>${sbt013LatestVersion}</sbt.version>
     </properties>
     ...
 </project>
@@ -27,7 +27,7 @@ to declare versions of Play! Framework dependencies.
 
 $h3 Using plugin configuration parameter.
 
-Add `sbtVersion` parameter with value `0.13.9` to plugin configuration section.
+Add `sbtVersion` parameter with value `0.13` or any value starting with `0.13.` to plugin configuration section.
 
 ```
 <project>
@@ -42,7 +42,7 @@ Add `sbtVersion` parameter with value `0.13.9` to plugin configuration section.
                 <version>${project.version}</version>
                 <configuration>
                     ...
-                    <sbtVersion>0.13.9</sbtVersion>
+                    <sbtVersion>${sbt013LatestVersion}</sbtVersion>
                 </configuration>
             </plugin>
             ...

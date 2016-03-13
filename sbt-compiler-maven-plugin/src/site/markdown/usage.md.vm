@@ -191,7 +191,7 @@ a) can be specified as plugin's configuration parameter:
                 <artifactId>sbt-compiler-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <sbtVersion>${sbtDefaultVersion}</sbtVersion>
+                    <sbtVersion>${sbt013LatestVersion}</sbtVersion>
                 </configuration>
             </plugin>
         <plugins>
@@ -204,12 +204,12 @@ or using property
 ```
 <project>
     <properties>
-        <sbt.version>${sbtDefaultVersion}</sbt.version>
+        <sbt.version>${sbt013LatestVersion}</sbt.version>
     </properties>
 </project>
 ```
 
-b) if no version specified directly, default value `${sbtDefaultVersion}` will be selected
+b) if no version specified directly, default value `${sbt013LatestVersion}` will be selected
 
 $h3 Setting additional compiler options
 

@@ -13,6 +13,6 @@ This project declares the following modules:
 
 | Name                                                             | Description                              |
 |------------------------------------------------------------------|-----------------------------|
-| [SBT Compiler for SBT 0.12.x](./sbt-compiler-sbt012/index.html)  | SBT Compiler for SBT 0.12.x |
-| [SBT Compiler for SBT 0.13.x](./sbt-compiler-sbt013/index.html)  | SBT Compiler for SBT 0.13.x |
+| [SBT Compiler for SBT 0.12](./sbt-compiler-sbt012/index.html)    | SBT Compiler for SBT 0.12   |
+| [SBT Compiler for SBT 0.13](./sbt-compiler-sbt013/index.html)    | SBT Compiler for SBT 0.13   |
 
