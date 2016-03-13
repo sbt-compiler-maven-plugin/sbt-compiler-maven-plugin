@@ -179,8 +179,6 @@ public class SBT013Compiler
         // comment from SBT (sbt.inc.IncOptions scala):
         // Determines whether incremental compiler uses the new algorithm known as name hashing.
         //
-        // This flag is disabled by default so incremental compiler's behavior is the same as in sbt 0.13.0.
-        //
         // IMPLEMENTATION NOTE:
         // Enabling this flag enables a few additional functionalities that are needed by the name hashing algorithm:
         //
@@ -189,7 +187,7 @@ public class SBT013Compiler
         //   3. Hashing of public names is enabled. See `sbt.inc.AnalysisCallback` for details.
         // comment from Zinc (com.typesafe.zinc.Settings.scala):
         // Enable improved (experimental) incremental compilation algorithm
-        boolean nameHashing = false;
+        boolean nameHashing = true;
 
         return new IncOptions( transitiveStep, recompileAllFraction, relationsDebug, apiDebug, apiDiffContextSize,
                                apiDumpDirectory, transactional, backup, recompileOnMacroDef, nameHashing );
