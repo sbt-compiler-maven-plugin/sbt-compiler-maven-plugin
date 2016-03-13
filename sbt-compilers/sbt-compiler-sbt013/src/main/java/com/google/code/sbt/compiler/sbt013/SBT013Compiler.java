@@ -87,7 +87,7 @@ public class SBT013Compiler
                            configuration.getOutputDirectory(), resolveScalacOptions( configuration ),
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
                            configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER, getIncOptions(),
-                           configuration.getLogger().isDebugEnabled() /* mirrorAnalysisCache */ );
+                           false /* mirrorAnalysisCache */ );
         if ( configuration.getLogger().isDebugEnabled() )
         {
             Inputs.debug( inputs, sbtLogger );
