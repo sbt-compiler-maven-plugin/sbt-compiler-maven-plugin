@@ -34,7 +34,7 @@ under the License.
     <name>SBT Compiler</name>
     <description>SBT Compiler</description>
     <inceptionYear>2013</inceptionYear>
-    <url>https://sbt-compiler-maven-plugin.github.io/</url>
+    <url>https://sbt-compiler-maven-plugin.github.io/sbt-compiler-maven-plugin/${project.version}</url>
 
     <scm>
         <connection>scm:git:git://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</connection>
@@ -175,6 +175,7 @@ under the License.
                     <version>2.10.3</version>
                     <configuration>
                         <source>1.6</source>
+                        <detectJavaApiLink>false</detectJavaApiLink>
                         <links>
                             <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                         </links>
@@ -455,6 +456,7 @@ under the License.
                         <version>2.10.3</version>
                         <configuration>
                             <source>1.6</source>
+                            <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
                                 <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                             </links>
@@ -554,6 +556,7 @@ under the License.
                         <version>2.10.3</version>
                         <configuration>
                             <source>1.6</source>
+                            <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
                                 <link>http://docs.oracle.com/javase/1.6.0/docs/api/</link>
                             </links>

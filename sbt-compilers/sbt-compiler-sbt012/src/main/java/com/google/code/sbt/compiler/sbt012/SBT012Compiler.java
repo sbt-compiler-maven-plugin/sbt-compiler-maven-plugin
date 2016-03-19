@@ -46,18 +46,27 @@ public class SBT012Compiler
      */
     private static final String COMPILE_ORDER = "mixed";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDefaultScalaVersion()
     {
         return "2.10.0";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDefaultSbtVersion()
     {
         return "0.12.2";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException

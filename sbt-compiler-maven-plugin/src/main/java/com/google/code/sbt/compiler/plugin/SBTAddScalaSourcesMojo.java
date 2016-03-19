@@ -56,6 +56,7 @@ public class SBTAddScalaSourcesMojo
      * <li>{@code src/test/scala} is added to project's test compile source roots</li>
      * </ul>
      */
+    @Override
     public void execute()
     {
         if ( "pom".equals( project.getPackaging() ) )

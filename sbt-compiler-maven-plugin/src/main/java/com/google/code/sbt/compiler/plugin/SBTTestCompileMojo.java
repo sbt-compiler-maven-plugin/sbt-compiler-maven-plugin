@@ -85,6 +85,9 @@ public class SBTTestCompileMojo
     @Parameter( defaultValue = "${project.build.testOutputDirectory}", required = true, readonly = true )
     private File outputDirectory;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException
@@ -97,42 +100,63 @@ public class SBTTestCompileMojo
         super.internalExecute();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getCompileSourceRoots()
     {
         return compileSourceRoots;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Set<String> getSourceIncludes()
     {
         return testIncludes;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Set<String> getSourceExcludes()
     {
         return testExcludes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getClasspathElements()
     {
         return classpathElements;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected File getOutputDirectory()
     {
         return outputDirectory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected File getAnalysisCacheFile()
     {
         return defaultTestAnalysisCacheFile( project );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<File, File> getAnalysisCacheMap()
     {

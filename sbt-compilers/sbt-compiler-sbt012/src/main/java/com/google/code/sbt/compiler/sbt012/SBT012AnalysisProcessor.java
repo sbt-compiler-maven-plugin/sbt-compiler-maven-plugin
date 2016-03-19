@@ -35,12 +35,18 @@ import org.codehaus.plexus.component.annotations.Component;
 public class SBT012AnalysisProcessor
     implements AnalysisProcessor
 {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean areClassFileTimestampsSupported()
     {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Analysis readFromFile( File analysisCacheFile )
     {

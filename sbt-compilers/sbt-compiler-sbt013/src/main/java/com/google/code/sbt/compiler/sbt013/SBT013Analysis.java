@@ -52,6 +52,9 @@ public class SBT013Analysis
         this.analysis = analysis;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeToFile( File analysisCacheFile )//use Zinc method (if there is any)?
     {
@@ -64,24 +67,36 @@ public class SBT013Analysis
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<File> getSourceFiles()
     {
         return JavaConversions.setAsJavaSet( analysis.apis().internal().keySet() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getCompilationTime( File sourceFile )
     {
         return analysis.apis().internalAPI( sourceFile ).compilation().startTime();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<File> getProducts( File sourceFile )
     {
         return JavaConversions.setAsJavaSet( analysis.relations().products( sourceFile ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateClassFileTimestamp( File classFile )
     {
@@ -97,6 +112,9 @@ public class SBT013Analysis
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object unwrap()
     {

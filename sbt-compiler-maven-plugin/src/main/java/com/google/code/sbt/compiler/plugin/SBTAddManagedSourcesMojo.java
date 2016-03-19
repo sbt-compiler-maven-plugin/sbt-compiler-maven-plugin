@@ -28,7 +28,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * Add managed source root, if it is not already added.<br><br>
  * Helper mojo.<br>
- * Adds <code>${project.build.directory}/src_managed</code> as compile source root
+ * Adds {@code ${project.build.directory}/src_managed} as compile source root
  * even if it does not exist yet (it may be created later by source generators).
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
@@ -48,8 +48,9 @@ public class SBTAddManagedSourcesMojo
     /**
      * Adds default SBT managed sources location to Maven project.
      * 
-     * <code>${project.build.directory}/src_managed</code> is added to project's compile source roots
+     * {@code ${project.build.directory}/src_managed} is added to project's compile source roots
      */
+    @Override
     public void execute()
     {
         if ( "pom".equals( project.getPackaging() ) )

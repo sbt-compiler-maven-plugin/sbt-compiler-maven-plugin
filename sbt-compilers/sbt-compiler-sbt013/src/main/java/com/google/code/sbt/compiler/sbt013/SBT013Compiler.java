@@ -56,18 +56,27 @@ public class SBT013Compiler
      */
     private static final boolean FORK_JAVA = false;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDefaultScalaVersion()
     {
         return "2.10.5";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDefaultSbtVersion()
     {
         return "0.13.9";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException

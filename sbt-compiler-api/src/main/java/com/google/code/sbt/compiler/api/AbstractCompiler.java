@@ -31,7 +31,7 @@ public abstract class AbstractCompiler
     implements Compiler
 {
     /**
-     * Returns merged <code>scalaOptions</code> and <code>sourceEncoding</code> configuration parameters.
+     * Returns merged {@code scalaOptions} and {@code sourceEncoding} configuration parameters.
      * 
      * @param configuration compiler configuration object
      * @return merged parameters
@@ -50,7 +50,7 @@ public abstract class AbstractCompiler
     }
 
     /**
-     * Returns merged <code>javacOptions</code> and <code>sourceEncoding</code> configuration parameters.
+     * Returns merged {@code javacOptions} and {@code sourceEncoding} configuration parameters.
      * 
      * @param configuration compiler configuration object
      * @return merged parameters

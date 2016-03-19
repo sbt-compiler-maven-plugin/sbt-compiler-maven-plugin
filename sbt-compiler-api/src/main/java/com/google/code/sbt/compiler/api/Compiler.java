@@ -29,9 +29,9 @@ public interface Compiler
      * 
      * This default value is used when none of the below options is true:
      * <ul>
-     * <li>plugin's <code>scalaVersion</code> configuration parameter is defined,</li>
-     * <li>project's <code>scala.version</code> property is defined,</li>
-     * <li>project contains <code>org.scala-lang:scala-library</code> dependency.</li>
+     * <li>plugin's {@code scalaVersion} configuration parameter is defined,</li>
+     * <li>project's {@code scala.version} property is defined,</li>
+     * <li>project contains {@code org.scala-lang:scala-library} dependency.</li>
      * </ul>
      *
      * @return default Scala version for the compiler
@@ -43,8 +43,8 @@ public interface Compiler
      * 
      * This default value is used when none of the below options is true:
      * <ul>
-     * <li>plugin's <code>sbtVersion</code> configuration parameter is defined,</li>
-     * <li>project's <code>sbt.version</code> property is defined,</li>
+     * <li>plugin's {@code sbtVersion} configuration parameter is defined,</li>
+     * <li>project's {@code sbt.version} property is defined,</li>
      * </ul>
      *
      * @return default SBT version for the compiler

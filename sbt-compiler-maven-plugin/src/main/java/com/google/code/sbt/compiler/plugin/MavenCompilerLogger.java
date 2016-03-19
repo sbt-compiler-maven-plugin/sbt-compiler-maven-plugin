@@ -41,54 +41,81 @@ public class MavenCompilerLogger
         this.mavenLogger = mavenLogger;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled()
     {
         return mavenLogger.isDebugEnabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void debug( String content )
     {
         mavenLogger.debug( content );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void debug( Throwable throwable )
     {
         mavenLogger.debug( throwable );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isInfoEnabled()
     {
         return mavenLogger.isInfoEnabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void info( String content )
     {
         mavenLogger.info( content );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isWarnEnabled()
     {
         return mavenLogger.isWarnEnabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void warn( String content )
     {
         mavenLogger.warn( content );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isErrorEnabled()
     {
         return mavenLogger.isErrorEnabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error( String content )
     {

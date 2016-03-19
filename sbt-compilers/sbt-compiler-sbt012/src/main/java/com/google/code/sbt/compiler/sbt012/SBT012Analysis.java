@@ -48,6 +48,9 @@ public class SBT012Analysis
         this.analysis = analysis;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeToFile( File analysisCacheFile )
     {
@@ -55,30 +58,45 @@ public class SBT012Analysis
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<File> getSourceFiles()
     {
         return JavaConversions.setAsJavaSet( analysis.apis().internal().keySet() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getCompilationTime( File sourceFile )
     {
         return analysis.apis().internalAPI( sourceFile ).compilation().startTime();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<File> getProducts( File sourceFile )
     {
         return JavaConversions.setAsJavaSet( analysis.relations().products( sourceFile ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateClassFileTimestamp( File classFile )
     {
         // Class file time stamps not supported
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object unwrap()
     {

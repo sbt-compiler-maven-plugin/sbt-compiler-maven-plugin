@@ -89,6 +89,9 @@ public class SBTCompileMojo
     @Parameter( defaultValue = "${project.artifact}", readonly = true, required = true )
     private Artifact projectArtifact;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void internalExecute()
         throws MojoExecutionException, MojoFailureException
@@ -107,42 +110,63 @@ public class SBTCompileMojo
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getCompileSourceRoots()
     {
         return compileSourceRoots;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Set<String> getSourceIncludes()
     {
         return includes;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Set<String> getSourceExcludes()
     {
         return excludes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getClasspathElements()
     {
         return classpathElements;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected File getOutputDirectory()
     {
         return outputDirectory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected File getAnalysisCacheFile()
     {
         return defaultAnalysisCacheFile( project );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<File, File> getAnalysisCacheMap()
     {
