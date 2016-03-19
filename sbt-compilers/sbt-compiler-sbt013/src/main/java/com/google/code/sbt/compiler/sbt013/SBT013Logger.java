@@ -23,7 +23,7 @@ import xsbti.F0;
 import xsbti.Logger;
 
 /**
- * {@link CompilerLogger} wrapper implementing SBT Logger interface.
+ * SBT 0.13.x compatible {@link CompilerLogger} wrapper implementing SBT Logger interface
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
