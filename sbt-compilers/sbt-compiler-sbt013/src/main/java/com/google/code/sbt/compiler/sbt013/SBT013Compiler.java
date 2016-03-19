@@ -24,13 +24,17 @@ import com.google.code.sbt.compiler.api.Analysis;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
 import com.google.code.sbt.compiler.api.CompilerLogger;
+import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 import org.codehaus.plexus.component.annotations.Component;
 
+import scala.Function1;
 import scala.Option;
 
 import xsbti.CompileFailed;
 import xsbti.Logger;
+import xsbti.Position;
+import xsbti.Reporter;
 
 import com.typesafe.zinc.Compiler;
 import com.typesafe.zinc.IncOptions;
@@ -106,7 +110,12 @@ public class SBT013Compiler
 
         try
         {
-            return new SBT013Analysis( compiler.compile( inputs, sbtLogger ) );
+            SourcePositionMapper mapper = configuration.getSourcePositionMapper();
+            Function1<Position, Position> sourcePositionMapper = new SBT013SourcePositionMapper( mapper, logger );
+            Reporter reporter =
+                new sbt.LoggerReporter( getMaximumErrors(), sbt.Logger$.MODULE$.xlog2Log( sbtLogger ),
+                                        sourcePositionMapper );
+            return new SBT013Analysis( compiler.compile( inputs, Option.<File> empty(), reporter, sbtLogger ) );
         }
         catch ( CompileFailed e )
         {
@@ -202,6 +211,11 @@ public class SBT013Compiler
 
         return new IncOptions( transitiveStep, recompileAllFraction, relationsDebug, apiDebug, apiDiffContextSize,
                                apiDumpDirectory, transactional, backup, recompileOnMacroDef, nameHashing );
+    }
+
+    private int getMaximumErrors()
+    {
+        return 100;
     }
 
 }
