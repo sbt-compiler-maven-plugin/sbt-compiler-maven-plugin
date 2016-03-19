@@ -98,6 +98,11 @@ public class CompilerConfiguration
      */
     private Map<File, File> analysisCacheMap;
 
+    /**
+     * Compilation error/warning source position mapper.
+     */
+    private SourcePositionMapper sourcePositionMapper;
+
 
     /**
      * Returns Scala and Java source files encoding.
@@ -390,6 +395,27 @@ public class CompilerConfiguration
     public void setAnalysisCacheMap( Map<File, File> analysisCacheMap )
     {
         this.analysisCacheMap = analysisCacheMap;
+    }
+
+    
+    /**
+     * Returns compilation error/warning source position mapper.
+     * 
+     * @return source position mapper
+     */
+    public SourcePositionMapper getSourcePositionMapper()
+    {
+        return sourcePositionMapper;
+    }
+
+    /**
+     * Sets compilation error/warning source position mapper.
+     * 
+     * @param sourcePositionMapper source position mapper
+     */
+    public void setSourcePositionMapper( SourcePositionMapper sourcePositionMapper )
+    {
+        this.sourcePositionMapper = sourcePositionMapper;
     }
 
 }
