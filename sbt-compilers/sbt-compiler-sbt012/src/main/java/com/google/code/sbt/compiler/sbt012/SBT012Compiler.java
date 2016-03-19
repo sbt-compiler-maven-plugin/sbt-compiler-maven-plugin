@@ -89,6 +89,10 @@ public class SBT012Compiler
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
                            configuration.getAnalysisCacheMap(), SBT012Compiler.COMPILE_ORDER,
                            /* getIncOptions(), */logger.isDebugEnabled() /* mirrorAnalysisCache */ );
+        if ( configuration.getSourcePositionMapper() != null )
+        {
+            logger.warn( "Source position mappers not supported" );
+        }
         if ( logger.isDebugEnabled() )
         {
             Inputs.debug( inputs, sbtLogger );
