@@ -23,6 +23,7 @@ import com.google.code.sbt.compiler.api.AbstractCompiler;
 import com.google.code.sbt.compiler.api.Analysis;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
+import com.google.code.sbt.compiler.api.CompilerLogger;
 
 import org.codehaus.plexus.component.annotations.Component;
 
@@ -71,12 +72,13 @@ public class SBT013Compiler
     public Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {
-        Logger sbtLogger = new SBT013Logger( configuration.getLogger() );
+        CompilerLogger logger = configuration.getLogger();
+        Logger sbtLogger = new SBT013Logger( logger );
         Setup setup =
             Setup.create( configuration.getScalaCompilerFile(), configuration.getScalaLibraryFile(),
                           configuration.getScalaExtraJarFiles(), configuration.getXsbtiFile(),
                           configuration.getCompilerInterfaceSrcFile(), null, SBT013Compiler.FORK_JAVA );
-        if ( configuration.getLogger().isDebugEnabled() )
+        if ( logger.isDebugEnabled() )
         {
             Setup.debug( setup, sbtLogger );
         }
@@ -88,7 +90,7 @@ public class SBT013Compiler
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
                            configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER, getIncOptions(),
                            false /* mirrorAnalysisCache */ );
-        if ( configuration.getLogger().isDebugEnabled() )
+        if ( logger.isDebugEnabled() )
         {
             Inputs.debug( inputs, sbtLogger );
         }
