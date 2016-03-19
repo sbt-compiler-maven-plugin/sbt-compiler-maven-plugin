@@ -29,7 +29,7 @@ import com.typesafe.zinc.Compiler$;
 import com.google.code.sbt.compiler.api.Analysis;
 
 /**
- * SBT 0.12 compatible incremental compilation analysis
+ * SBT 0.12.x compatible incremental compilation analysis
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */

@@ -23,7 +23,9 @@ import xsbti.F0;
 import xsbti.Logger;
 
 /**
- * SBT 0.12.x compatible {@link CompilerLogger} wrapper implementing SBT Logger interface
+ * SBT 0.12.x compatible {@link CompilerLogger} wrapper implementing SBT
+ * <a href="https://github.com/sbt/sbt/blob/v0.12.3/interface/src/main/java/xsbti/Logger.java">Logger</a>
+ * interface
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */

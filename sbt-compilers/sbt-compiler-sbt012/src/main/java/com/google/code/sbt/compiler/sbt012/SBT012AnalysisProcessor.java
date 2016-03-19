@@ -27,11 +27,11 @@ import com.google.code.sbt.compiler.api.AnalysisProcessor;
 import org.codehaus.plexus.component.annotations.Component;
 
 /**
- * SBT 0.12 compatible analysis processor
+ * SBT 0.12.x compatible analysis processor
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-@Component( role = AnalysisProcessor.class, hint = "sbt012", description = "SBT 0.12 analysis processor" )
+@Component( role = AnalysisProcessor.class, hint = "sbt012", description = "SBT 0.12.x analysis processor" )
 public class SBT012AnalysisProcessor
     implements AnalysisProcessor
 {
