@@ -24,6 +24,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ import com.google.code.sbt.compiler.api.Compiler;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
 import com.google.code.sbt.compiler.api.Compilers;
+import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
  * Abstract base class for SBT compilation mojos.
@@ -215,6 +217,25 @@ public abstract class AbstractSBTCompileMojo
      */
     @Parameter( property = "sbt._scalacPlugins", defaultValue = "", readonly = true )
     protected String _scalacPlugins;
+
+    /**
+     * Source position mappers.
+     * <br>
+     * <br>
+     * Space-separated list of source position mapper definitions in {@code groupId:artifactId:version} format.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter( property = "sbt.sourcePositionMappers", defaultValue = "", readonly = true )
+    protected String sourcePositionMappers;
+
+    /**
+     * Source position mappers.
+     * <br>
+     * For internal use only.
+     */
+    @Parameter( property = "sbt._sourcePositionMappers", defaultValue = "", readonly = true )
+    protected String _sourcePositionMappers;
 
     /**
      * Maven project to interact with.
@@ -390,8 +411,8 @@ public abstract class AbstractSBTCompileMojo
                 || ( _scalacPlugins != null && _scalacPlugins.trim().length() > 0 ) )
             {
                 List<Artifact> resolvedScalaCompilerPluginArtifacts = new ArrayList<Artifact>();
-                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, scalacPlugins );
-                resolveScalacPluginArtifacts( resolvedScalaCompilerPluginArtifacts, _scalacPlugins );
+                resolveArtifacts( resolvedScalaCompilerPluginArtifacts, scalacPlugins );
+                resolveArtifacts( resolvedScalaCompilerPluginArtifacts, _scalacPlugins );
                 for ( Artifact artifact: resolvedScalaCompilerPluginArtifacts )
                 {
                     String arg = "-Xplugin:" + artifact.getFile().getAbsolutePath();
@@ -400,6 +421,27 @@ public abstract class AbstractSBTCompileMojo
                         arg = '\"' + arg + '\"';
                     }
                     resolvedScalacOptions = resolvedScalacOptions + ' ' + arg;
+                }
+            }
+
+            SourcePositionMapper sourcePositionMapper = null;
+            if ( ( sourcePositionMappers != null && sourcePositionMappers.trim().length() > 0 )
+                || ( _sourcePositionMappers != null && _sourcePositionMappers.trim().length() > 0 ) )
+            {
+                List<Artifact> resolvedSourcePositionMapperArtifacts = new ArrayList<Artifact>();
+                resolveArtifacts( resolvedSourcePositionMapperArtifacts, sourcePositionMappers );
+                resolveArtifacts( resolvedSourcePositionMapperArtifacts, _sourcePositionMappers );
+                if ( !resolvedSourcePositionMapperArtifacts.isEmpty() )
+                {
+                    Set<Artifact> resolvedSourcePositionMapperArtifactSet =
+                        getAllDependencies( new HashSet<Artifact>( resolvedSourcePositionMapperArtifacts ), null /* filter */ );
+                    List<SourcePositionMapper> resolvedSourcePositionMappers =
+                        resolveSourcePositionMappers( resolvedSourcePositionMapperArtifactSet );
+                    if ( resolvedSourcePositionMappers != null )
+                    {
+                        sourcePositionMapper = new SourcePositionMapperAggregator( resolvedSourcePositionMappers );
+                        sourcePositionMapper.setCharsetName( sourceEncoding );
+                    }
                 }
             }
 
@@ -418,6 +460,7 @@ public abstract class AbstractSBTCompileMojo
             configuration.setScalacOptions( resolvedScalacOptions );
             configuration.setAnalysisCacheFile( getAnalysisCacheFile() );
             configuration.setAnalysisCacheMap( getAnalysisCacheMap() );
+            configuration.setSourcePositionMapper( sourcePositionMapper );
 
             sbtCompiler.performCompile( configuration );
         }
@@ -434,6 +477,10 @@ public abstract class AbstractSBTCompileMojo
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
         catch ( InvalidDependencyVersionException e )
+        {
+            throw new MojoExecutionException( "Scala compilation failed", e );
+        }
+        catch ( MalformedURLException e )
         {
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
@@ -644,10 +691,17 @@ public abstract class AbstractSBTCompileMojo
         throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
         ProjectBuildingException
     {
+        return getAllDependencies( Collections.singleton( artifact ), filter );
+    }
+
+    private Set<Artifact> getAllDependencies( Set<Artifact> artifacts, ArtifactFilter filter )
+        throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
+        ProjectBuildingException
+    {
         Artifact originatingArtifact = factory.createBuildArtifact( "dummy", "dummy", "1.0", "jar" );
         ArtifactResolutionResult resolutionResult =
-            resolver.resolveTransitively( Collections.singleton( artifact ), originatingArtifact,
-                                          localRepo, remoteRepos, metadataSource, filter );
+            resolver.resolveTransitively( artifacts, originatingArtifact, localRepo,
+                                          remoteRepos, metadataSource, filter );
         return resolutionResult.getArtifacts();
     }
 
@@ -781,13 +835,13 @@ public abstract class AbstractSBTCompileMojo
         }
     }
 
-    // Plugins in format "groupId1:artifactId1:version1 groupId2:artifactId2:version2"
-    private void resolveScalacPluginArtifacts( List<Artifact> scalacPluginArtifacts, String plugins )
+    // "artifactGAVs" in format "groupId1:artifactId1:version1 groupId2:artifactId2:version2"
+    private void resolveArtifacts( List<Artifact> artifacts, String artifactGAVs )
         throws ArtifactNotFoundException, ArtifactResolutionException
     {
-        if ( plugins != null && plugins.trim().length() > 0 )
+        if ( artifactGAVs != null && artifactGAVs.trim().length() > 0 )
         {
-            String[] scalacPluginsGAVs = plugins.trim().split( " " );
+            String[] scalacPluginsGAVs = artifactGAVs.trim().split( " " );
             for ( String scalacPluginGAV : scalacPluginsGAVs )
             {
                 String[] gav = scalacPluginGAV.split( ":" );
@@ -797,10 +851,38 @@ public abstract class AbstractSBTCompileMojo
                 Artifact scalacPluginArtifact = getResolvedArtifact( groupId, artifactId, version );
                 if ( scalacPluginArtifact != null )
                 {
-                    scalacPluginArtifacts.add( scalacPluginArtifact );
+                    artifacts.add( scalacPluginArtifact );
                 }
             }
         }
+    }
+
+    private List<SourcePositionMapper> resolveSourcePositionMappers( Set<Artifact> resolvedSourcePositionMapperArtifacts )
+        throws MalformedURLException
+    {
+        List<SourcePositionMapper> result = null;
+
+        List<URL> classPathUrls = new ArrayList<URL>( resolvedSourcePositionMapperArtifacts.size() );
+        for ( Artifact artifact : resolvedSourcePositionMapperArtifacts )
+        {
+            classPathUrls.add( new URL( artifact.getFile().toURI().toASCIIString() ) );
+        }
+        ClassLoader tmpMappersClassLoader =
+            new URLClassLoader( classPathUrls.toArray( new URL[classPathUrls.size()] ),
+                                Thread.currentThread().getContextClassLoader() );
+        ServiceLoader<SourcePositionMapper> spmServiceLoader =
+            ServiceLoader.load( SourcePositionMapper.class, tmpMappersClassLoader );
+        Iterator<SourcePositionMapper> spmIterator = spmServiceLoader.iterator();
+        if ( spmIterator.hasNext() )
+        {
+            result = new ArrayList<SourcePositionMapper>();
+            while ( spmIterator.hasNext() )
+            {
+                result.add( spmIterator.next() );
+            }
+        }
+
+        return result;
     }
 
 }
