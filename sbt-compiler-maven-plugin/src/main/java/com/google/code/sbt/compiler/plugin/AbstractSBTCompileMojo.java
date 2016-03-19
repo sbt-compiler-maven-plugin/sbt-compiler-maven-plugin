@@ -26,8 +26,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -751,10 +751,9 @@ public abstract class AbstractSBTCompileMojo
                 setCachedClassLoader( compilerId, compilerClassLoader );
             }
 
-            String compilerClassName =
-                String.format( "com.google.code.sbt.compiler.%s.%sCompiler", compilerId,
-                               compilerId.toUpperCase( Locale.ROOT ) );
-            Compiler sbtCompiler = (Compiler) compilerClassLoader.loadClass( compilerClassName ).newInstance();
+            ServiceLoader<Compiler> compilerServiceLoader = ServiceLoader.load( Compiler.class, compilerClassLoader );
+            // get first (there should be exactly one)
+            Compiler sbtCompiler = compilerServiceLoader.iterator().next();
 
             getLog().debug( String.format( "Using autodetected compiler \"%s\".", compilerId ) );
 
@@ -765,18 +764,6 @@ public abstract class AbstractSBTCompileMojo
             throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
         catch ( ArtifactResolutionException e )
-        {
-            throw new MojoExecutionException( "Compiler autodetection failed", e );
-        }
-        catch ( ClassNotFoundException e )
-        {
-            throw new MojoExecutionException( "Compiler autodetection failed", e );
-        }
-        catch ( IllegalAccessException e )
-        {
-            throw new MojoExecutionException( "Compiler autodetection failed", e );
-        }
-        catch ( InstantiationException e )
         {
             throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
