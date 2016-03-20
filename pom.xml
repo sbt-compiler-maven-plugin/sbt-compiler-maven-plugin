@@ -34,7 +34,7 @@ under the License.
     <name>SBT Compiler</name>
     <description>SBT Compiler</description>
     <inceptionYear>2013</inceptionYear>
-    <url>https://sbt-compiler-maven-plugin.github.io/sbt-compiler-maven-plugin/${project.version}</url>
+    <url>https://sbt-compiler-maven-plugin.github.io/sbt-compiler-maven-plugin/${project.version}/</url>
 
     <scm>
         <connection>scm:git:git://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.git</connection>
