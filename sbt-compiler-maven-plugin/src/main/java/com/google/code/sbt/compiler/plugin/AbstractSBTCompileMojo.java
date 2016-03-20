@@ -425,22 +425,25 @@ public abstract class AbstractSBTCompileMojo
             }
 
             SourcePositionMapper sourcePositionMapper = null;
-            if ( ( sourcePositionMappers != null && sourcePositionMappers.trim().length() > 0 )
-                || ( _sourcePositionMappers != null && _sourcePositionMappers.trim().length() > 0 ) )
+            if ( sbtCompiler.areSourcePositionMappersSupported() )
             {
-                List<Artifact> resolvedSourcePositionMapperArtifacts = new ArrayList<Artifact>();
-                resolveArtifacts( resolvedSourcePositionMapperArtifacts, sourcePositionMappers );
-                resolveArtifacts( resolvedSourcePositionMapperArtifacts, _sourcePositionMappers );
-                if ( !resolvedSourcePositionMapperArtifacts.isEmpty() )
+                if ( ( sourcePositionMappers != null && sourcePositionMappers.trim().length() > 0 )
+                    || ( _sourcePositionMappers != null && _sourcePositionMappers.trim().length() > 0 ) )
                 {
-                    Set<Artifact> resolvedSourcePositionMapperArtifactSet =
-                        getAllDependencies( new HashSet<Artifact>( resolvedSourcePositionMapperArtifacts ), null /* filter */ );
-                    List<SourcePositionMapper> resolvedSourcePositionMappers =
-                        resolveSourcePositionMappers( resolvedSourcePositionMapperArtifactSet );
-                    if ( resolvedSourcePositionMappers != null )
+                    List<Artifact> resolvedSourcePositionMapperArtifacts = new ArrayList<Artifact>();
+                    resolveArtifacts( resolvedSourcePositionMapperArtifacts, sourcePositionMappers );
+                    resolveArtifacts( resolvedSourcePositionMapperArtifacts, _sourcePositionMappers );
+                    if ( !resolvedSourcePositionMapperArtifacts.isEmpty() )
                     {
-                        sourcePositionMapper = new SourcePositionMapperAggregator( resolvedSourcePositionMappers );
-                        sourcePositionMapper.setCharsetName( sourceEncoding );
+                        Set<Artifact> resolvedSourcePositionMapperArtifactSet =
+                            getAllDependencies( new HashSet<Artifact>( resolvedSourcePositionMapperArtifacts ), null /* filter */ );
+                        List<SourcePositionMapper> resolvedSourcePositionMappers =
+                            resolveSourcePositionMappers( resolvedSourcePositionMapperArtifactSet );
+                        if ( resolvedSourcePositionMappers != null )
+                        {
+                            sourcePositionMapper = new SourcePositionMapperAggregator( resolvedSourcePositionMappers );
+                            sourcePositionMapper.setCharsetName( sourceEncoding );
+                        }
                     }
                 }
             }

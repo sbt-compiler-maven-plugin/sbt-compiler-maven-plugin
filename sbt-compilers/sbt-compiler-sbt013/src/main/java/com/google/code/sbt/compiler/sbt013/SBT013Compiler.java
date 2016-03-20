@@ -82,6 +82,15 @@ public class SBT013Compiler
      * {@inheritDoc}
      */
     @Override
+    public boolean areSourcePositionMappersSupported()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Analysis performCompile( CompilerConfiguration configuration )
         throws CompilerException
     {

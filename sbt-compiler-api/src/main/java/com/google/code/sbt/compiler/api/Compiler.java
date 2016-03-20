@@ -52,6 +52,13 @@ public interface Compiler
     String getDefaultSbtVersion();
 
     /**
+     * Returns information if this compiler supports source position mappers.
+     * 
+     *  @return information if source position mappers are supported
+     */
+    boolean areSourcePositionMappersSupported();
+
+    /**
      * Performs the compilation of the project.
      * 
      * @param configuration SBT compilation configuration
