@@ -8,7 +8,7 @@ Project migrated from [Google Code](https://code.google.com/p/sbt-compiler-maven
 
 [![Build Status](https://travis-ci.org/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin.png?branch=master)](https://travis-ci.org/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin)
 [![Build Status](https://circleci.com/gh/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin/tree/master.svg?&style=shield)](https://circleci.com/gh/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin)
-[![License](http://img.shields.io/:license-Apache%202-red.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
+[![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.code.sbt-compiler-maven-plugin/sbt-compiler-maven-plugin/badge.png?style=flat)](http://search.maven.org/#search|ga|1|g%3A%22com.google.code.sbt-compiler-maven-plugin%22%20AND%20a%3A%22sbt-compiler-maven-plugin%22)
 
 ### Project documentation
