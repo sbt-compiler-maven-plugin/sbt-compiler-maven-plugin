@@ -48,8 +48,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
@@ -479,15 +477,7 @@ public abstract class AbstractSBTCompileMojo
         {
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
-        catch ( InvalidDependencyVersionException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
         catch ( MalformedURLException e )
-        {
-            throw new MojoExecutionException( "Scala compilation failed", e );
-        }
-        catch ( ProjectBuildingException e )
         {
             throw new MojoExecutionException( "Scala compilation failed", e );
         }
@@ -672,8 +662,7 @@ public abstract class AbstractSBTCompileMojo
     }
 
     private List<File> getCompilerDependencies( Artifact scalaCompilerArtifact, Artifact scalaLibraryArtifact )
-        throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
-        ProjectBuildingException
+        throws ArtifactNotFoundException, ArtifactResolutionException
     {
         ArtifactFilter scalaLibraryFilter =
             new ExcludesArtifactFilter( Collections.singletonList( scalaLibraryArtifact.getGroupId() + ":"
@@ -691,15 +680,13 @@ public abstract class AbstractSBTCompileMojo
     }
 
     private Set<Artifact> getAllDependencies( Artifact artifact, ArtifactFilter filter )
-        throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
-        ProjectBuildingException
+        throws ArtifactNotFoundException, ArtifactResolutionException
     {
         return getAllDependencies( Collections.singleton( artifact ), filter );
     }
 
     private Set<Artifact> getAllDependencies( Set<Artifact> artifacts, ArtifactFilter filter )
-        throws ArtifactNotFoundException, ArtifactResolutionException, InvalidDependencyVersionException,
-        ProjectBuildingException
+        throws ArtifactNotFoundException, ArtifactResolutionException
     {
         Artifact originatingArtifact = factory.createBuildArtifact( "dummy", "dummy", "1.0", "jar" );
         ArtifactResolutionResult resolutionResult =
@@ -824,15 +811,7 @@ public abstract class AbstractSBTCompileMojo
         {
             throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
-        catch ( InvalidDependencyVersionException e )
-        {
-            throw new MojoExecutionException( "Compiler autodetection failed", e );
-        }
         catch ( MalformedURLException e )
-        {
-            throw new MojoExecutionException( "Compiler autodetection failed", e );
-        }
-        catch ( ProjectBuildingException e )
         {
             throw new MojoExecutionException( "Compiler autodetection failed", e );
         }
