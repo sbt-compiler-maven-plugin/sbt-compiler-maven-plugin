@@ -18,12 +18,12 @@
 package com.google.code.sbt.compiler.api;
 
 /**
- * Compilation error/warning position.
+ * Compilation error/warning.
  * <br>
  * <br>
- * Based on <a href="https://github.com/sbt/sbt/blob/v0.13.0/interface/src/main/java/xsbti/Position.java">SBT Position interface</a>.
+ * Based on <a href="https://github.com/sbt/sbt/blob/v0.13.0/interface/src/main/java/xsbti/Problem.java">SBT Problem interface</a>.
  * <br>
- * Used by {@link SourcePositionMapper} implementations.
+ * Contained by {@link CompilerException}.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -31,31 +31,31 @@ public interface CompilationProblem
 {
 
     /**
-     * ...
+     * Problem category
      *
      * @return compilation problem category
      */
     String getCategory();
 
     /**
-     * ...
+     * Problem message
      *
      * @return compilation problem message
      */
     String getMessage();
 
     /**
-     * ...
+     * Problem position
      *
      * @return compilation problem position
      */
     SourcePosition getPosition();
 
     /**
-     * ...
+     * Problem severity
      *
      * @return compilation problem severity
      */
-    String getSeverity(); //TODO - change to enum?
+    String getSeverity();
 
 }

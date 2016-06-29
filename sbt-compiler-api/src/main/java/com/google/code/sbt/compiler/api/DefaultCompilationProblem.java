@@ -37,13 +37,12 @@ public class DefaultCompilationProblem implements CompilationProblem, Serializab
     private String severity;
 
     /**
-     * Creates instance of error/warning position.
+     * Creates instance of compilation error/warning problem.
      * 
-     * @param line one-based line number
-     * @param lineContent line content
-     * @param offset zero-based offset in characters from the beginning of the file
-     * @param pointer one-based position in the line
-     * @param file file
+     * @param category problem category
+     * @param message problem message
+     * @param position problem position
+     * @param severity problem severity ("Error" or "Warning")
      */
     public DefaultCompilationProblem( String category, String message, SourcePosition position, String severity )
     {
