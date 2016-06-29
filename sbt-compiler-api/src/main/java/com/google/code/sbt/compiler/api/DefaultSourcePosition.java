@@ -18,14 +18,16 @@
 package com.google.code.sbt.compiler.api;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Compilation error/warning position simple implementation.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-public class DefaultSourcePosition implements SourcePosition
+public class DefaultSourcePosition implements SourcePosition, Serializable
 {
+    private static final long serialVersionUID = 1L;
 
     private int line;
 
