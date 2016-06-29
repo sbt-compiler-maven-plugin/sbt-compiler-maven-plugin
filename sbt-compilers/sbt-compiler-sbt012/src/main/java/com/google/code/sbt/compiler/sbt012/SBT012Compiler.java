@@ -17,16 +17,28 @@
 
 package com.google.code.sbt.compiler.sbt012;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.code.sbt.compiler.api.AbstractCompiler;
 import com.google.code.sbt.compiler.api.Analysis;
+import com.google.code.sbt.compiler.api.CompilationProblem;
 import com.google.code.sbt.compiler.api.CompilerConfiguration;
 import com.google.code.sbt.compiler.api.CompilerException;
 import com.google.code.sbt.compiler.api.CompilerLogger;
+import com.google.code.sbt.compiler.api.DefaultCompilationProblem;
+import com.google.code.sbt.compiler.api.DefaultSourcePosition;
+import com.google.code.sbt.compiler.api.SourcePosition;
 
 import org.codehaus.plexus.component.annotations.Component;
 
 import xsbti.CompileFailed;
-import xsbti.Logger;
+import xsbti.Maybe;
+import xsbti.Position;
+import xsbti.Problem;
 
 import com.typesafe.zinc.Compiler;
 import com.typesafe.zinc.Inputs;
@@ -81,7 +93,7 @@ public class SBT012Compiler
         throws CompilerException
     {
         CompilerLogger logger = configuration.getLogger();
-        Logger sbtLogger = new SBT012Logger( logger );
+        SBT012Logger sbtLogger = new SBT012Logger( logger );
         Setup setup =
             Setup.create( configuration.getScalaCompilerFile(), configuration.getScalaLibraryFile(),
                           configuration.getScalaExtraJarFiles(), configuration.getXsbtiFile(),
@@ -113,8 +125,117 @@ public class SBT012Compiler
         }
         catch ( CompileFailed e )
         {
-            throw new CompilerException( "Scala compilation failed", e );
+            CompilationProblem[] problems = getScalacProblems( e.problems() );
+            if ( problems.length == 0 )
+            {
+                String[] consoleErrorLines = sbtLogger.getConsoleErrorLines();
+                problems = getJavacProblems( consoleErrorLines );
+            }
+
+            throw new CompilerException( "Scala compilation failed", e, problems );
         }
+    }
+
+    // scalac problems conversion
+
+    private CompilationProblem[] getScalacProblems( Problem[] problems )
+    {
+        CompilationProblem[] result = new CompilationProblem[problems.length];
+        for ( int i = 0; i < problems.length; i++ )
+        {
+            Problem problem = problems[i];
+            Position position = problem.position();
+
+            Maybe<Integer> line = position.line();
+            String lineContent = position.lineContent();
+            Maybe<Integer> offset = position.offset();
+            Maybe<Integer> pointer = position.pointer();
+            Maybe<File> sourceFile = position.sourceFile();
+            SourcePosition sp =
+                new DefaultSourcePosition( line.isDefined() ? line.get().intValue() : -1, lineContent,
+                                           offset.isDefined() ? offset.get().intValue() : -1,
+                                           pointer.isDefined() ? pointer.get().intValue() : -1,
+                                           sourceFile.isDefined() ? sourceFile.get() : null );
+            result[i] =
+                new DefaultCompilationProblem( problem.category(), problem.message(), sp, problem.severity().name() );
+        }
+        return result;
+    }
+
+    // javac problems parsing from error logs
+
+    private static final Pattern JAVAC_ERROR = Pattern.compile( "\\s*(.*[.]java):(\\d+):\\s*(.*)" );
+    private static final Pattern JAVAC_ERROR_POSITION = Pattern.compile( "(\\s*)\\^\\s*" );
+    private static final Pattern JAVAC_ERROR_INFO = Pattern.compile( "\\s+([a-z ]+):(.*)" );
+
+    private CompilationProblem[] getJavacProblems( String[] consoleErrorLines )
+    {
+        List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
+
+        int i = 0;
+        while ( i < consoleErrorLines.length )
+        {
+            String line = consoleErrorLines[i];
+            Matcher matcher = JAVAC_ERROR.matcher( line );
+            if ( matcher.find() )
+            {
+                File file = new File( matcher.group( 1 ) );
+                int lineNo = Integer.parseInt( matcher.group( 2 ) );
+                String message = matcher.group( 3 );
+                if ( message.startsWith( "error: " ) )
+                {
+                    message = message.substring( "error: ".length() );
+                }
+                String lineContent = null;
+                int pointer = -1;
+                i++;
+                if ( i < consoleErrorLines.length )
+                {
+                    lineContent = consoleErrorLines[i];
+                    i++;
+                    // Java6 has different error line order - additional message lines before content and pointer 
+                    while ( i < consoleErrorLines.length )
+                    {
+                        line = consoleErrorLines[i];
+                        i++;
+                        matcher = JAVAC_ERROR_POSITION.matcher( line );
+                        if ( matcher.find() )
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            message = message + "\n  " + lineContent; // this wasn't lineContent yet
+                            lineContent = line;
+                        }
+                    }
+                    pointer = matcher.group( 1 ).length();
+                    while ( i < consoleErrorLines.length )
+                    {
+                        line = consoleErrorLines[i];
+                        matcher = JAVAC_ERROR_INFO.matcher( line );
+                        if ( matcher.matches() )
+                        {
+                            message = message + '\n' + line;
+                            i++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                SourcePosition position = new DefaultSourcePosition( lineNo, lineContent, -1, pointer, file );
+                CompilationProblem problem = new DefaultCompilationProblem( "", message, position, "Error" );
+                problems.add( problem );
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        return problems.toArray( new CompilationProblem[0] );
     }
 
 }

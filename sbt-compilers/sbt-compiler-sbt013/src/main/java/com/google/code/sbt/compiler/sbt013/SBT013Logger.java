@@ -36,7 +36,9 @@ public class SBT013Logger
     private static final String MISLEADING_WARNING_MESSAGE =
         "Pruning sources from previous analysis, due to incompatible CompileSetup.";
 
-    CompilerLogger compilerLogger;
+    private CompilerLogger compilerLogger;
+
+    private StringBuilder errors = new StringBuilder();
 
     /**
      * Creates SBT Logger wrapper around given {@link CompilerLogger} implementation.
@@ -59,7 +61,9 @@ public class SBT013Logger
     {
         if ( compilerLogger.isErrorEnabled() )
         {
-            compilerLogger.error( msg.apply() );
+            String msgString = msg.apply();
+            errors.append( msgString ).append( '\n' );
+            compilerLogger.error( msgString );
         }
     }
 
@@ -125,6 +129,11 @@ public class SBT013Logger
         {
             compilerLogger.debug( exception.apply() );
         }
+    }
+
+    String[] getConsoleErrorLines()
+    {
+        return errors.toString().split( "\n" );
     }
 
 }

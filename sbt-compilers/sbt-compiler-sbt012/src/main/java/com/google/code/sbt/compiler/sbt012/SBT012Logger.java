@@ -33,7 +33,9 @@ public class SBT012Logger
     implements Logger
 {
 
-    CompilerLogger compilerLogger;
+    private CompilerLogger compilerLogger;
+
+    private StringBuilder errors = new StringBuilder();
 
     /**
      * Creates SBT Logger wrapper around given {@link CompilerLogger} implementation.
@@ -56,7 +58,9 @@ public class SBT012Logger
     {
         if ( compilerLogger.isErrorEnabled() )
         {
-            compilerLogger.error( msg.apply() );
+            String msgString = msg.apply();
+            errors.append( msgString ).append( '\n' );
+            compilerLogger.error( msgString );
         }
     }
 
@@ -118,6 +122,11 @@ public class SBT012Logger
         {
             compilerLogger.debug( exception.apply() );
         }
+    }
+
+    String[] getConsoleErrorLines()
+    {
+        return errors.toString().split( "\n" );
     }
 
 }
