@@ -18,6 +18,7 @@
 package com.google.code.sbt.compiler.api;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,10 @@ import java.util.Map;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-public class CompilerConfiguration
+public class CompilerConfiguration implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     /**
      * The {@code -encoding} option for Scala and Java compilers.
      */
