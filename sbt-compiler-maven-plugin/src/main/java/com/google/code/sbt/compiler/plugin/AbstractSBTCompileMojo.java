@@ -308,9 +308,15 @@ public abstract class AbstractSBTCompileMojo
         if ( !"pom".equals( project.getPackaging() ) )
         {
             long ts = System.currentTimeMillis();
-            internalExecute();
-            long te = System.currentTimeMillis();
-            getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
+            try
+            {
+                internalExecute();
+            }
+            finally
+            {
+                long te = System.currentTimeMillis();
+                getLog().debug( String.format( "Mojo execution time: %d ms", te - ts ) );
+            }
         }
     }
 
@@ -827,9 +833,9 @@ public abstract class AbstractSBTCompileMojo
             for ( String scalacPluginGAV : scalacPluginsGAVs )
             {
                 String[] gav = scalacPluginGAV.split( ":" );
-                String groupId = gav[0];
-                String artifactId = gav[1];
-                String version = gav[2];
+                String groupId = gav[ 0 ];
+                String artifactId = gav[ 1 ];
+                String version = gav[ 2 ];
                 Artifact scalacPluginArtifact = getResolvedArtifact( groupId, artifactId, version );
                 if ( scalacPluginArtifact != null )
                 {
