@@ -19,6 +19,8 @@ package com.google.code.sbt.compiler.sbt013;
 
 import java.io.File;
 
+import scala.runtime.AbstractFunction1;
+
 import xsbti.Maybe;
 import xsbti.Position;
 
@@ -34,7 +36,7 @@ import com.google.code.sbt.compiler.api.SourcePositionMapper;
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-public class SBT013SourcePositionMapper extends AbstractFunction1Impl<Position, Position>
+public class SBT013SourcePositionMapper extends AbstractFunction1<Position, Position>
 {
     private SourcePositionMapper mapper;
     private CompilerLogger logger;
