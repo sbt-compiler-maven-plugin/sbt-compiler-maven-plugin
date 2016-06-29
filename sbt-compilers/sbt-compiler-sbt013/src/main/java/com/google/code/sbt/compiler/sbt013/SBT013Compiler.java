@@ -207,11 +207,13 @@ public class SBT013Compiler
 
         // comment from Zinc (com.typesafe.zinc.Settings.scala):
         // Restore previous class files on failure
-        boolean transactional = false;
+        boolean transactional = true; //GS-TEST false;
 
         // comment from Zinc (com.typesafe.zinc.Settings.scala):
         // Backup location (if transactional)
-        Option<File> backup = Option.empty();
+        Option<File> backup =
+            Option.apply( new File( configuration.getOutputDirectory().getParentFile(),
+                                    configuration.getOutputDirectory().getName() + ".bak" ) ); // GS-TEST Option.empty();
 
         // comment from SBT (sbt.inc.IncOptions scala):
         // Determines whether incremental compiler should recompile all dependencies of a file
