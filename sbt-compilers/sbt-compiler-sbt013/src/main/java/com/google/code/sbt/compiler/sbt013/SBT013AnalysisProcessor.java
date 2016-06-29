@@ -19,7 +19,7 @@ package com.google.code.sbt.compiler.sbt013;
 
 import java.io.File;
 
-import com.typesafe.zinc.Compiler$;
+import com.typesafe.zinc.Compiler;
 
 import com.google.code.sbt.compiler.api.Analysis;
 import com.google.code.sbt.compiler.api.AnalysisProcessor;
@@ -50,7 +50,7 @@ public class SBT013AnalysisProcessor
     @Override
     public Analysis readFromFile( File analysisCacheFile )
     {
-        return new SBT013Analysis( Compiler$.MODULE$.analysis( analysisCacheFile ) );
+        return new SBT013Analysis( Compiler.analysis( analysisCacheFile ) );
     }
 
 }

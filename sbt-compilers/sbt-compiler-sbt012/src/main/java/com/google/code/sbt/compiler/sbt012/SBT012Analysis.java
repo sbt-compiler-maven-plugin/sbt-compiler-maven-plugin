@@ -24,7 +24,7 @@ import scala.collection.JavaConversions;
 
 import sbt.inc.AnalysisStore;
 
-import com.typesafe.zinc.Compiler$;
+import com.typesafe.zinc.Compiler;
 
 import com.google.code.sbt.compiler.api.Analysis;
 
@@ -54,7 +54,7 @@ public class SBT012Analysis
     @Override
     public void writeToFile( File analysisCacheFile )
     {
-        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisCacheFile );
+        AnalysisStore analysisStore = Compiler.analysisStore( analysisCacheFile );
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 

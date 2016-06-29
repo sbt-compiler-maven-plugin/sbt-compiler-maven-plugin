@@ -27,7 +27,7 @@ import sbt.inc.LastModified;
 import sbt.inc.Stamp;
 import sbt.inc.Stamps;
 
-import com.typesafe.zinc.Compiler$;
+import com.typesafe.zinc.Compiler;
 
 import com.google.code.sbt.compiler.api.Analysis;
 
@@ -63,7 +63,7 @@ public class SBT013Analysis
             analysis = analysis.copy( stamps, analysis.apis(), analysis.relations(), analysis.infos(), analysis.compilations() );
             stamps = null;
         }
-        AnalysisStore analysisStore = Compiler$.MODULE$.analysisStore( analysisCacheFile );
+        AnalysisStore analysisStore = Compiler.analysisStore( analysisCacheFile );
         analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
     }
 
