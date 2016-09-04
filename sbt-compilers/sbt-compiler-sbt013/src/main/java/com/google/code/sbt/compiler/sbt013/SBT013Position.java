@@ -26,7 +26,7 @@ import com.google.code.sbt.compiler.api.SourcePosition;
 
 /**
  * SBT 0.13.x compatible {@link SourcePosition} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.13.9/interface/src/main/java/xsbti/Position.java">Position</a>
+ * <a href="https://github.com/sbt/sbt/blob/v0.13.12/interface/src/main/java/xsbti/Position.java">Position</a>
  * interface
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>

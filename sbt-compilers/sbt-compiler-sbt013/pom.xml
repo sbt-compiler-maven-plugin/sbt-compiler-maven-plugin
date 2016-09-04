@@ -36,7 +36,7 @@ under the License.
         <dependency>
             <groupId>com.typesafe.zinc</groupId>
             <artifactId>zinc</artifactId>
-            <version>0.3.9</version>
+            <version>0.3.12</version>
         </dependency>
     </dependencies>
 
@@ -54,41 +54,5 @@ under the License.
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>publicsite</id> <!-- site version to be uploaded -->
-
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../../sbt-compiler-api/src/main/java</sourcepath>
-                            <subpackages>com.google.code.sbt.compiler.sbt013</subpackages>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-
-        <profile>
-            <id>fullsite</id>
-
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <sourcepath>${project.basedir}/src/main/java:${project.basedir}/../../sbt-compiler-api/src/main/java</sourcepath>
-                            <subpackages>com.google.code.sbt.compiler.sbt013</subpackages>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-    </profiles>
 
 </project>

@@ -31,7 +31,7 @@ import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
  * SBT 0.13.x compatible {@link SourcePositionMapper} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.13.9/main/actions/src/main/scala/sbt/Compiler.scala#L19">xsbti.Position =&gt; xsbti.Position</a>
+ * <a href="https://github.com/sbt/sbt/blob/v0.13.12/main/actions/src/main/scala/sbt/Compiler.scala#L22">xsbti.Position =&gt; xsbti.Position</a>
  * interface
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
