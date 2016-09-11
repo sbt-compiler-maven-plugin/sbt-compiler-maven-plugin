@@ -119,8 +119,8 @@ public class SBT013Compiler
             Inputs.create( configuration.getClasspathFiles(), configuration.getSourceFiles(),
                            configuration.getOutputDirectory(), resolveScalacOptions( configuration ),
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
-                           configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER, getIncOptions( configuration ),
-                           false /* mirrorAnalysisCache */ );
+                           configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER,
+                           getIncOptions( configuration ), false /* mirrorAnalysisCache */ );
         if ( logger.isDebugEnabled() )
         {
             Inputs.debug( inputs, sbtLogger );
@@ -207,13 +207,13 @@ public class SBT013Compiler
 
         // comment from Zinc (com.typesafe.zinc.Settings.scala):
         // Restore previous class files on failure
-        boolean transactional = true; //GS-TEST false;
+        boolean transactional = true;
 
         // comment from Zinc (com.typesafe.zinc.Settings.scala):
         // Backup location (if transactional)
         Option<File> backup =
             Option.apply( new File( configuration.getOutputDirectory().getParentFile(),
-                                    configuration.getOutputDirectory().getName() + ".bak" ) ); // GS-TEST Option.empty();
+                                    configuration.getOutputDirectory().getName() + ".bak" ) );
 
         // comment from SBT (sbt.inc.IncOptions scala):
         // Determines whether incremental compiler should recompile all dependencies of a file

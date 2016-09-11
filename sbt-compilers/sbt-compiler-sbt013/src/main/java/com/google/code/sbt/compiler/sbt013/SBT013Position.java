@@ -36,6 +36,11 @@ public class SBT013Position
 {
     private SourcePosition sourcePosition;
 
+    /**
+     * Creates SBT Position wrapper around given {@link SourcePosition} implementation.
+     * 
+     * @param sourcePosition {@link SourcePosition} delegate
+     */
     public SBT013Position( SourcePosition sourcePosition )
     {
         this.sourcePosition = sourcePosition;

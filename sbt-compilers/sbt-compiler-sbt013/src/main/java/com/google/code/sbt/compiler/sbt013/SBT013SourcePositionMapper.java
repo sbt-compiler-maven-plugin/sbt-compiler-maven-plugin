@@ -31,7 +31,7 @@ import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
  * SBT 0.13.x compatible {@link SourcePositionMapper} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.13.12/main/actions/src/main/scala/sbt/Compiler.scala#L22">xsbti.Position =&gt; xsbti.Position</a>
+ * <a href="https://github.com/sbt/sbt/blob/v0.13.0/main/actions/src/main/scala/sbt/Compiler.scala#L19">xsbti.Position =&gt; xsbti.Position</a>
  * interface
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
@@ -41,6 +41,12 @@ public class SBT013SourcePositionMapper extends AbstractFunction1<Position, Posi
     private SourcePositionMapper mapper;
     private CompilerLogger logger;
 
+    /**
+     * Creates SBT xsbti.Position =&gt; xsbti.Position wrapper around given {@link SourcePositionMapper} implementation.
+     * 
+     * @param mapper {@link SourcePositionMapper} delegate
+     * @param logger {@link CompilerLogger} used to debug possible problems
+     */
     public SBT013SourcePositionMapper( SourcePositionMapper mapper, CompilerLogger logger )
     {
         this.mapper = mapper;

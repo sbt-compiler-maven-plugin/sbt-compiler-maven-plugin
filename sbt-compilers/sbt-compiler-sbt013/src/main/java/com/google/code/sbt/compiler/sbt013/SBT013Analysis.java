@@ -60,11 +60,12 @@ public class SBT013Analysis
     {
         if ( stamps != null ) // stamps were modified, merge now
         {
-            analysis = analysis.copy( stamps, analysis.apis(), analysis.relations(), analysis.infos(), analysis.compilations() );
+            analysis =
+                analysis.copy( stamps, analysis.apis(), analysis.relations(), analysis.infos(), analysis.compilations() );
             stamps = null;
         }
         AnalysisStore analysisStore = Compiler.analysisStore( analysisCacheFile );
-        analysisStore.set( analysis, analysisStore.get().get()._2/* compileSetup */ );
+        analysisStore.set( analysis, analysisStore.get().get()._2 /* compileSetup */ );
     }
 
     /**
