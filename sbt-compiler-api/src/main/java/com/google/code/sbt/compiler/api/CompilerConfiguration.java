@@ -84,7 +84,7 @@ public class CompilerConfiguration implements Serializable
     /**
      * Logger.
      */
-    private CompilerLogger log;
+    private transient CompilerLogger log;
 
     /**
      * Compilation output directory.
@@ -104,7 +104,7 @@ public class CompilerConfiguration implements Serializable
     /**
      * Compilation error/warning source position mapper.
      */
-    private SourcePositionMapper sourcePositionMapper;
+    private transient SourcePositionMapper sourcePositionMapper;
 
 
     /**
