@@ -56,7 +56,7 @@ public interface Compiler
      * 
      *  @return information if source position mappers are supported
      */
-    boolean areSourcePositionMappersSupported();
+    boolean supportsSourcePositionMappers();
 
     /**
      * Performs the compilation of the project.

@@ -91,7 +91,7 @@ public class SBT013Compiler
      * {@inheritDoc}
      */
     @Override
-    public boolean areSourcePositionMappersSupported()
+    public boolean supportsSourcePositionMappers()
     {
         return true;
     }

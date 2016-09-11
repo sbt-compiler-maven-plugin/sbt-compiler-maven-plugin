@@ -80,7 +80,7 @@ public class SBT012Compiler
      * {@inheritDoc}
      */
     @Override
-    public boolean areSourcePositionMappersSupported()
+    public boolean supportsSourcePositionMappers()
     {
         return false;
     }

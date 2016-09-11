@@ -429,7 +429,7 @@ public abstract class AbstractSBTCompileMojo
             }
 
             SourcePositionMapper sourcePositionMapper = null;
-            if ( sbtCompiler.areSourcePositionMappersSupported() )
+            if ( sbtCompiler.supportsSourcePositionMappers() )
             {
                 if ( ( sourcePositionMappers != null && sourcePositionMappers.trim().length() > 0 )
                     || ( _sourcePositionMappers != null && _sourcePositionMappers.trim().length() > 0 ) )
