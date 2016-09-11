@@ -77,6 +77,11 @@ public class CompilerException
         this.problems = problems;
     }
 
+    /**
+     * Returns compilation problems.
+     *
+     * @return compilation problems
+     */
     public CompilationProblem[] getProblems()
     {
         return problems;
