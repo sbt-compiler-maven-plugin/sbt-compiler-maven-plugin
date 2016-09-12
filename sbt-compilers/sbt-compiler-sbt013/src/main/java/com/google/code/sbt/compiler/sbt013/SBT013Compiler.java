@@ -75,7 +75,7 @@ public class SBT013Compiler
     @Override
     public String getDefaultScalaVersion()
     {
-        return "2.10.5";
+        return "2.10.6";
     }
 
     /**
