@@ -25,9 +25,8 @@ import xsbti.Position;
 import com.google.code.sbt.compiler.api.SourcePosition;
 
 /**
- * SBT 0.13.x compatible {@link SourcePosition} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.13.12/interface/src/main/java/xsbti/Position.java">Position</a>
- * interface
+ * SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+ * wrapper around {@link SourcePosition} delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -37,7 +36,8 @@ public class SBT013Position
     private SourcePosition sourcePosition;
 
     /**
-     * Creates SBT Position wrapper around given {@link SourcePosition} implementation.
+     * Creates SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+     * wrapper around {@link SourcePosition} delegate.
      * 
      * @param sourcePosition {@link SourcePosition} delegate
      */

@@ -30,19 +30,23 @@ import com.google.code.sbt.compiler.api.SourcePosition;
 import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
- * SBT 0.13.x compatible {@link SourcePositionMapper} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.13.0/main/actions/src/main/scala/sbt/Compiler.scala#L19">xsbti.Position =&gt; xsbti.Position</a>
- * interface
+ * SBT (<a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
+ * <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+ * wrapper around {@link SourcePositionMapper} delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
 public class SBT013SourcePositionMapper extends AbstractFunction1<Position, Position>
 {
     private SourcePositionMapper mapper;
+
     private CompilerLogger logger;
 
     /**
-     * Creates SBT xsbti.Position =&gt; xsbti.Position wrapper around given {@link SourcePositionMapper} implementation.
+     * Creates SBT
+     * (<a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
+     * <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+     * wrapper around {@link SourcePositionMapper} delegate.
      * 
      * @param mapper {@link SourcePositionMapper} delegate
      * @param logger {@link CompilerLogger} used to debug possible problems

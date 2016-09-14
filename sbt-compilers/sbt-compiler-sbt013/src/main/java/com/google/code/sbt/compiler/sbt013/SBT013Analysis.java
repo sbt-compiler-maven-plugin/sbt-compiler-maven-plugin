@@ -32,7 +32,8 @@ import com.typesafe.zinc.Compiler;
 import com.google.code.sbt.compiler.api.Analysis;
 
 /**
- * SBT 0.13.x compatible incremental compilation analysis
+ * {@link Analysis} wrapper around
+ * SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -43,9 +44,10 @@ public class SBT013Analysis
     private Stamps stamps;
 
     /**
-     * Creates {@link Analysis} wrapper around SBT native {@link sbt.inc.Analysis} delegate.
+     * Creates {@link Analysis} wrapper around
+     * SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
      * 
-     * @param analysis SBT native {@link sbt.inc.Analysis} delegate
+     * @param analysis SBT {@code sbt.inc.Analysis} delegate
      */
     public SBT013Analysis( sbt.inc.Analysis analysis )
     {

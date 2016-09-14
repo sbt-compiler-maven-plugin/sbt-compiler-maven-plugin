@@ -23,9 +23,8 @@ import xsbti.F0;
 import xsbti.Logger;
 
 /**
- * SBT 0.12.x compatible {@link CompilerLogger} wrapper implementing SBT
- * <a href="https://github.com/sbt/sbt/blob/v0.12.3/interface/src/main/java/xsbti/Logger.java">Logger</a>
- * interface
+ * SBT <a href="http://www.scala-sbt.org/0.12.4/api/index.html#xsbti.Logger">xsbti.Logger</a>
+ * wrapper around {@link CompilerLogger} delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -38,7 +37,8 @@ public class SBT012Logger
     private StringBuilder errors = new StringBuilder();
 
     /**
-     * Creates SBT Logger wrapper around given {@link CompilerLogger} implementation.
+     * Creates SBT <a href="http://www.scala-sbt.org/0.12.4/api/index.html#xsbti.Logger">xsbti.Logger</a>
+     * wrapper around {@link CompilerLogger} delegate.
      * 
      * @param compilerLogger {@link CompilerLogger} delegate
      */
