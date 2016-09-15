@@ -52,9 +52,9 @@ public interface Compiler
     String getDefaultSbtVersion();
 
     /**
-     * Returns information if this compiler supports source position mappers.
+     * Returns information, whether this compiler supports source position mappers.
      * 
-     *  @return information if source position mappers are supported
+     *  @return information, whether source position mappers are supported
      */
     boolean supportsSourcePositionMappers();
 
