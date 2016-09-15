@@ -17,28 +17,32 @@
 
 package com.google.code.sbt.compiler.plugin;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import com.google.code.sbt.compiler.api.SourcePosition;
 import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
- * ...
+ * Wwrapper for a collection of source position mappers.<br>
+ * <br>
+ * When mapping the position it iterates over contained mappers until one of them returns
+ * not {@code null} result.
  *
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
-public class SourcePositionMapperAggregator
+public class SourcePositionMapperCollection
     implements SourcePositionMapper
 {
 
     private Collection<SourcePositionMapper> mappers;
 
     /**
-     * Creates source position mappers aggregator.
+     * Creates source position mappers collection.
      * 
      * @param mappers source position mappers
      */
-    public SourcePositionMapperAggregator( Collection<SourcePositionMapper> mappers )
+    public SourcePositionMapperCollection( Collection<SourcePositionMapper> mappers )
     {
         this.mappers = mappers;
     }
@@ -59,22 +63,15 @@ public class SourcePositionMapperAggregator
      * {@inheritDoc}
      */
     @Override
-    public SourcePosition map( SourcePosition sp )
+    public SourcePosition map( SourcePosition sp ) throws IOException
     {
         SourcePosition result = null;
         for ( SourcePositionMapper mapper: mappers )
         {
-            try
+            result = mapper.map( sp );
+            if ( result != null )
             {
-                result = mapper.map( sp );
-                if ( result != null )
-                {
-                    break;
-                }
-            }
-            catch ( Throwable t )
-            {
-                // ignore
+                break;
             }
         }
         return result;

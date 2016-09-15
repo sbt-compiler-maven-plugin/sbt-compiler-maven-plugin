@@ -445,7 +445,7 @@ public abstract class AbstractSBTCompileMojo
                             resolveSourcePositionMappers( resolvedSourcePositionMapperArtifactSet );
                         if ( resolvedSourcePositionMappers != null )
                         {
-                            sourcePositionMapper = new SourcePositionMapperAggregator( resolvedSourcePositionMappers );
+                            sourcePositionMapper = new SourcePositionMapperCollection( resolvedSourcePositionMappers );
                             sourcePositionMapper.setCharsetName( sourceEncoding );
                         }
                     }
