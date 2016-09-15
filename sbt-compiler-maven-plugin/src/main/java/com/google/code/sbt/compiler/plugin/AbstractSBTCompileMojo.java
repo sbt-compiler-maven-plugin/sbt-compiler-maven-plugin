@@ -378,7 +378,7 @@ public abstract class AbstractSBTCompileMojo
 
             List<File> scalaExtraJars = getCompilerDependencies( scalaCompilerArtifact, scalaLibraryArtifact );
 
-            String resolvedSbtVersion = getSbtVersion( sbtCompiler );
+            String resolvedSbtVersion = sbtCompiler.getDefaultSbtVersion();
 
             Artifact xsbtiArtifact = getResolvedArtifact( SBT_GROUP_ID, XSBTI_ARTIFACT_ID, resolvedSbtVersion );
             if ( xsbtiArtifact == null )
@@ -611,16 +611,6 @@ public abstract class AbstractSBTCompileMojo
             {
                 result = sbtCompiler.getDefaultScalaVersion();
             }
-        }
-        return result;
-    }
-
-    private String getSbtVersion( Compiler sbtCompiler )
-    {
-        String result = sbtVersion;
-        if ( result == null || result.length() == 0 )
-        {
-            result = sbtCompiler.getDefaultSbtVersion();
         }
         return result;
     }
