@@ -252,7 +252,7 @@ under the License.
                             <buildHelperPluginVersion>1.9.1</buildHelperPluginVersion>
                             <scala211LatestVersion>2.11.8</scala211LatestVersion>
                             <sbt012LatestVersion>0.12.4</sbt012LatestVersion>
-                            <sbt013LatestVersion>0.13.12</sbt013LatestVersion>
+                            <sbt013LatestVersion>0.13.13</sbt013LatestVersion>
                         </attributes>
                     </configuration>
                     <dependencies>
