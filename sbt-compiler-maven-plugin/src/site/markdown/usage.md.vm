@@ -142,7 +142,7 @@ a) can be specified as plugin's configuration parameter:
                 <artifactId>sbt-compiler-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <scalaVersion>${scala211LatestVersion}</scalaVersion>
+                    <scalaVersion>${scala212LatestVersion}</scalaVersion>
                 </configuration>
             </plugin>
         <plugins>
@@ -155,12 +155,12 @@ or using property
 ```
 <project>
     <properties>
-        <scala.version>${scala211LatestVersion}</scala.version>
+        <scala.version>${scala212LatestVersion}</scala.version>
     </properties>
 </project>
 ```
 
-b) if no version specified directly, project's dependencies will be searched for `scala-library` and it's versions used
+b) if no version is specified directly, project's dependencies will be searched for `scala-library` and it's version will be used
 
 ```
 <project>
@@ -168,7 +168,7 @@ b) if no version specified directly, project's dependencies will be searched for
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>${scala211LatestVersion}</version>
+            <version>${scala212LatestVersion}</version>
         </dependency>
     </dependencies>
 </project>
@@ -178,9 +178,13 @@ c) if `scala-library` dependency was not found, default value will be selected d
 
 $h3 Setting SBT version
 
-SBT version resolution is performed in two steps.
+Exact SBT version cannot be specified. SBT version resolution is performed by
+selecting SBT Compiler component (delegate). Plugin contains two built-in compiler components -
+one for SBT `0.12` and one for SBT `0.13`. Selected component determines SBT version used.
 
-a) can be specified as plugin's configuration parameter:
+SBT Compiler component can be specified:
+
+a) with plugin's configuration parameter
 
 ```
 <project>
@@ -191,7 +195,7 @@ a) can be specified as plugin's configuration parameter:
                 <artifactId>sbt-compiler-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <sbtVersion>${sbt013LatestVersion}</sbtVersion>
+                    <sbtVersion>0.13</sbtVersion>
                 </configuration>
             </plugin>
         <plugins>
@@ -204,12 +208,12 @@ or using property
 ```
 <project>
     <properties>
-        <sbt.version>${sbt013LatestVersion}</sbt.version>
+        <sbt.version>0.13</sbt.version>
     </properties>
 </project>
 ```
 
-b) if no version specified directly, default value `${sbt013LatestVersion}` will be selected
+b) if no version specified directly, default value `0.13` will be selected
 
 $h3 Setting additional compiler options
 
