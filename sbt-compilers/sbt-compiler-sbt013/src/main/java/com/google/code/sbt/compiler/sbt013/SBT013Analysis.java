@@ -33,7 +33,7 @@ import com.google.code.sbt.compiler.api.Analysis;
 
 /**
  * {@link Analysis} wrapper around
- * SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
+ * SBT <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
  */
@@ -45,7 +45,7 @@ public class SBT013Analysis
 
     /**
      * Creates {@link Analysis} wrapper around
-     * SBT <a href="http://www.scala-sbt.org/0.13.12/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
+     * SBT <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.inc.Analysis">sbt.inc.Analysis</a> delegate.
      * 
      * @param analysis SBT {@code sbt.inc.Analysis} delegate
      */

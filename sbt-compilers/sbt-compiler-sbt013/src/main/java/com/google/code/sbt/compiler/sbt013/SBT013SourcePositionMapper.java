@@ -30,8 +30,8 @@ import com.google.code.sbt.compiler.api.SourcePosition;
 import com.google.code.sbt.compiler.api.SourcePositionMapper;
 
 /**
- * SBT (<a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
- * <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+ * SBT (<a href="http://www.scala-sbt.org/0.13.15/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
+ * <a href="http://www.scala-sbt.org/0.13.15/api/index.html#xsbti.Position">xsbti.Position</a>
  * wrapper around {@link SourcePositionMapper} delegate.
  * 
  * @author <a href="mailto:gslowikowski@gmail.com">Grzegorz Slowikowski</a>
@@ -44,8 +44,8 @@ public class SBT013SourcePositionMapper extends AbstractFunction1<Position, Posi
 
     /**
      * Creates SBT
-     * (<a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
-     * <a href="http://www.scala-sbt.org/0.13.12/api/index.html#xsbti.Position">xsbti.Position</a>
+     * (<a href="http://www.scala-sbt.org/0.13.15/api/index.html#xsbti.Position">xsbti.Position</a>) =&gt;
+     * <a href="http://www.scala-sbt.org/0.13.15/api/index.html#xsbti.Position">xsbti.Position</a>
      * wrapper around {@link SourcePositionMapper} delegate.
      * 
      * @param mapper {@link SourcePositionMapper} delegate
