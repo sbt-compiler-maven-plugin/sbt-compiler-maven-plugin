@@ -178,6 +178,9 @@ public abstract class AbstractSBTCompileMojo
     @Parameter( property = "sbt.javacOptions", defaultValue = "-g" )
     protected String javacOptions;
 
+    @Parameter( property = "sbt.compileOrder", defaultValue = "mixed" )
+    protected String compileOrder;
+
     /**
      * Additional parameters for Scala compiler.
      * <br>
@@ -465,6 +468,7 @@ public abstract class AbstractSBTCompileMojo
             configuration.setSourceEncoding( sourceEncoding );
             configuration.setJavacOptions( javacOptions );
             configuration.setScalacOptions( resolvedScalacOptions );
+            configuration.setCompileOrder( compileOrder );
             configuration.setAnalysisCacheFile( getAnalysisCacheFile() );
             configuration.setAnalysisCacheMap( getAnalysisCacheMap() );
             configuration.setSourcePositionMapper( sourcePositionMapper );

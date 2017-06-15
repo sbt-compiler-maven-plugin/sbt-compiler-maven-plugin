@@ -47,6 +47,13 @@ public class CompilerConfiguration implements Serializable
     private String scalacOptions;
 
     /**
+     * Compile order for Scala and Java sources for sbt incremental compile.
+     *
+     * Can be Mixed, JavaThenScala, or ScalaThenJava.
+     */
+    private String compileOrder;
+
+    /**
      * Java and Scala source files.
      */
     private List<File> sourceFiles;
@@ -167,6 +174,27 @@ public class CompilerConfiguration implements Serializable
     public void setScalacOptions( String scalacOptions )
     {
         this.scalacOptions = scalacOptions;
+    }
+
+
+    /**
+     * Returns compile order.
+     * 
+     * @return compile order
+     */
+    public String getCompileOrder()
+    {
+        return compileOrder;
+    }
+
+    /**
+     * Sets compile order.
+     * 
+     * @param compileOrder compile order
+     */
+    public void setCompileOrder( String compileOrder )
+    {
+        this.compileOrder = compileOrder;
     }
 
 

@@ -54,11 +54,6 @@ public class SBT012Compiler
     extends AbstractCompiler
 {
     /**
-     * SBT compilation order.
-     */
-    private static final String COMPILE_ORDER = "mixed";
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -108,7 +103,7 @@ public class SBT012Compiler
             Inputs.create( configuration.getClasspathFiles(), configuration.getSourceFiles(),
                            configuration.getOutputDirectory(), resolveScalacOptions( configuration ),
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
-                           configuration.getAnalysisCacheMap(), SBT012Compiler.COMPILE_ORDER,
+                           configuration.getAnalysisCacheMap(), configuration.getCompileOrder(),
                            /* getIncOptions(), */logger.isDebugEnabled() /* mirrorAnalysisCache */ );
         if ( configuration.getSourcePositionMapper() != null )
         {

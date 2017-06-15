@@ -60,11 +60,6 @@ public class SBT013Compiler
     extends AbstractCompiler
 {
     /**
-     * SBT compilation order.
-     */
-    private static final String COMPILE_ORDER = "mixed";
-
-    /**
      * Run javac compilation in forked JVM.
      */
     private static final boolean FORK_JAVA = false;
@@ -119,7 +114,7 @@ public class SBT013Compiler
             Inputs.create( configuration.getClasspathFiles(), configuration.getSourceFiles(),
                            configuration.getOutputDirectory(), resolveScalacOptions( configuration ),
                            resolveJavacOptions( configuration ), configuration.getAnalysisCacheFile(),
-                           configuration.getAnalysisCacheMap(), SBT013Compiler.COMPILE_ORDER,
+                           configuration.getAnalysisCacheMap(), configuration.getCompileOrder(),
                            getIncOptions( configuration ), false /* mirrorAnalysisCache */ );
         if ( logger.isDebugEnabled() )
         {
